@@ -35,6 +35,7 @@ public class SensorsControlPanel extends JApplet {
         username = getParameter("username");
         try {
             initHTTPClient();
+            mngXML = new ManageXML();
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
 
                 @Override
@@ -42,8 +43,7 @@ public class SensorsControlPanel extends JApplet {
                     appletGUI = new AppletGUI();
                     appletGUI.fillContainer(getContentPane());
                 }
-            });
-
+            }); 
             new SensorDownloadWorker().execute();
         } catch (Exception e) {
             System.err.println("createGUI non eseguito con successo");
@@ -74,29 +74,29 @@ public class SensorsControlPanel extends JApplet {
 
         @Override
         protected void process(java.util.List<NodeList> chunks) {
-            NodeList sensorsList = chunks.get(0);
+            NodeList xmlDocs = chunks.get(0);
+            Element sensorsList = (Element) xmlDocs.item(0);
             appletGUI.model.removeAllElements();
-            for (int i = sensorsList.getLength() - 1; i >= 0; i--) {
-                Element sensorElem = (Element) sensorsList.item(i);
+            System.out.println("sensorList: " + sensorsList.toString());
+            for (int i = sensorsList.getChildNodes().getLength() - 1; i >= 0; i--) {
+                Element sensorElem = (Element) sensorsList.getChildNodes().item(i);
+                System.out.println("sensorElem: " + sensorElem.toString());
+                System.out.println("sensorElemId: " + sensorElem.getAttribute("id"));
+                System.out.println("sensorElemContent: " + sensorElem.getTextContent());
                 String[] listElem = {
-                    sensorElem.getElementsByTagName("SensorName").item(0).getTextContent(),
-                    sensorElem.getElementsByTagName("SensorStatus").item(0).getTextContent(),};
+                    sensorElem.getAttribute("id"),
+                    sensorElem.getTextContent()};
                 appletGUI.model.addElement(listElem);
             }
         }
 
         private NodeList getSensors() throws Exception {
             // prepare the request xml
-            Document data = mngXML.newDocument("SensorsStatusRequest");
-            if (username != null) {
-                Element sensorsOfElem = data.createElement("username");
-                sensorsOfElem.appendChild(data.createTextNode(username));
-                data.appendChild(sensorsOfElem);
-            }
-            //showDocument(data);
-            Document answer = hc.execute("SensorsStatusRequest", data);
-            //showDocument(answer);
-            NodeList sensorsList = answer.getElementsByTagName("SensorsStatusResponse");
+            Document data = mngXML.newDocument("GetSensors");
+            // do request
+            Document answer = hc.execute("Sensors", data);
+            // get response
+            NodeList sensorsList = answer.getElementsByTagName("SensorsList");
             return sensorsList;
         }
     }
