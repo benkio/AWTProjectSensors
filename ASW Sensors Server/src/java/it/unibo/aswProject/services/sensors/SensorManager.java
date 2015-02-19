@@ -18,6 +18,10 @@ public class SensorManager {
     
     private SensorManager(){
         sensorList= new HashMap<>();
+        
+        for(int cont =0; cont <5; cont++){
+            sensorList.put(cont, new Sensor(null, cont));
+        }
     }
     
     public static SensorManager getInstance(){
@@ -36,4 +40,9 @@ public class SensorManager {
     public Sensor getSensor(int num){
         return sensorList.get(num);
     }
+
+    public HashMap<Integer, Sensor> getSensorList() {
+        return sensorList;
+    }
+    
 }

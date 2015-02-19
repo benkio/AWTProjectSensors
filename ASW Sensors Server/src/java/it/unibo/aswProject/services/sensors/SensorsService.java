@@ -94,6 +94,23 @@ public class SensorsService extends HttpServlet{
                 response.getOutputStream().close();  
             break;
             
+                
+            case "GetSensors":
+                System.out.println("Get Sensors Recived From: "+session.getAttribute("user"));
+                SensorManager sm = SensorManager.getInstance();
+                
+                Document doc= mngXML.newDocument("SensorsList");
+                
+                for (Sensor s : sm.getSensorList().values()) {
+                    Element sensor = doc.createElement("Sensor");
+                    sensor.setAttribute("id", Integer.toString(s.getNumber()));
+                    sensor.appendChild(doc.createTextNode(s.getSensorState()));
+                    doc.getDocumentElement().appendChild(sensor);
+                }
+                
+                mngXML.transform(response.getOutputStream(), doc);
+                response.getOutputStream().close();
+                
             case "GetValues":
                 System.out.println("GetValues Recived");
                 String user = (String) session.getAttribute("user");

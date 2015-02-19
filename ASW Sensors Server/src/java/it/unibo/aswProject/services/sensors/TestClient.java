@@ -35,15 +35,15 @@ public class TestClient {
         
         hc.setBase(new URL(BASE));
 
-        Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
+        Document answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
         mngXML.transform(System.out, answer);
               
 //        answer = hc.execute("Sensors", subscriptionRequest(1));
 //        mngXML.transform(System.out, answer);
-        System.in.read();
+//        System.in.read();
         
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
-        mngXML.transform(System.out, answer);
+//        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
+//        mngXML.transform(System.out, answer);
         
     }
     

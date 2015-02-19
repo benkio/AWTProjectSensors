@@ -20,6 +20,7 @@ public class Sensor extends Thread{
     private boolean go;
     private ISensorListener list;
     private int number;
+    private String state;
 
     public Sensor(ISensorListener list, int number) {
         this.list= list;
@@ -27,9 +28,10 @@ public class Sensor extends Thread{
         
         value = rnd.nextInt();
         go = true;
-        this.number= number;
+        this.number = number;
+        this.state = "Active";
         
-        this.start();
+        //this.start();
     }
     
     public synchronized int getValue(){
@@ -62,6 +64,14 @@ public class Sensor extends Thread{
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public String getSensorState() {
+        return state;
+    }
+
+    public void setSensorState(String state) {
+        this.state = state;
     }
     
     
