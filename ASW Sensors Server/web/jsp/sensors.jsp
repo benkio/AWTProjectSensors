@@ -13,8 +13,8 @@
         <%@ include file="/WEB-INF/jspf/navbar.jspf" %>        
             
     <applet codebase="<%= request.getContextPath()%>/applet/" 
-            code="awt.applet.SensorsControlPanel" 
-            archive="SensorsControlPanel.jar,Lib1.jar"
+            code="it.unibo.aswProject.applet.SensorsControlPanel" 
+            archive="SensorsControlPanel.jar,ASWLibrary.jar"
             width=940 height=500>
         <param name="sessionId" value="<%= session.getId()%>">
         <param name="username" value="<%= session.getAttribute("username") %>">

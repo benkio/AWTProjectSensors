@@ -27,6 +27,7 @@ import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
 /**
@@ -168,7 +169,7 @@ public class UserListFile {
 
     private synchronized void writeFile(UserList userList) throws Exception {
         Marshaller marsh = context.createMarshaller();
-        Document doc = mngXML.newDocument("");
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         marsh.marshal(userList, doc);
         OutputStream out = new FileOutputStream(userFile);
         mngXML.transform(out, doc);
