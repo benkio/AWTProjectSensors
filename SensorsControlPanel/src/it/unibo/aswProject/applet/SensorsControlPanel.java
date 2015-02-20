@@ -77,15 +77,13 @@ public class SensorsControlPanel extends JApplet {
             NodeList xmlDocs = chunks.get(0);
             Element sensorsList = (Element) xmlDocs.item(0);
             appletGUI.model.removeAllElements();
-            System.out.println("sensorList: " + sensorsList.toString());
             for (int i = sensorsList.getChildNodes().getLength() - 1; i >= 0; i--) {
                 Element sensorElem = (Element) sensorsList.getChildNodes().item(i);
-                System.out.println("sensorElem: " + sensorElem.toString());
-                System.out.println("sensorElemId: " + sensorElem.getAttribute("id"));
-                System.out.println("sensorElemContent: " + sensorElem.getTextContent());
                 String[] listElem = {
                     sensorElem.getAttribute("id"),
-                    sensorElem.getTextContent()};
+                    sensorElem.getTextContent(),
+                    "50" //TODO impostare il vero valore del sensore
+                };
                 appletGUI.model.addElement(listElem);
             }
         }
@@ -117,15 +115,6 @@ public class SensorsControlPanel extends JApplet {
             // Initialize the Swing UI
             contentPane = cp;
             contentPane.setLayout(new BorderLayout());
-            
-            progressLabel = new JLabel("Progress: ");
-            sensorValueProgressBar = new JProgressBar();
-            sensorValueLabel = new JLabel();
-            progressPanel = new JPanel();
-            progressPanel.add(progressLabel);
-            progressPanel.add(sensorValueProgressBar);
-            progressPanel.add(sensorValueLabel);
-            contentPane.add(progressPanel,BorderLayout.NORTH);
             
             model = new DefaultListModel<String[]>();
             sensorsList = new JList(model);

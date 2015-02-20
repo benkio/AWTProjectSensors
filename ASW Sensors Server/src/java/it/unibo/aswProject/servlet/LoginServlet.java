@@ -18,6 +18,7 @@ package it.unibo.aswProject.servlet;
 import it.unibo.aswProject.libraries.bean.User;
 import it.unibo.aswProject.util.UserListFile;
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +44,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String errorMsg = "";
         try {
             HttpSession session = request.getSession();
             if (request.getServletPath().equals("/LoginServlet")) {
@@ -65,7 +67,13 @@ public class LoginServlet extends HttpServlet {
             }
             response.sendRedirect( request.getContextPath() + "/index.jsp");
         } catch (Exception ex) {
-            throw new ServletException(getServletContext().getContextPath());
+            errorMsg = "Error Occurred: " + ex.getMessage();
+            
+            request.setAttribute("errorMsg", errorMsg);
+
+            // forward request (along with its attributes) to the status JSP
+            RequestDispatcher rd = request.getRequestDispatcher("/jsp/login.jsp");
+            rd.forward(request, response);
         }
     }
 

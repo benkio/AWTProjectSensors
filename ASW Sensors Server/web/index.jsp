@@ -26,25 +26,6 @@
                     <li>Access and view the values of the sersors(if autheticated)</li>
                     <li>Access, view and act on the actuators(if admin)</li>
                 </ul>
-        </article>
-        <!--
-        
-        To substitute with applet
-        
-        <aside>Sensors List</aside>
-
-        -->
-        
-        <!--
-
-        To substitute with applet
-        <section>
-            Active Sensor Name
-            <article>Sensor Value 1</article>
-            <article>Sensor Value 2</article>
-        </section>
-
-        -->
-        
+        </article>        
     </body>
 </html>

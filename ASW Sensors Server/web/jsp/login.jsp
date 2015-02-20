@@ -23,8 +23,14 @@
                     <label for="password" class="youpasswd">Password</label>
                     <input id="password" name="password" required="required" type="password" placeholder="password" />
                 </p>
-                <p class="login button">
+                <p>
                     <input type="submit" value="Login" />
+                </p>
+                <p id="loginError">
+                    <% if (request.getAttribute("errorMsg") != null) {%>
+                        <%= request.getAttribute("errorMsg") %>
+                    <% }%>
+                        
                 </p>
             </form>
         </div>
