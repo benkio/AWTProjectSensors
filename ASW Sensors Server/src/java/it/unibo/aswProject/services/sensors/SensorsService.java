@@ -5,6 +5,8 @@
  */
 package it.unibo.aswProject.services.sensors;
 
+import it.unibo.aswProject.sensors.SensorManager;
+import it.unibo.aswProject.sensors.Sensor;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,6 +100,7 @@ public class SensorsService extends HttpServlet{
             case "GetSensors":
                 System.out.println("Get Sensors Recived From: "+session.getAttribute("user"));
                 SensorManager sm = SensorManager.getInstance();
+                sm.startSensors();
                 
                 Document doc= mngXML.newDocument("SensorsList");
                 
@@ -160,6 +163,30 @@ public class SensorsService extends HttpServlet{
                     //os.close();
                 }
             break;
+                
+            case "Notify":
+                System.out.println("Notify Recived From Sensor");
+                
+                synchronized (this) {
+                    for (String destUser : contexts.keySet()) {
+                        Object value = contexts.get(destUser);
+                        if (value instanceof AsyncContext) {
+                            OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream();
+                            mngXML.transform(aos, data);
+                            aos.close();
+                            ((AsyncContext) value).complete();
+                            contexts.put(destUser, new LinkedList<>());
+                        } else {
+                            ((LinkedList<Document>) value).addLast(data);
+                        }
+                    }
+                }
+                
+                answer = mngXML.newDocument("Done");
+                mngXML.transform(response.getOutputStream(), answer);
+                response.getOutputStream().close();
+                
+                break;
         }
     }
 }

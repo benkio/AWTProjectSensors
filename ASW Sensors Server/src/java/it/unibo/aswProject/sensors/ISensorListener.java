@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.services.sensors;
+package it.unibo.aswProject.sensors;
 
 /**
  *
  * @author Thomas
  */
 public interface ISensorListener {
-    public void update(int number);
+    public void update(Sensor s);
 }

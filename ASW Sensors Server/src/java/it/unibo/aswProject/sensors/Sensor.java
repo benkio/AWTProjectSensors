@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.services.sensors;
+package it.unibo.aswProject.sensors;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,8 +30,6 @@ public class Sensor extends Thread{
         go = true;
         this.number = number;
         this.state = "Active";
-        
-        //this.start();
     }
     
     public synchronized int getValue(){
@@ -46,14 +44,14 @@ public class Sensor extends Thread{
     public void run() {
         while (go){
             try {
-//                Thread.sleep((int)((rnd.nextDouble()+1000)*10));
-                Thread.sleep(1000);
+                Thread.sleep((int)((rnd.nextDouble()+1000)*10));
+//                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Sensor.class.getName()).log(Level.SEVERE, null, ex);
             }
             synchronized(this){
                 value= rnd.nextInt();
-                this.list.update(number);
+                this.list.update(this);
             }   
         }
     }
@@ -73,8 +71,6 @@ public class Sensor extends Thread{
     public void setSensorState(String state) {
         this.state = state;
     }
-    
-    
     
     public synchronized void dispose()
     {

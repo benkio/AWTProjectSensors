@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  *
  * @author Thomas
  */
-public class TestClient {
+public class TestNotify {
 
     static HTTPClient hc = new HTTPClient();
     static final String BASE = "http://localhost:8080/SensorsServer/";
@@ -35,13 +35,15 @@ public class TestClient {
         
         hc.setBase(new URL(BASE));
 
-        Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
-        mngXML.transform(System.out, answer);
-        System.in.read();
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
-        mngXML.transform(System.out, answer);
-        System.in.read();
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
+        Document req = mngXML.newDocument("Notify");
+        req.getDocumentElement().setAttribute("from", "sensor");
+        req.getDocumentElement().setAttribute("number", "1");
+        req.getDocumentElement().setAttribute("kind", "value");
+        Element msg = req.createElement("Message");
+        msg.appendChild(req.createTextNode("TEST"));
+        req.getDocumentElement().appendChild(msg);
+        
+        Document answer = hc.execute("Sensors",  req);
         mngXML.transform(System.out, answer);
               
 //        answer = hc.execute("Sensors", subscriptionRequest(1));
