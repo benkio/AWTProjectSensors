@@ -18,6 +18,10 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 import it.unibo.aswProject.libraries.ui.EntryListCellRenderer;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 
 /**
  *
@@ -159,11 +163,12 @@ public class SensorsControlPanel extends JApplet {
             while (runComet) {
                 try {
                     // prepare the request xml
-                    Document data = mngXML.newDocument("SensorValueRequest");
-                    Element sensorIDTag = data.createElement("sensorName");
-                    Text sensorIDTextNode = data.createTextNode(sensorName);
-                    data.appendChild(sensorIDTag);
-                    Document answer = hc.execute("SensorValueResponse", data);
+                    Document data = mngXML.newDocument("GetValues");
+//                    Document data = mngXML.newDocument("SensorValueRequest");
+//                    Element sensorIDTag = data.createElement("sensorName");
+//                    Text sensorIDTextNode = data.createTextNode(sensorName);
+//                    data.appendChild(sensorIDTag);
+                    Document answer = hc.execute("Sensors", data);
                     if (runComet) {
                         SwingUtilities.invokeAndWait(new RunnableImpl(answer));
                     }
@@ -181,10 +186,18 @@ public class SensorsControlPanel extends JApplet {
                 this.answer = answer;
             }
 
+            @Override
             public void run() {
+                try {
                 String newValue = answer.getDocumentElement().getChildNodes().item(0).getTextContent();
                 appletGUI.sensorValueLabel.setText(newValue+"%");
                 appletGUI.sensorValueProgressBar.setValue(Integer.valueOf(newValue));
+                    new ManageXML().transform(System.out, answer);
+                } catch (TransformerConfigurationException | ParserConfigurationException ex) {
+                    Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException | IOException ex) {
+                    Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

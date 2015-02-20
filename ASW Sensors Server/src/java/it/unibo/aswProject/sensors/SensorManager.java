@@ -46,6 +46,8 @@ public class SensorManager implements ISensorListener {
         } catch (MalformedURLException ex) {
             Logger.getLogger(SensorManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        this.startSensors();
     }
     
     public static SensorManager getInstance(){
@@ -102,12 +104,12 @@ public class SensorManager implements ISensorListener {
         Document answer;
         try {
             answer = hc.execute("Sensors",  req);
-            mngXML.transform(System.out, answer);
+            //mngXML.transform(System.out, answer);
         } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(SensorManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        System.out.println("Notify");
+        //System.out.println("Notify");
     }
     
 }

@@ -9,6 +9,8 @@ import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,11 +40,24 @@ public class TestClient {
         Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
         mngXML.transform(System.out, answer);
         System.in.read();
+        
         answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
         mngXML.transform(System.out, answer);
         System.in.read();
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
-        mngXML.transform(System.out, answer);
+        
+        new Thread(new Runnable(){                    
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("GetValues")));
+                    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
+                        Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        ).start();        
               
 //        answer = hc.execute("Sensors", subscriptionRequest(1));
 //        mngXML.transform(System.out, answer);

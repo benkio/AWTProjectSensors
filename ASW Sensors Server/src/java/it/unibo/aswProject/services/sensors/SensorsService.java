@@ -79,10 +79,10 @@ public class SensorsService extends HttpServlet{
         
         switch (operation) {
             case "login":
-                System.out.println("Test Recived");
-                request.getSession(true).setAttribute("user", "user");
+                System.out.println("Test Started");
+                request.getSession(true).setAttribute("username", "test");
                 synchronized (this) {
-                    contexts.put("user", new LinkedList<Document>());
+                    contexts.put("test", new LinkedList<Document>());
                 }
                                 
                 answer = mngXML.newDocument("TestRecived");
@@ -98,9 +98,8 @@ public class SensorsService extends HttpServlet{
             
                 
             case "GetSensors":
-                System.out.println("Get Sensors Recived From: "+session.getAttribute("user"));
+                System.out.println("Get Sensors Recived From: "+session.getAttribute("username"));
                 SensorManager sm = SensorManager.getInstance();
-                sm.startSensors();
                 
                 Document doc= mngXML.newDocument("SensorsList");
                 
@@ -113,14 +112,21 @@ public class SensorsService extends HttpServlet{
                 
                 mngXML.transform(response.getOutputStream(), doc);
                 response.getOutputStream().close();
+            break;
                 
             case "GetValues":
                 System.out.println("GetValues Recived");
-                String user = (String) session.getAttribute("user");
+                String user = (String) session.getAttribute("username");
+                
+                if( !contexts.containsKey(user)){
+                    synchronized(this){
+                        contexts.put(user, new LinkedList<Document>());
+                    }
+                }
                 
                 boolean async;
                 synchronized (this) {
-                    LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
+                   LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
                     if (async = list.isEmpty()) {
                         AsyncContext asyncContext = request.startAsync();
                         asyncContext.setTimeout(10 * 1000);
@@ -132,7 +138,7 @@ public class SensorsService extends HttpServlet{
 
                                     AsyncContext asyncContext = e.getAsyncContext();
                                     HttpServletRequest reqAsync = (HttpServletRequest) asyncContext.getRequest();
-                                    String user = (String) reqAsync.getSession().getAttribute("user");
+                                    String user = (String) reqAsync.getSession().getAttribute("username");
                                     System.out.println("timeout event launched for: " + user);
 
                                     Document answer = mngXML.newDocument("timeout");
@@ -165,7 +171,7 @@ public class SensorsService extends HttpServlet{
             break;
                 
             case "Notify":
-                System.out.println("Notify Recived From Sensor");
+                //System.out.println("Notify Recived From Sensor");
                 
                 synchronized (this) {
                     for (String destUser : contexts.keySet()) {
@@ -173,10 +179,12 @@ public class SensorsService extends HttpServlet{
                         if (value instanceof AsyncContext) {
                             OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream();
                             mngXML.transform(aos, data);
+                            mngXML.transform(System.out, data);
                             aos.close();
                             ((AsyncContext) value).complete();
                             contexts.put(destUser, new LinkedList<>());
                         } else {
+                            System.out.println("linked");
                             ((LinkedList<Document>) value).addLast(data);
                         }
                     }
@@ -186,7 +194,7 @@ public class SensorsService extends HttpServlet{
                 mngXML.transform(response.getOutputStream(), answer);
                 response.getOutputStream().close();
                 
-                break;
+            break;
         }
     }
 }
