@@ -103,3 +103,6 @@ header  h1{
     font: 20pt Helvetica,"Helvetica neue", Arial, sans-serif;
     text-align: center;
 }
+#loginError{
+    color: red;
+}
