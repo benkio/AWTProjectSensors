@@ -5,15 +5,24 @@
  */
 package it.unibo.aswProject.model.actuators;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Thomas
  */
+@XmlRootElement
 public class Actuator {
     private int id;
     private int value;
     private IActuatorListener list;
 
+    public Actuator(){
+        this.id = 0;
+        this.value = 0;
+        this.list = null;
+    }
+    
     public Actuator(int id, int value, IActuatorListener list) {
         this.id = id;
         this.value = value;

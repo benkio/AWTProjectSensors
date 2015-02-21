@@ -6,10 +6,15 @@
 package it.unibo.aswProject.services.actuators;
 
 import it.unibo.aswProject.libraries.xml.ManageXML;
+import it.unibo.aswProject.model.actuators.Actuator;
+import it.unibo.aswProject.model.actuators.ActuatorList;
+import it.unibo.aswProject.model.actuators.ActuatorsManager;
 import it.unibo.aswProject.services.sensors.SensorsService;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -18,6 +23,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -50,16 +60,42 @@ public class ActuatorsService extends HttpServlet {
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (TransformerException ex) {
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JAXBException ex) {
+            Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) {
+    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws JAXBException, IOException, TransformerException, ParserConfigurationException {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
         
         switch (operation) {
-        
+            case"getActuators":
+                ActuatorsManager am = ActuatorsManager.getInstance();
+                am.addActuator(new Actuator(1, 1, null));
+                am.addActuator(new Actuator(2, 2, null));
+                
+                if(!am.getList().isEmpty())
+                {
+                    JAXBContext jc = JAXBContext.newInstance(ActuatorList.class);
+                    Marshaller marsh = jc.createMarshaller();
+
+                    try (OutputStream os = response.getOutputStream()) {
+                            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                            ActuatorList al = new ActuatorList();
+                            al.setList(am.getList());
+                            marsh.marshal(al, doc);
+                            mngXML.transform(os, doc);
+                            mngXML.transform(System.out, doc);
+                    }
+
+                }
+                else{
+                    //TODO: No actuators
+                }
+
+                break;
         }
     }
 }

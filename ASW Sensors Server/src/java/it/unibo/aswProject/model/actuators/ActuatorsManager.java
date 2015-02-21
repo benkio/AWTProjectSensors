@@ -22,7 +22,7 @@ public class ActuatorsManager {
         list = new LinkedList<>();
     }
     
-    public synchronized ActuatorsManager getInstance(){
+    public static synchronized ActuatorsManager getInstance(){
         if (instance == null)
         {
             instance = new ActuatorsManager();
