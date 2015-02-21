@@ -5,8 +5,8 @@
  */
 package it.unibo.aswProject.services.sensors;
 
-import it.unibo.aswProject.sensors.SensorManager;
-import it.unibo.aswProject.sensors.Sensor;
+import it.unibo.aswProject.model.sensors.SensorManager;
+import it.unibo.aswProject.model.sensors.Sensor;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.io.InputStream;

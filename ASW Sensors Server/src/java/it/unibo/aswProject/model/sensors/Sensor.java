@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.sensors;
+package it.unibo.aswProject.model.sensors;
 
 import java.util.ArrayList;
 import java.util.Random;
