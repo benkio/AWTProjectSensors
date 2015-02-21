@@ -26,7 +26,7 @@ public class Sensor extends Thread{
         this.list= list;
         rnd= new Random();
         
-        value = rnd.nextInt();
+        value = rnd.nextInt(101);
         go = true;
         this.number = number;
         this.state = "Active";
@@ -50,7 +50,7 @@ public class Sensor extends Thread{
                 Logger.getLogger(Sensor.class.getName()).log(Level.SEVERE, null, ex);
             }
             synchronized(this){
-                value= rnd.nextInt();
+                value= rnd.nextInt(101);
                 this.list.update(this);
             }   
         }

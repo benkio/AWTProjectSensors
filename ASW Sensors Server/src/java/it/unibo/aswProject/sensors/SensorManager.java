@@ -7,12 +7,10 @@ package it.unibo.aswProject.sensors;
 
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.xml.ManageXML;
-import it.unibo.aswProject.sensors.Sensor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;

@@ -11,7 +11,6 @@ import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -106,6 +105,7 @@ public class SensorsService extends HttpServlet{
                 for (Sensor s : sm.getSensorList().values()) {
                     Element sensor = doc.createElement("Sensor");
                     sensor.setAttribute("id", Integer.toString(s.getNumber()));
+                    sensor.setAttribute("value", Integer.toString(s.getValue()));
                     sensor.appendChild(doc.createTextNode(s.getSensorState()));
                     doc.getDocumentElement().appendChild(sensor);
                 }
