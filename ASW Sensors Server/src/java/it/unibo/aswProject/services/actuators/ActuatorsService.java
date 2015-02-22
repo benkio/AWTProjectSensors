@@ -96,6 +96,9 @@ public class ActuatorsService extends HttpServlet {
                 }
 
                 break;
+            case "setValue":
+                //int id= root.getElementsByTagName("id");
+                break;
         }
     }
 }
