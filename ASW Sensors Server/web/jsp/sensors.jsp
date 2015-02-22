@@ -11,7 +11,9 @@
         <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
         <%@ include file="/WEB-INF/jspf/navbar.jspf" %>        
-            
+    
+        <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
+        
     <applet codebase="<%= request.getContextPath()%>/applet/" 
             code="it.unibo.aswProject.applet.SensorsControlPanel" 
             archive="SensorsControlPanel.jar,lib/ASWLibrary.jar"

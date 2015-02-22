@@ -40,7 +40,9 @@
         
         <%@ include file="/WEB-INF/jspf/header.jspf" %>
 
-        <%@ include file="/WEB-INF/jspf/navbar.jspf" %>        
+        <%@ include file="/WEB-INF/jspf/navbar.jspf" %>     
+        
+        <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
             
         <table border="0" cellpadding="1" cellspacing="1" id="ActuarorsTable">
             <thead>

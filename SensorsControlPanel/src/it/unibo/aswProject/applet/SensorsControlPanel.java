@@ -80,13 +80,16 @@ public class SensorsControlPanel extends JApplet {
         }
     }
 
-    private class SensorDownloadWorker extends SwingWorker<Void, NodeList> {
+    private class SensorDownloadWorker extends SwingWorker<Boolean, NodeList> {
 
         @Override
-        protected Void doInBackground() throws Exception {
-            NodeList sensors = getSensors();
-            publish(sensors);
-            return null;
+        protected Boolean doInBackground() throws Exception {
+            if (serviceSubscribe()){
+                NodeList sensors = getSensors();
+                publish(sensors);
+                return true;
+            }
+            return false;
         }
 
         @Override
@@ -106,6 +109,19 @@ public class SensorsControlPanel extends JApplet {
             
             cometValueUpdaterThread.start();
         }
+        
+        @Override
+        protected void done(){
+            try{
+            Boolean subscribeResult = get();
+            if (subscribeResult){
+                //TODO: set the error label
+                appletGUI.errorLabel.setText("status: error is subscription");
+            }
+            }catch(Exception e){
+                Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
 
         private NodeList getSensors() throws Exception {
             // prepare the request xml
@@ -116,6 +132,17 @@ public class SensorsControlPanel extends JApplet {
             NodeList sensorsList = answer.getElementsByTagName("SensorsList");
             return sensorsList;
         }
+        
+        private boolean serviceSubscribe() throws Exception{
+            //Send a subscribe request to the sensor service
+            Document data = mngXML.newDocument("subscribe");
+            // do request
+            Document answer = hc.execute("Sensors", data);
+            // check response
+            if (answer.getElementsByTagName("subscribed").getLength() == 0)
+                return false;
+            return true;
+        }
     }
 
     private class AppletGUI {
@@ -123,6 +150,7 @@ public class SensorsControlPanel extends JApplet {
         private JScrollPane jScrollPane;
         private JList sensorsList;
         private Container contentPane;
+        public JLabel errorLabel;
         public DefaultListModel<String[]> model;
 
         public void fillContainer(Container cp) {
@@ -135,6 +163,9 @@ public class SensorsControlPanel extends JApplet {
             sensorsList.setCellRenderer(new EntryListCellRenderer());
             jScrollPane = new JScrollPane(sensorsList);
             contentPane.add(jScrollPane, BorderLayout.CENTER);
+            
+            errorLabel.setText("Status: OK");
+            contentPane.add(errorLabel, BorderLayout.CENTER);
         }
     }
 
