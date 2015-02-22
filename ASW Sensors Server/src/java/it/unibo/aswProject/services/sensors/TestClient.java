@@ -37,11 +37,11 @@ public class TestClient {
 
         Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
         mngXML.transform(System.out, answer);
-        System.in.read();
+        //System.in.read();
         
         answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
         mngXML.transform(System.out, answer);
-        System.in.read();
+        //System.in.read();
         
         new Thread(new Runnable(){                    
             @Override
@@ -55,8 +55,27 @@ public class TestClient {
                 }
             }
         }
-        ).start();        
+        ).start();    
+        
+        answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
+        mngXML.transform(System.out, answer);
+        //System.in.read();
+        
+        new Thread(new Runnable(){                    
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("GetValues")));
+                    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
+                        Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        ).start();    
               
+        System.in.read();
 //        answer = hc.execute("Sensors", subscriptionRequest(1));
 //        mngXML.transform(System.out, answer);
 //        System.in.read();

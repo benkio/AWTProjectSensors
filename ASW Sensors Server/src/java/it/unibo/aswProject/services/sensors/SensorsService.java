@@ -115,13 +115,13 @@ public class SensorsService extends HttpServlet{
             break;
                 
             case "GetValues":
-                System.out.println("GetValues Recived");
                 String user = (String) session.getAttribute("username");
+                System.out.println("GetValues Recived from: "+user);
                 
-                if( !contexts.containsKey(user)){
-                    synchronized(this){
-                        contexts.put(user, new LinkedList<Document>());
-                    }
+                synchronized(this){
+                    contexts.put(user, new LinkedList<Document>());
+                    System.out.println(user + "New Context with LL"); 
+
                 }
                 
                 boolean async;
@@ -146,6 +146,7 @@ public class SensorsService extends HttpServlet{
                                     synchronized (SensorsService.this) {
                                         if (confirm = (contexts.get(user) instanceof AsyncContext)) {
                                             contexts.put(user, new LinkedList<>());
+                                            System.out.println(user + "New Context with AC in Tout");
                                         }
                                     }
                                     if (confirm) {
@@ -160,6 +161,7 @@ public class SensorsService extends HttpServlet{
                             }
                         });
                         contexts.put(user, asyncContext);
+                        System.out.println(user + "New Context with AC");
                     } else {
                         answer = list.removeFirst();
                     }
@@ -171,7 +173,6 @@ public class SensorsService extends HttpServlet{
             break;
                 
             case "Notify":
-                //System.out.println("Notify Recived From Sensor");
                 
                 synchronized (this) {
                     for (String destUser : contexts.keySet()) {
@@ -183,9 +184,10 @@ public class SensorsService extends HttpServlet{
                             aos.close();
                             ((AsyncContext) value).complete();
                             contexts.put(destUser, new LinkedList<>());
+                            System.out.println(destUser + "New Context with AC in Ntf");
                         } else {
-                            System.out.println("linked");
                             ((LinkedList<Document>) value).addLast(data);
+                            System.out.println(destUser + "added message in LL");
                         }
                     }
                 }
