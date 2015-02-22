@@ -31,7 +31,7 @@
                        });
                    });
                }); 
-            loadXMLDoc("/actuators",loadInitialActuator,GetActuatorsXML);
+            loadXMLDoc("../actuators",loadInitialActuator,GetActuatorsXML);
         </script>
     </head>
     <body>

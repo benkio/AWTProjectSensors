@@ -71,13 +71,13 @@ public class ActuatorsService extends HttpServlet {
         Document answer= null;
         ActuatorsManager am = ActuatorsManager.getInstance();
         
-        String logged = (String) session.getAttribute("isLoggedIn");
-        if(logged==null || !logged.equals("true")){
-            answer = mngXML.newDocument("notLogged");
-            mngXML.transform(response.getOutputStream(), answer);
-            response.getOutputStream().close();
-            return;
-        }
+//        String logged = (String) session.getAttribute("isLoggedIn");
+//        if(logged==null || !logged.equals("true")){
+//            answer = mngXML.newDocument("notLogged");
+//            mngXML.transform(response.getOutputStream(), answer);
+//            response.getOutputStream().close();
+//            return;
+//        }
         
         switch (operation) {
             case"getActuators":

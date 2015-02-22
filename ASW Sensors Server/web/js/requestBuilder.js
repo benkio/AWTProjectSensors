@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-function loadInitialActuator() {
+function loadInitialActuator(xmlhttp) {
     var actuator_name, actuator_value, actuator, i;
     actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("Actuator");
     for (i = 1; i <= actuator.length; i++) {
@@ -30,7 +30,7 @@ function loadXMLDoc(url, loadFunction, xmlRequest) {
     }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            loadFunction();
+            loadFunction(xmlhttp);
         }
     };
     xmlhttp.open("POST", url, true);
