@@ -37,16 +37,8 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
 public class SensorsService extends HttpServlet{
 
-    private HashMap<Integer, LinkedList<String>> subscriptions;
     private HashMap<String, Object> contexts = new HashMap<String, Object>();
-    private Sensor sensor;
-
-    @Override
-    public void init() throws ServletException {
-        super.init(); //To change body of generated methods, choose Tools | Templates.    
-    }
-    
-    
+    private LinkedList<String> subUsers= new LinkedList<>();
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -71,7 +63,6 @@ public class SensorsService extends HttpServlet{
     }
 
     private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws IOException, TransformerException {
-                //Name of operation is message root
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
@@ -80,22 +71,64 @@ public class SensorsService extends HttpServlet{
         switch (operation) {
             case "login":
                 System.out.println("Test Started");
-                request.getSession(true).setAttribute("username", "test");
-                synchronized (this) {
-                    contexts.put("test", new LinkedList<Document>());
-                }
-                                
+                request.getSession(true).setAttribute("username", "test");                                
                 answer = mngXML.newDocument("TestRecived");
                 mngXML.transform(response.getOutputStream(), answer);
                 response.getOutputStream().close();  
             break;
             
-            case "Subscribe":
-                System.out.println("Subscription Recived From: "+session.getAttribute("user"));
-                mngXML.transform(response.getOutputStream(), mngXML.newDocument("SubscriptionRecived"));
-                response.getOutputStream().close();  
+            case "subscribe":
+                System.out.println("Subscription Recived From: "+user);
+                
+                synchronized (this){
+                    if(!user.equals("null")){
+                        if(!subUsers.contains(user)){
+                            if(subUsers.isEmpty()){
+                                subUsers.add(user);
+                                SensorManager.getInstance().startnotifications();
+                            }else{
+                                subUsers.add(user);
+                            }
+
+                            contexts.put(user, new LinkedList<Document>());
+                        }
+                        
+                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("subscribed"));
+                        response.getOutputStream().close();  
+                    }
+                    else{
+                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("notLogged"));
+                        response.getOutputStream().close();  
+                    }
+                }
             break;
-            
+                
+            case "unsubscribe":
+                System.out.println("Unsubscription Recived From: "+user);
+                
+                synchronized (this){
+                    if(!user.equals("null")){
+                        if(subUsers.contains(user)){
+                            subUsers.remove(user);
+                            
+                            if(subUsers.isEmpty()){
+                                SensorManager.getInstance().stopnotifications();
+                            }
+                            
+                            if(contexts.containsKey(user))
+                                contexts.remove(user);
+                            
+                        }
+                        
+                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("unsubscribed"));
+                        response.getOutputStream().close();  
+                    }
+                    else{
+                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("notLogged"));
+                        response.getOutputStream().close();  
+                    }
+                }
+                break;
                 
             case "GetSensors":
                 System.out.println("Get Sensors Recived From: "+session.getAttribute("username"));
@@ -110,14 +143,7 @@ public class SensorsService extends HttpServlet{
                     sensor.appendChild(doc.createTextNode(s.getSensorState()));
                     doc.getDocumentElement().appendChild(sensor);
                 }
-                
-                
-                synchronized(this){
-                    contexts.put(user, new LinkedList<Document>());
-                    System.out.println(user + ": New Context with LL"); 
-
-                }
-                                
+                              
                 mngXML.transform(response.getOutputStream(), doc);
                 response.getOutputStream().close();
             break;
@@ -127,77 +153,102 @@ public class SensorsService extends HttpServlet{
 
                 boolean async;
                 synchronized (this) {
-                   LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
-                    if (async = list.isEmpty()) {
-                        AsyncContext asyncContext = request.startAsync();
-                        asyncContext.setTimeout(10 * 1000);
-                        asyncContext.addListener(new AsyncAdapter() {
-                            @Override
-                            public void onTimeout(AsyncEvent e) {
-                                try {
-                                    ManageXML mngXML = new ManageXML();
+                    if(subUsers.contains(user)){
 
-                                    AsyncContext asyncContext = e.getAsyncContext();
-                                    HttpServletRequest reqAsync = (HttpServletRequest) asyncContext.getRequest();
-                                    String user = (String) reqAsync.getSession().getAttribute("username");
-                                    System.out.println("Timeout event launched for: " + user);
+                        if(contexts.get(user) instanceof AsyncContext){
+                            //((AsyncContext)contexts.get(user)).complete();
+                            contexts.put(user, new LinkedList<Document>());
+                        }
+                        
+                        LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
+                        if (async = list.isEmpty()) {
+                            AsyncContext asyncContext = request.startAsync();
+                            asyncContext.setTimeout(10 * 1000);
+                            asyncContext.addListener(new AsyncAdapter() {
+                                @Override
+                                public void onTimeout(AsyncEvent e) {
+                                    try {
+                                        ManageXML mngXML = new ManageXML();
 
-                                    Document answer = mngXML.newDocument("timeout");
-                                    boolean confirm;
-                                    synchronized (SensorsService.this) {
-                                        if (confirm = (contexts.get(user) instanceof AsyncContext)) {
-                                            contexts.put(user, new LinkedList<>());
-                                            System.out.println(user + " New LL after Timeout");
+                                        AsyncContext asyncContext = e.getAsyncContext();
+                                        HttpServletRequest reqAsync = (HttpServletRequest) asyncContext.getRequest();
+                                        String user = (String) reqAsync.getSession().getAttribute("username");
+                                        System.out.println(user+ " Async req Timeouted");
+
+                                        Document answer = mngXML.newDocument("timeout");
+                                        boolean confirm;
+                                        synchronized (SensorsService.this) {
+                                            if (confirm = (contexts.get(user) instanceof AsyncContext)) {
+                                                contexts.put(user, new LinkedList<>());
+                                            }
                                         }
-                                    }
-                                    if (confirm) {
-                                        try (OutputStream tos = asyncContext.getResponse().getOutputStream()) {
-                                            mngXML.transform(tos, answer);
+                                        if (confirm) {
+                                            try (OutputStream tos = asyncContext.getResponse().getOutputStream()) {
+                                                mngXML.transform(tos, answer);
+                                            }
+                                            asyncContext.complete();
                                         }
-                                        asyncContext.complete();
+                                    } catch (ParserConfigurationException | IOException | TransformerException ex) {
+                                        System.out.println(ex);
                                     }
-                                } catch (ParserConfigurationException | IOException | TransformerException ex) {
-                                    System.out.println(ex);
                                 }
-                            }
-                        });
-                        contexts.put(user, asyncContext);
-                        System.out.println(user + " New AC");
-                    } else {
-                        answer = list.removeFirst();
+                            });
+                            contexts.put(user, asyncContext);
+                            System.out.println(user + " Async req Started");
+                        } else {
+                            answer = list.removeFirst();
+                        }                    
+                        if (!async) {
+                            mngXML.transform(response.getOutputStream(), answer);
+                            response.getOutputStream().close();
+                            System.out.println(user + " Message Sended");
+                        }
                     }
-                }
-                if (!async) {
-                    mngXML.transform(response.getOutputStream(), answer);
-                    //os.close();
+                    else{
+                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("userNotSubscribed"));
+                        response.getOutputStream().close(); 
+                    }
                 }
             break;
                 
             case "Notify":
                 
                 synchronized (this) {
-                    for (String destUser : contexts.keySet()) {
-                        Object value = contexts.get(destUser);
-                        if (value instanceof AsyncContext) {
-                            OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream();
-                            mngXML.transform(aos, data);
-                            mngXML.transform(System.out, data);
-                            aos.close();
-                            ((AsyncContext) value).complete();
-                            contexts.put(destUser, new LinkedList<>());
-                            System.out.println(destUser + " New LL after Notify");
-                        } else {
-                            ((LinkedList<Document>) value).addLast(data);
-                            System.out.println(destUser + "added message in LL");
-                        }
+                    
+                    if(subUsers.isEmpty()){
+                        answer = mngXML.newDocument("noUsers");
+                        mngXML.transform(response.getOutputStream(), answer);
+                        response.getOutputStream().close();
                     }
-                }
-                
-                answer = mngXML.newDocument("Done");
-                mngXML.transform(response.getOutputStream(), answer);
-                response.getOutputStream().close();
-                
-            break;
+                    else{ 
+                        for (String destUser : subUsers) {
+                            Object value = contexts.get(destUser);
+                            if (value instanceof AsyncContext) {
+                                try (OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream()) {
+                                    mngXML.transform(aos, data);
+                                    mngXML.transform(System.out, data);
+                                }
+                                ((AsyncContext) value).complete();
+                                contexts.put(destUser, new LinkedList<>());
+                                System.out.println(destUser + " Async Req Ended");
+                            } else {
+                                
+                                LinkedList<Document> list = ((LinkedList<Document>) value);
+                                
+                                if(list.size()>1000){
+                                    list.clear();
+                                }
+                                list.addLast(data);
+                                System.out.println(destUser + " message appended");
+                            }
+                        }
+                        
+                        answer = mngXML.newDocument("Done");
+                        mngXML.transform(response.getOutputStream(), answer);
+                        response.getOutputStream().close();
+                    }
+                }    
+                break;
         }
     }
 }
