@@ -115,7 +115,6 @@ public class SensorsControlPanel extends JApplet {
             try{
             Boolean subscribeResult = get();
             if (subscribeResult){
-                //TODO: set the error label
                 appletGUI.errorLabel.setText("status: error is subscription");
             }
             }catch(Exception e){
@@ -138,10 +137,8 @@ public class SensorsControlPanel extends JApplet {
             Document data = mngXML.newDocument("subscribe");
             // do request
             Document answer = hc.execute("Sensors", data);
-            // check response
-            if (answer.getElementsByTagName("subscribed").getLength() == 0)
-                return false;
-            return true;
+            
+            return answer.getElementsByTagName("subscribed").getLength() != 0;
         }
     }
 
@@ -164,8 +161,9 @@ public class SensorsControlPanel extends JApplet {
             jScrollPane = new JScrollPane(sensorsList);
             contentPane.add(jScrollPane, BorderLayout.CENTER);
             
+            errorLabel = new JLabel();
             errorLabel.setText("Status: OK");
-            contentPane.add(errorLabel, BorderLayout.CENTER);
+            contentPane.add(errorLabel, BorderLayout.PAGE_END);
         }
     }
 
