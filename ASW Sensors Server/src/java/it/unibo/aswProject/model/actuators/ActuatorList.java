@@ -5,6 +5,7 @@
  */
 package it.unibo.aswProject.model.actuators;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,17 +16,17 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
     @XmlRootElement
     public class ActuatorList{
-        private LinkedList<Actuator> actuatorList;
+        private ArrayList<Actuator> actuatorList;
         
         public ActuatorList(){
-            actuatorList= new LinkedList<>();
+            actuatorList= new ArrayList<>();
         }
 
-        public LinkedList<Actuator> getList() {
+        public ArrayList<Actuator> getList() {
             return actuatorList;
         }
 
-        public void setList(LinkedList<Actuator> list) {
+        public void setList(ArrayList<Actuator> list) {
             this.actuatorList = list;
         }        
     }
