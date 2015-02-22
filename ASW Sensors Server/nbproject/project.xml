@@ -10,10 +10,6 @@
                     <file>${reference.ASWLibrary.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
-                <library dirs="200">
-                    <file>${reference.SensorsControlPanel.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
             </web-module-libraries>
             <web-module-additional-libraries>
                 <library dirs="200">
