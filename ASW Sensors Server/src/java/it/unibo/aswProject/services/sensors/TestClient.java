@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingWorker;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -37,62 +38,19 @@ public class TestClient {
 
         Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
         mngXML.transform(System.out, answer);
-        //System.in.read();
+
+        answer = hc.execute("Sensors",  mngXML.newDocument("subscribe"));
+        mngXML.transform(System.out, answer);
         
         answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
         mngXML.transform(System.out, answer);
-        //System.in.read();
         
-        new Thread(new Runnable(){                    
-            @Override
-            public void run() {
-                while(true){
-                    try {
-                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("GetValues")));
-                    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
-                        Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        ).start();    
-        
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
-        mngXML.transform(System.out, answer);
-        //System.in.read();
-        
-        new Thread(new Runnable(){                    
-            @Override
-            public void run() {
-                while(true){
-                    try {
-                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("GetValues")));
-                    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
-                        Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
-        ).start();    
-              
         System.in.read();
-//        answer = hc.execute("Sensors", subscriptionRequest(1));
-//        mngXML.transform(System.out, answer);
-//        System.in.read();
         
-//        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
-//        mngXML.transform(System.out, answer);
+        answer = hc.execute("Sensors",  mngXML.newDocument("unsubscribe"));
+        mngXML.transform(System.out, answer);
         
-    }
-    
-    static private Document subscriptionRequest(int snum) throws TransformerConfigurationException, ParserConfigurationException{
-        ManageXML mxml= new ManageXML();
-        Document request = mxml.newDocument("Subscribe");
-        Element sensor = request.createElement("Sensor");
-        sensor.appendChild(request.createTextNode("1"));
-        request.getDocumentElement().appendChild(sensor);
-        
-        return request;
-    }
-    
+        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
+        mngXML.transform(System.out, answer);
+    }    
 }

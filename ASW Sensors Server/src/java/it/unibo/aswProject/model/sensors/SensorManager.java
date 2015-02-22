@@ -30,6 +30,7 @@ public class SensorManager implements ISensorListener {
     private HashMap<Integer,Sensor> sensorList;
     private HTTPClient hc;
     private String BASE = "http://localhost:8080/SensorsServer/";
+    private boolean notify;
     
     private SensorManager(){
         sensorList= new HashMap<>();
@@ -44,6 +45,8 @@ public class SensorManager implements ISensorListener {
         } catch (MalformedURLException ex) {
             Logger.getLogger(SensorManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        notify= false;
         
         this.startSensors();
     }
@@ -81,8 +84,21 @@ public class SensorManager implements ISensorListener {
         }
     }
 
+    public synchronized void startnotifications(){
+        this.notify=true;
+    }
+    
+    public synchronized void stopnotifications(){
+        this.notify=false;
+    }
+    
     @Override
     public void update(Sensor s) {
+        
+        synchronized (this){
+            if(!notify) return;
+        }
+        
         ManageXML mngXML= null;
         
         try {
