@@ -44,8 +44,8 @@ public class Sensor extends Thread{
     public void run() {
         while (go){
             try {
-                Thread.sleep((int)((rnd.nextDouble()+1000)*10));
-//                Thread.sleep(1000);
+                //Thread.sleep((int)((rnd.nextDouble()+1000)*10));
+                Thread.sleep(5000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(Sensor.class.getName()).log(Level.SEVERE, null, ex);
             }

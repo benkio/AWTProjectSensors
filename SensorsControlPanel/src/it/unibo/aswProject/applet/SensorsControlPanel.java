@@ -114,7 +114,7 @@ public class SensorsControlPanel extends JApplet {
         protected void done(){
             try{
             Boolean subscribeResult = get();
-            if (subscribeResult){
+            if (!subscribeResult){
                 appletGUI.errorLabel.setText("status: error is subscription");
             }
             }catch(Exception e){
