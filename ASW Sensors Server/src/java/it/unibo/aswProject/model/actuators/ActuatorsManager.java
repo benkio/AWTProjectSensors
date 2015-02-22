@@ -6,6 +6,8 @@
 package it.unibo.aswProject.model.actuators;
 
 import it.unibo.aswProject.model.sensors.SensorManager;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -15,11 +17,10 @@ import java.util.LinkedList;
 public class ActuatorsManager {
     
     private static ActuatorsManager instance;
-    private LinkedList<Actuator> list;
-    
+    private HashMap<Integer,Actuator> list;
     
     private ActuatorsManager(){
-        list = new LinkedList<>();
+        list = new HashMap<>();
     }
     
     public static synchronized ActuatorsManager getInstance(){
@@ -31,13 +32,15 @@ public class ActuatorsManager {
         return instance;  
     }
 
-    public synchronized LinkedList<Actuator> getList() {
-        return list;
+    public synchronized ArrayList<Actuator> getList() {
+        return new ArrayList<>(list.values());
     }
     
     public synchronized void addActuator(Actuator act){
-        this.list.add(act);
+        this.list.put(act.getId(), act);
     }
     
-    
+    public synchronized void setActuatorValue(int id, int value){
+        list.get(id).setValue(value);
+    }
 }

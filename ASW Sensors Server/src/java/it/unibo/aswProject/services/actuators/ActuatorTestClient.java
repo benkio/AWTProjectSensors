@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
@@ -32,6 +33,25 @@ public class ActuatorTestClient {
         hc.setBase(new URL(BASE));
 
         Document answer = hc.execute("actuators",  mngXML.newDocument("getActuators"));
+        mngXML.transform(System.out, answer);
+        System.in.read();
+        
+        Document req = mngXML.newDocument("setValue");
+        
+        Element id = req.createElement("id");
+        id.appendChild(req.createTextNode("1"));
+        
+        Element val= req.createElement("value");
+        val.appendChild(req.createTextNode("3"));
+        
+        req.getDocumentElement().appendChild(id);
+        req.getDocumentElement().appendChild(val);
+        
+        answer = hc.execute("actuators",  req);
+        mngXML.transform(System.out, answer);
+        System.in.read();
+        
+        answer = hc.execute("actuators",  mngXML.newDocument("getActuators"));
         mngXML.transform(System.out, answer);
         System.in.read();
     }

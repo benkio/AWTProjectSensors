@@ -69,13 +69,23 @@ public class ActuatorsService extends HttpServlet {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
+        ActuatorsManager am = ActuatorsManager.getInstance();
+        
+        String logged = (String) session.getAttribute("isLoggedIn");
+        if(logged==null || !logged.equals("true")){
+            answer = mngXML.newDocument("notLogged");
+            mngXML.transform(response.getOutputStream(), answer);
+            response.getOutputStream().close();
+            return;
+        }
         
         switch (operation) {
             case"getActuators":
-                ActuatorsManager am = ActuatorsManager.getInstance();
-                am.addActuator(new Actuator(1, 1, null));
-                am.addActuator(new Actuator(2, 2, null));
                 
+                if(am.getList().isEmpty()){
+                    am.addActuator(new Actuator(1, 1, null));
+                    am.addActuator(new Actuator(2, 2, null));
+                }
                 if(!am.getList().isEmpty())
                 {
                     JAXBContext jc = JAXBContext.newInstance(ActuatorList.class);
@@ -97,7 +107,18 @@ public class ActuatorsService extends HttpServlet {
 
                 break;
             case "setValue":
-                //int id= root.getElementsByTagName("id");
+                mngXML.transform(System.out, data);
+                Element idEl = (Element) data.getElementsByTagName("id").item(0);
+                Element valEl = (Element) data.getElementsByTagName("value").item(0);
+                
+                int id = Integer.parseInt(idEl.getTextContent());
+                int val = Integer.parseInt(valEl.getTextContent());
+                am.setActuatorValue(id, val);
+                
+                answer = mngXML.newDocument("done");
+                mngXML.transform(response.getOutputStream(), answer);
+                response.getOutputStream().close();
+                
                 break;
         }
     }
