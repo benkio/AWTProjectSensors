@@ -14,7 +14,7 @@
             
     <applet codebase="<%= request.getContextPath()%>/applet/" 
             code="it.unibo.aswProject.applet.SensorsControlPanel" 
-            archive="SensorsControlPanel.jar,ASWLibrary.jar"
+            archive="SensorsControlPanel.jar,lib/ASWLibrary.jar"
             width=940 height=500>
         <param name="sessionId" value="<%= session.getId()%>">
         <param name="username" value="<%= session.getAttribute("username") %>">

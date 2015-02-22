@@ -49,24 +49,7 @@ public class SensorsControlPanel extends JApplet {
             Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-
-    @Override
-    public void start() {
-        new SensorDownloadWorker().execute();
-        if (cometValueUpdaterThread != null && cometValueUpdaterThread.isAlive()) {
-            cometValueUpdaterThread.stopComet();
-        }
-        cometValueUpdaterThread = new CometValueUpdaterThread();
-        cometValueUpdaterThread.start();
-    }
-
-    @Override
-    public void stop() {
-        if (cometValueUpdaterThread.isAlive()) {
-            cometValueUpdaterThread.stopComet();
-        }
-    }
-
+    
     private void initHTTPClient() throws MalformedURLException {
         hc.setSessionId(getParameter("sessionId"));
         // represent the path portion of the URL as a file
@@ -77,6 +60,24 @@ public class SensorsControlPanel extends JApplet {
         // construct a new url with the parent path
         URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
         hc.setBase(parentUrl);
+    }
+
+    @Override
+    public void start() {
+        if (cometValueUpdaterThread != null && cometValueUpdaterThread.isAlive()) {
+            cometValueUpdaterThread.stopComet();
+        }
+        new SensorDownloadWorker().execute();
+
+        cometValueUpdaterThread = new CometValueUpdaterThread();
+        
+    }
+
+    @Override
+    public void stop() {
+        if (cometValueUpdaterThread.isAlive()) {
+            cometValueUpdaterThread.stopComet();
+        }
     }
 
     private class SensorDownloadWorker extends SwingWorker<Void, NodeList> {
@@ -102,6 +103,8 @@ public class SensorsControlPanel extends JApplet {
                 };
                 appletGUI.model.addElement(listElem);
             }
+            
+            cometValueUpdaterThread.start();
         }
 
         private NodeList getSensors() throws Exception {

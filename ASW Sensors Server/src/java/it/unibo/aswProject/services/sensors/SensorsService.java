@@ -75,6 +75,7 @@ public class SensorsService extends HttpServlet{
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
+        String user = (String) session.getAttribute("username");
         
         switch (operation) {
             case "login":
@@ -110,20 +111,20 @@ public class SensorsService extends HttpServlet{
                     doc.getDocumentElement().appendChild(sensor);
                 }
                 
+                
+                synchronized(this){
+                    contexts.put(user, new LinkedList<Document>());
+                    System.out.println(user + ": New Context with LL"); 
+
+                }
+                                
                 mngXML.transform(response.getOutputStream(), doc);
                 response.getOutputStream().close();
             break;
                 
             case "GetValues":
-                String user = (String) session.getAttribute("username");
                 System.out.println("GetValues Recived from: "+user);
-                
-                synchronized(this){
-                    contexts.put(user, new LinkedList<Document>());
-                    System.out.println(user + "New Context with LL"); 
 
-                }
-                
                 boolean async;
                 synchronized (this) {
                    LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
@@ -139,14 +140,14 @@ public class SensorsService extends HttpServlet{
                                     AsyncContext asyncContext = e.getAsyncContext();
                                     HttpServletRequest reqAsync = (HttpServletRequest) asyncContext.getRequest();
                                     String user = (String) reqAsync.getSession().getAttribute("username");
-                                    System.out.println("timeout event launched for: " + user);
+                                    System.out.println("Timeout event launched for: " + user);
 
                                     Document answer = mngXML.newDocument("timeout");
                                     boolean confirm;
                                     synchronized (SensorsService.this) {
                                         if (confirm = (contexts.get(user) instanceof AsyncContext)) {
                                             contexts.put(user, new LinkedList<>());
-                                            System.out.println(user + "New Context with AC in Tout");
+                                            System.out.println(user + " New LL after Timeout");
                                         }
                                     }
                                     if (confirm) {
@@ -161,7 +162,7 @@ public class SensorsService extends HttpServlet{
                             }
                         });
                         contexts.put(user, asyncContext);
-                        System.out.println(user + "New Context with AC");
+                        System.out.println(user + " New AC");
                     } else {
                         answer = list.removeFirst();
                     }
@@ -184,7 +185,7 @@ public class SensorsService extends HttpServlet{
                             aos.close();
                             ((AsyncContext) value).complete();
                             contexts.put(destUser, new LinkedList<>());
-                            System.out.println(destUser + "New Context with AC in Ntf");
+                            System.out.println(destUser + " New LL after Notify");
                         } else {
                             ((LinkedList<Document>) value).addLast(data);
                             System.out.println(destUser + "added message in LL");
