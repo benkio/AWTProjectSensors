@@ -226,7 +226,6 @@ public class SensorsService extends HttpServlet{
                             if (value instanceof AsyncContext) {
                                 try (OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream()) {
                                     mngXML.transform(aos, data);
-                                    mngXML.transform(System.out, data);
                                 }
                                 ((AsyncContext) value).complete();
                                 contexts.put(destUser, new LinkedList<>());
