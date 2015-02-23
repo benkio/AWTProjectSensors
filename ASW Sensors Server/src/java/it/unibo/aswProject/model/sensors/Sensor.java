@@ -14,21 +14,18 @@ import java.util.logging.Logger;
  *
  * @author Thomas
  */
-public class Sensor extends Thread{
+public class Sensor{
     private int value;
     private Random rnd;
-    private boolean go;
     private ISensorListener list;
-    private int number;
+    private int id;
     private String state;
 
     public Sensor(ISensorListener list, int number) {
         this.list= list;
         rnd= new Random();
-        
         value = rnd.nextInt(101);
-        go = true;
-        this.number = number;
+        this.id = number;
         this.state = "Active";
     }
     
@@ -40,28 +37,12 @@ public class Sensor extends Thread{
         this.value=val;
     }
 
-    @Override
-    public void run() {
-        while (go){
-            try {
-                //Thread.sleep((int)((rnd.nextDouble()+1000)*10));
-                Thread.sleep(5000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Sensor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            synchronized(this){
-                value= rnd.nextInt(101);
-                this.list.update(this);
-            }   
-        }
-    }
-
     public int getNumber() {
-        return number;
+        return id;
     }
 
     public void setNumber(int number) {
-        this.number = number;
+        this.id = number;
     }
 
     public String getSensorState() {
@@ -70,10 +51,5 @@ public class Sensor extends Thread{
 
     public void setSensorState(String state) {
         this.state = state;
-    }
-    
-    public synchronized void dispose()
-    {
-        this.go=false;
     }
 }

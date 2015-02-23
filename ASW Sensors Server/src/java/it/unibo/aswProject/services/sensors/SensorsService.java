@@ -142,7 +142,7 @@ public class SensorsService extends HttpServlet{
                     if(!subUsers.contains(user)){
                         if(subUsers.isEmpty()){
                             subUsers.add(user);
-                            SensorManager.getInstance().startnotifications();
+                            SensorManager.getInstance().startNotifications();
                         }else{
                             subUsers.add(user);
                         }
@@ -164,7 +164,7 @@ public class SensorsService extends HttpServlet{
                         subUsers.remove(user);
 
                         if(subUsers.isEmpty()){
-                            SensorManager.getInstance().stopnotifications();
+                            SensorManager.getInstance().stopNotifications();
                         }
 
                         if(contexts.containsKey(user))

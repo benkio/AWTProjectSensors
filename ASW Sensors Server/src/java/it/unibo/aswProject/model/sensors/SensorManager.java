@@ -40,6 +40,7 @@ public class SensorManager implements ISensorListener {
         }
         
         hc = new HTTPClient();
+        
         try {
             hc.setBase(new URL(BASE));
         } catch (MalformedURLException ex) {
@@ -47,8 +48,6 @@ public class SensorManager implements ISensorListener {
         }
         
         notify= false;
-        
-        this.startSensors();
     }
     
     public static SensorManager getInstance(){
@@ -72,33 +71,17 @@ public class SensorManager implements ISensorListener {
         return sensorList;
     }
     
-    public synchronized void startSensors(){
-        for (Sensor s : this.sensorList.values()) {
-            s.start();
-        }
-    }
-    
-    public synchronized void stopSensors(){
-        for (Sensor s : this.sensorList.values()) {
-            s.dispose();
-        }
-    }
-
-    public synchronized void startnotifications(){
+    public synchronized void startNotifications(){
         this.notify=true;
     }
     
-    public synchronized void stopnotifications(){
+    public synchronized void stopNotifications(){
         this.notify=false;
     }
     
     @Override
     public void update(Sensor s) {
-        
-        synchronized (this){
-            if(!notify) return;
-        }
-        
+                
         ManageXML mngXML= null;
         
         try {
