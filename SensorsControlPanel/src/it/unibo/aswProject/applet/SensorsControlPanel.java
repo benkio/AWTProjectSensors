@@ -78,6 +78,12 @@ public class SensorsControlPanel extends JApplet {
         if (cometValueUpdaterThread.isAlive()) {
             cometValueUpdaterThread.stopComet();
         }
+        try{
+        hc.execute("Sensors", mngXML.newDocument("unsubscribe"));
+        } catch (Exception e) {
+            Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
+        }
+        
     }
 
     private class SensorDownloadWorker extends SwingWorker<Boolean, NodeList> {

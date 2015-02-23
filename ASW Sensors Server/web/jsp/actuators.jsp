@@ -8,30 +8,21 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="<%= request.getContextPath()%>/js/requestBuilder.js" type="text/javascript"></script>
         <script src="<%= request.getContextPath()%>/js/xmlBuilder.js" type="text/javascript"></script>
-        <script>    
+        <script>   
+            XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
                //Events
                $(document).ready(function () {
-                   $("input[name*='Plus']").click(function () {
+                   $("input[name*='Spinner']").change(function () {
                        //TODO PLUS BUTTON ACTUATOR
-                       var numeric_part = $(this).attr('name').substr(18);
-                       console.log("plus button pressed " + numeric_part);
+                       var numeric_part = $(this).attr('name').substr(15);
+                       console.log("spinner changed:  " + numeric_part);
+                       var value = $(this).val();
 
                        updateActuatorValue(numeric_part, function (x, y) {
-                           return x + y;
-                       });
-                   });
-
-                   $("input[name*='Minus']").click(function () {
-                       //TODO Minus BUTTON ACTUATOR
-                       var numeric_part = $(this).attr('name').substr(19);
-                       console.log("minus button pressed " + numeric_part);
-
-                       updateActuatorValue(numeric_part, function (x, y) {
-                           return x - y;
+                           return value;
                        });
                    });
                }); 
-            loadXMLDoc("../actuators",loadInitialActuator,GetActuatorsXML);
         </script>
     </head>
     <body>
@@ -51,8 +42,15 @@
                 </tr>
             </thead>
             <tbody id="TableBody">
-                
+            <tr>
+                <td/>
+                <td>
+                    <input type="button" name="sendActuatorsValue" value="Send Value of Actuators" onclick="sendActuatorsValue()" />
+                </td>
+                <td/>
+            </tr>
             </tbody>
         </table>
+        <p id="errorMessage" class="error"></p>
     </body>
 </html> 

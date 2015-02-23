@@ -26,7 +26,7 @@
                 <p>
                     <input type="submit" value="Login" />
                 </p>
-                <p id="loginError">
+                <p id="loginError" class="error">
                     <% if (request.getAttribute("errorMsg") != null) {%>
                         <%= request.getAttribute("errorMsg") %>
                     <% }%>

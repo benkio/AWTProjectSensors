@@ -31,8 +31,10 @@ public class ActuatorTestClient {
         ManageXML mngXML = new ManageXML();
         
         hc.setBase(new URL(BASE));
-
-        Document answer = hc.execute("actuators",  mngXML.newDocument("getActuators"));
+        Document requestDocument = mngXML.newDocument("getActuators");
+        mngXML.transform(System.out, requestDocument);
+       
+        Document answer = hc.execute("actuators",  requestDocument);
         mngXML.transform(System.out, answer);
         System.in.read();
         
@@ -47,6 +49,7 @@ public class ActuatorTestClient {
         req.getDocumentElement().appendChild(id);
         req.getDocumentElement().appendChild(val);
         
+        mngXML.transform(System.out, req);
         answer = hc.execute("actuators",  req);
         mngXML.transform(System.out, answer);
         System.in.read();

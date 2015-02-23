@@ -6,22 +6,22 @@
 
 function loadInitialActuator(xmlhttp) {
     var actuator_name, actuator_value, actuator, i;
-    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("Actuator");
-    for (i = 1; i <= actuator.length; i++) {
-        actuator_name = actuator[i].getElementsByTagName("ActuatorName");
-        actuator_value = actuator[i].getElementsByTagName("ActuatorValue");
-        $("#TableBody").html(actuatorToHTML(actuator_name, actuator_value));
+    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("list");
+    for (i = 0; i < actuator.length; i++) {
+        actuator_name = actuator.item(i).getElementsByTagName("id").item(0).textContent;
+        actuator_value = actuator.item(i).getElementsByTagName("value").item(0).textContent;
+        $("#TableBody").prepend(actuatorToHTML(actuator_name , actuator_value ));
         try {
-            $("p[name*='Name" + i + "']").text(actuator_name[0].firstChild.nodeValue);
-            updateActuatorValue(i, function (x, y) {
-                return actuator_value[0].firstChild.nodeValue;
+            $("p[name*='Name" + actuator_name + "']").text(actuator_name );
+            updateActuatorValue(actuator_name, function (x, y) {
+                return actuator_value;
             });
         } catch (er) {
-            $("p[name*='Name" + i + "']").text("XML Fetch Error");
+            $("p[name*='Name" + actuator_name + "']").text("XML Fetch Error");
         }
     }
 }
-function loadXMLDoc(url, loadFunction, xmlRequest) {
+function XMLRequestPattern(url, loadFunction, xmlRequest) {
     var xmlhttp;
     if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
         xmlhttp = new XMLHttpRequest();
@@ -34,40 +34,28 @@ function loadXMLDoc(url, loadFunction, xmlRequest) {
         }
     };
     xmlhttp.open("POST", url, true);
-    xmlhttp.send(xmlRequest);
+    xmlhttp.setRequestHeader("Content-Type", "text/xml");
+    xmlhttp.send(xmlRequest());
 }
 
-function sendActuatorValue(url, actuatorNum) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url, false);
-    xmlhttp.setRequestHeader("Content-Type", "text/xml");
-    var data = document.implementation.createDocument("", "", null);
-
-    var actuatorTag = data.createElement("Actuator");
-
-    var actuatorTagName = data.createElement("ActuatorName");
-    var actuatorName = data.createTextNode($("p[name*='Name" + actuatorNum + "']").val());
-
-    var actuatorTagValue = data.createElement("ActuatorValue");
-    var actuatorValue = data.createTextNode($("p[name*='Value" + actuatorNum + "']").val());
-
-
-    actuatorTagName.appendChild(actuatorName);
-    actuatorTagValue.appendChild(actuatorValue);
-    actuatorTag.appendChild(actuatorTagName);
-    actuatorTag.appendChild(actuatorTagValue);
-    data.appendChild(actuatorTag);
-
-    xmlhttp.send(data);
-    if (xmlhttp.status != 200)
-        alert("Error sending the value to the server");
+function sendActuatorsValue() {
+    $("#errorMessage").text("");
+    $("progress").each(function () {
+        var numeric_part = $(this).attr('name').substr(21);
+        XMLRequestPattern("../actuators", function(xmlhttp){
+            var doneResponse = xmlhttp.responseXML.documentElement.nodeName;
+            if (doneResponse != "done") $("#errorMessage").text("Some error occurred in the send of Actuators Value"); 
+        }, function () {
+            return setActuatorsValueXML(numeric_part);
+        });
+    });
 }
 
 
 //Utilities functions 
 
 function actuatorToHTML(actuatorID, actuatorValue) {
-    return "<tr><td><p name=\"ActuatorName" + actuatorID + ">" + actuatorID + "</p></td><td><progress name=\"ActuatorValueProgress" + actuatorID + " value=\"0\" max=\"100\"></progress><p class=\"ActuatorValue\" name=\"ActuatorValue" + actuatorID + ">" + actuatorValue + "%</p></td><td><input name=\"ActuatorMinusButton" + actuatorID + " type=\"button\" value=\"-\" /><input name=\"ActuatorPlusButton" + actuatorID + " type=\"button\" value=\"+\" /></td></tr>";
+    return "<tr><td><p name=\"ActuatorName" + actuatorID + "\">" + actuatorID + "</p></td><td><progress name=\"ActuatorValueProgress" + actuatorID + "\" value=\"0\" max=\"100\"></progress><p class=\"ActuatorValue\" name=\"ActuatorValue" + actuatorID + "\">" + actuatorValue + "%</p></td><td><input type=\"number\" min=\"0\" max=\"100\" step=\"1\" name=\"ActuatorSpinner"+actuatorID+"\" value=\""+actuatorValue+"\"></td></tr>";
 }
 function updateActuatorValue(num,operation){
     var currentVal = parseInt($("progress[name*="+num+"]").val());
