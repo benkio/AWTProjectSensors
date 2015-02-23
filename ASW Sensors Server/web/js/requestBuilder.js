@@ -20,6 +20,7 @@ function loadInitialActuator(xmlhttp) {
             $("p[name*='Name" + actuator_name + "']").text("XML Fetch Error");
         }
     }
+    setEventListeners();
 }
 function XMLRequestPattern(url, loadFunction, xmlRequest) {
     var xmlhttp;
@@ -51,7 +52,6 @@ function sendActuatorsValue() {
     });
 }
 
-
 //Utilities functions 
 
 function actuatorToHTML(actuatorID, actuatorValue) {
@@ -65,3 +65,19 @@ function updateActuatorValue(num,operation){
            $("p[name*='Value" + num + "']").text(newVal + '%');
     }
 }
+
+//Events
+function setEventListeners() {
+    $("input[name*='Spinner']").each(function(){
+        $(this).change(function () {
+           //TODO PLUS BUTTON ACTUATOR
+           var numeric_part = $(this).attr('name').substr(15);
+           console.log("spinner changed:  " + numeric_part);
+           var value = $(this).val();
+
+           updateActuatorValue(numeric_part, function (x, y) {
+                       return value;
+           });
+        });
+    });
+};

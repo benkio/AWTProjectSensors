@@ -10,19 +10,6 @@
         <script src="<%= request.getContextPath()%>/js/xmlBuilder.js" type="text/javascript"></script>
         <script>   
             XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
-               //Events
-               $(document).ready(function () {
-                   $("input[name*='Spinner']").change(function () {
-                       //TODO PLUS BUTTON ACTUATOR
-                       var numeric_part = $(this).attr('name').substr(15);
-                       console.log("spinner changed:  " + numeric_part);
-                       var value = $(this).val();
-
-                       updateActuatorValue(numeric_part, function (x, y) {
-                           return value;
-                       });
-                   });
-               }); 
         </script>
     </head>
     <body>
