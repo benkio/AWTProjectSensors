@@ -68,15 +68,64 @@ public class SensorsService extends HttpServlet{
         Document answer= null;
         String user = (String) session.getAttribute("username");
         
-        String logged = (String) session.getAttribute("isLoggedIn");
-        if(logged==null || !logged.equals("true")){
-            answer = mngXML.newDocument("notLogged");
-            mngXML.transform(response.getOutputStream(), answer);
-            response.getOutputStream().close();
+        Boolean logged = (Boolean) session.getAttribute("isLoggedIn");
+        if(logged== null || !logged){
+            
+            switch (operation) {
+                case "login":
+                    System.out.println("Test Started");
+                    request.getSession(true).setAttribute("username", "test");                                
+                    answer = mngXML.newDocument("TestRecived");
+                    mngXML.transform(response.getOutputStream(), answer);
+                    response.getOutputStream().close();  
+                break;
+                
+                case "Notify":
+                    synchronized (this) {
+
+                        if(subUsers.isEmpty()){
+                            answer = mngXML.newDocument("noUsers");
+                            mngXML.transform(response.getOutputStream(), answer);
+                            response.getOutputStream().close();
+                        }
+                        else{ 
+                            for (String destUser : subUsers) {
+                                Object value = contexts.get(destUser);
+                                if (value instanceof AsyncContext) {
+                                    try (OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream()) {
+                                        mngXML.transform(aos, data);
+                                    }
+                                    ((AsyncContext) value).complete();
+                                    contexts.put(destUser, new LinkedList<>());
+                                    System.out.println(destUser + " Async Req Ended");
+                                } else {
+
+                                    LinkedList<Document> list = ((LinkedList<Document>) value);
+
+                                    if(list.size()>1000){
+                                        list.clear();
+                                    }
+                                    list.addLast(data);
+                                    System.out.println(destUser + " message appended");
+                                }
+                            }
+
+                            answer = mngXML.newDocument("Done");
+                            mngXML.transform(response.getOutputStream(), answer);
+                            response.getOutputStream().close();
+                        }
+                    }    
+                break;
+                     
+                default:
+                    answer = mngXML.newDocument("notLogged");
+                    mngXML.transform(response.getOutputStream(), answer);
+                    response.getOutputStream().close();
+                break;
+            }
             return;
         }
-        
-        
+
         switch (operation) {
             case "login":
                 System.out.println("Test Started");
@@ -88,7 +137,7 @@ public class SensorsService extends HttpServlet{
             
             case "subscribe":
                 System.out.println("Subscription Recived From: "+user);
-                
+
                 synchronized (this){
                     if(!subUsers.contains(user)){
                         if(subUsers.isEmpty()){
@@ -208,44 +257,6 @@ public class SensorsService extends HttpServlet{
                     }
                 }
             break;
-                
-            case "Notify":
-                
-                synchronized (this) {
-                    
-                    if(subUsers.isEmpty()){
-                        answer = mngXML.newDocument("noUsers");
-                        mngXML.transform(response.getOutputStream(), answer);
-                        response.getOutputStream().close();
-                    }
-                    else{ 
-                        for (String destUser : subUsers) {
-                            Object value = contexts.get(destUser);
-                            if (value instanceof AsyncContext) {
-                                try (OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream()) {
-                                    mngXML.transform(aos, data);
-                                }
-                                ((AsyncContext) value).complete();
-                                contexts.put(destUser, new LinkedList<>());
-                                System.out.println(destUser + " Async Req Ended");
-                            } else {
-                                
-                                LinkedList<Document> list = ((LinkedList<Document>) value);
-                                
-                                if(list.size()>1000){
-                                    list.clear();
-                                }
-                                list.addLast(data);
-                                System.out.println(destUser + " message appended");
-                            }
-                        }
-                        
-                        answer = mngXML.newDocument("Done");
-                        mngXML.transform(response.getOutputStream(), answer);
-                        response.getOutputStream().close();
-                    }
-                }    
-                break;
         }
     }
 }
