@@ -68,6 +68,15 @@ public class SensorsService extends HttpServlet{
         Document answer= null;
         String user = (String) session.getAttribute("username");
         
+        String logged = (String) session.getAttribute("isLoggedIn");
+        if(logged==null || !logged.equals("true")){
+            answer = mngXML.newDocument("notLogged");
+            mngXML.transform(response.getOutputStream(), answer);
+            response.getOutputStream().close();
+            return;
+        }
+        
+        
         switch (operation) {
             case "login":
                 System.out.println("Test Started");
@@ -81,52 +90,41 @@ public class SensorsService extends HttpServlet{
                 System.out.println("Subscription Recived From: "+user);
                 
                 synchronized (this){
-                    if(!user.equals("null")){
-                        if(!subUsers.contains(user)){
-                            if(subUsers.isEmpty()){
-                                subUsers.add(user);
-                                SensorManager.getInstance().startnotifications();
-                            }else{
-                                subUsers.add(user);
-                            }
-
-                            contexts.put(user, new LinkedList<Document>());
+                    if(!subUsers.contains(user)){
+                        if(subUsers.isEmpty()){
+                            subUsers.add(user);
+                            SensorManager.getInstance().startnotifications();
+                        }else{
+                            subUsers.add(user);
                         }
-                        
-                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("subscribed"));
-                        response.getOutputStream().close();  
+
+                        contexts.put(user, new LinkedList<>());
                     }
-                    else{
-                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("notLogged"));
-                        response.getOutputStream().close();  
-                    }
+
+                    mngXML.transform(response.getOutputStream(), mngXML.newDocument("subscribed"));
+                    response.getOutputStream().close();  
                 }
-            break;
+                break;
                 
             case "unsubscribe":
                 System.out.println("Unsubscription Recived From: "+user);
                 
                 synchronized (this){
-                    if(!user.equals("null")){
-                        if(subUsers.contains(user)){
-                            subUsers.remove(user);
-                            
-                            if(subUsers.isEmpty()){
-                                SensorManager.getInstance().stopnotifications();
-                            }
-                            
-                            if(contexts.containsKey(user))
-                                contexts.remove(user);
-                            
+
+                    if(subUsers.contains(user)){
+                        subUsers.remove(user);
+
+                        if(subUsers.isEmpty()){
+                            SensorManager.getInstance().stopnotifications();
                         }
-                        
-                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("unsubscribed"));
-                        response.getOutputStream().close();  
+
+                        if(contexts.containsKey(user))
+                            contexts.remove(user);
+
                     }
-                    else{
-                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("notLogged"));
-                        response.getOutputStream().close();  
-                    }
+
+                    mngXML.transform(response.getOutputStream(), mngXML.newDocument("unsubscribed"));
+                    response.getOutputStream().close();  
                 }
                 break;
                 
@@ -154,7 +152,7 @@ public class SensorsService extends HttpServlet{
                 boolean async;
                 synchronized (this) {
                     if(subUsers.contains(user)){
-
+                        
                         if(contexts.get(user) instanceof AsyncContext){
                             //((AsyncContext)contexts.get(user)).complete();
                             contexts.put(user, new LinkedList<Document>());
