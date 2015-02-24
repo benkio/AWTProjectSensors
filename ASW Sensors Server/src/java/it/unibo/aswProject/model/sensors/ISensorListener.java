@@ -10,5 +10,5 @@ package it.unibo.aswProject.model.sensors;
  * @author Thomas
  */
 public interface ISensorListener {
-    public void update(Sensor s);
+    public void update(SensorEventType event);
 }

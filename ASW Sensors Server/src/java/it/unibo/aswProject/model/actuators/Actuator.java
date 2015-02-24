@@ -44,7 +44,7 @@ public class Actuator {
     public void setValue(int value) {
         this.value = value;
         if(list != null)
-            list.update(this);
+            list.actuatorUpdated(this);
     }
 
     public IActuatorListener getList() {

@@ -17,7 +17,9 @@ import java.util.LinkedList;
 public class ActuatorsManager {
     
     private static ActuatorsManager instance;
+    
     private HashMap<Integer,Actuator> list;
+    private IActuatorListener listener;
     
     private ActuatorsManager(){
         list = new HashMap<>();
@@ -42,5 +44,17 @@ public class ActuatorsManager {
     
     public synchronized void setActuatorValue(int id, int value){
         list.get(id).setValue(value);
+        
+        if(listener!= null){
+            new Thread(() -> {
+                this.listener.actuatorUpdated(list.get(id));
+            }).start();
+        }
     }
+
+    public void setListener(IActuatorListener listener) {
+        this.listener = listener;
+    }
+    
+    
 }

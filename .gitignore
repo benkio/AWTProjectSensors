@@ -19,3 +19,5 @@
 /ASW Sensors Server/dist/
 SensorsControlPanel/build
 built-jar.properties
+/Test/nbproject/private/
+/Test/build/

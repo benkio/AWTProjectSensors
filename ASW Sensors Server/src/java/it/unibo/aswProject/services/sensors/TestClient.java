@@ -8,6 +8,7 @@ package it.unibo.aswProject.services.sensors;
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,21 +37,33 @@ public class TestClient {
         
         hc.setBase(new URL(BASE));
 
-        Document answer = hc.execute("Sensors",  mngXML.newDocument("login"));
-        mngXML.transform(System.out, answer);
-
-        answer = hc.execute("Sensors",  mngXML.newDocument("subscribe"));
-        mngXML.transform(System.out, answer);
-        
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetSensors"));
+        Document answer = hc.execute("Sensors",  mngXML.newDocument("testLogin"));
         mngXML.transform(System.out, answer);
         
         System.in.read();
         
-        answer = hc.execute("Sensors",  mngXML.newDocument("unsubscribe"));
-        mngXML.transform(System.out, answer);
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+
+                try {
+                    while(true){
+                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("waitEvents")));
+                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("getSensors")));
+                    }
+                } catch (TransformerException ex) {
+                    Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SAXException ex) {
+                    Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
         
-        answer = hc.execute("Sensors",  mngXML.newDocument("GetValues"));
-        mngXML.transform(System.out, answer);
+        System.in.read();
+        t.stop();
+        
     }    
 }

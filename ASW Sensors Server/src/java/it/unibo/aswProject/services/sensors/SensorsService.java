@@ -1,22 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unibo.aswProject.services.sensors;
 
 import it.unibo.aswProject.model.sensors.SensorManager;
 import it.unibo.aswProject.model.sensors.Sensor;
 import it.unibo.aswProject.libraries.xml.ManageXML;
+import it.unibo.aswProject.model.sensors.ISensorEventsListener;
+import it.unibo.aswProject.model.sensors.SensorEventType;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,21 +20,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  *
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet{
+public class SensorsService extends HttpServlet implements ISensorEventsListener{
 
-    private HashMap<String, Object> contexts = new HashMap<String, Object>();
-    private LinkedList<String> subUsers= new LinkedList<>();
+    private SensorManager sm;
+    
+    private LinkedList<AsyncContext> contexts;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        
+        contexts= new LinkedList<>();
+        sm = SensorManager.getInstance();
+        sm.setListener(this);
+    }
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -55,9 +59,7 @@ public class SensorsService extends HttpServlet{
             
             operations(data,request.getSession(),mngXML,request,response);
             
-        } catch (TransformerConfigurationException | ParserConfigurationException | SAXException ex) {
-            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TransformerException ex) {
+        } catch(Exception ex){
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -65,198 +67,139 @@ public class SensorsService extends HttpServlet{
     private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws IOException, TransformerException {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
+        
         Document answer= null;
         String user = (String) session.getAttribute("username");
-        
         Boolean logged = (Boolean) session.getAttribute("isLoggedIn");
-        if(logged== null || !logged){
-            
+        
+        if(logged== null || !logged){ 
             switch (operation) {
-                case "login":
-                    System.out.println("Test Started");
-                    request.getSession(true).setAttribute("username", "test");                                
-                    answer = mngXML.newDocument("TestRecived");
-                    mngXML.transform(response.getOutputStream(), answer);
-                    response.getOutputStream().close();  
+                case "testLogin":
+                    request.getSession(true).setAttribute("username", "test");
+                    request.getSession().setAttribute("isLoggedIn", true);
+                    sendMessage("Creata sessione test", mngXML, response);
                 break;
-                
-                case "Notify":
-                    synchronized (this) {
-
-                        if(subUsers.isEmpty()){
-                            answer = mngXML.newDocument("noUsers");
-                            mngXML.transform(response.getOutputStream(), answer);
-                            response.getOutputStream().close();
-                        }
-                        else{ 
-                            for (String destUser : subUsers) {
-                                Object value = contexts.get(destUser);
-                                if (value instanceof AsyncContext) {
-                                    try (OutputStream aos = ((AsyncContext) value).getResponse().getOutputStream()) {
-                                        mngXML.transform(aos, data);
-                                    }
-                                    ((AsyncContext) value).complete();
-                                    contexts.put(destUser, new LinkedList<>());
-                                    System.out.println(destUser + " Async Req Ended");
-                                } else {
-
-                                    LinkedList<Document> list = ((LinkedList<Document>) value);
-
-                                    if(list.size()>1000){
-                                        list.clear();
-                                    }
-                                    list.addLast(data);
-                                    System.out.println(destUser + " message appended");
-                                }
-                            }
-
-                            answer = mngXML.newDocument("Done");
-                            mngXML.transform(response.getOutputStream(), answer);
-                            response.getOutputStream().close();
-                        }
-                    }    
-                break;
-                     
+                    
                 default:
-                    answer = mngXML.newDocument("notLogged");
-                    mngXML.transform(response.getOutputStream(), answer);
-                    response.getOutputStream().close();
+                    sendErrorMsg("Errore login", "Utente non autenticato", response, mngXML);
                 break;
             }
-            return;
+        }else{
+            switch (operation) {
+                case "getSensors":
+                    sendSensors(mngXML,response);
+                    break;
+                case "getValues":
+                    //sendSensorsValues(mngXML,response);
+                    break;
+                case "waitEvents":
+                    waitEvents(mngXML,response,request);
+                    break;
+                    
+                default:
+                    sendErrorMsg("Errore", "Operazione non supportata", response, mngXML);
+                    break;
+            }
+        }
+    }
+
+    private void sendErrorMsg(String caption, String message, HttpServletResponse response, ManageXML mngXML) throws IOException, TransformerException {
+        Document answer = mngXML.newDocument("error");
+        Element cpt = answer.createElement("caption");
+        cpt.appendChild(answer.createTextNode(caption));
+        
+        Element msg = answer.createElement("message");
+        msg.appendChild(answer.createTextNode(message));
+        
+        answer.getDocumentElement().appendChild(cpt);
+        answer.getDocumentElement().appendChild(msg);
+        
+        mngXML.transform(response.getOutputStream(), answer);
+        response.getOutputStream().close();
+    }
+
+    private void sendMessage(String msg, ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException
+    {
+        Document answer = mngXML.newDocument("message");
+        answer.getDocumentElement().appendChild(answer.createTextNode(msg));
+        mngXML.transform(response.getOutputStream(), answer);
+        response.getOutputStream().close(); 
+    }
+
+    private void sendSensors(ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
+        System.out.println("Get Sensors Recived");
+
+        Document doc= mngXML.newDocument("SensorsList");
+
+        for (Sensor s : sm.getSensorList().values()) {
+            Element sensor = doc.createElement("Sensor");
+            sensor.setAttribute("id", Integer.toString(s.getNumber()));
+            sensor.setAttribute("value", Integer.toString(s.getValue()));
+            sensor.appendChild(doc.createTextNode(s.getSensorState()));
+            doc.getDocumentElement().appendChild(sensor);
         }
 
-        switch (operation) {
-            case "login":
-                System.out.println("Test Started");
-                request.getSession(true).setAttribute("username", "test");                                
-                answer = mngXML.newDocument("TestRecived");
-                mngXML.transform(response.getOutputStream(), answer);
-                response.getOutputStream().close();  
-            break;
-            
-            case "subscribe":
-                System.out.println("Subscription Recived From: "+user);
+        mngXML.transform(response.getOutputStream(), doc);
+        response.getOutputStream().close();
+    }
 
-                synchronized (this){
-                    if(!subUsers.contains(user)){
-                        if(subUsers.isEmpty()){
-                            subUsers.add(user);
-                            SensorManager.getInstance().startNotifications();
-                        }else{
-                            subUsers.add(user);
-                        }
+    private synchronized void waitEvents(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        AsyncContext asyncContext = request.startAsync();
+        asyncContext.setTimeout(10 * 1000);
+        asyncContext.addListener(new AsyncListener() {
 
-                        contexts.put(user, new LinkedList<>());
-                    }
+            @Override
+            public void onComplete(AsyncEvent event) throws IOException {
+            }
 
-                    mngXML.transform(response.getOutputStream(), mngXML.newDocument("subscribed"));
-                    response.getOutputStream().close();  
-                }
-                break;
-                
-            case "unsubscribe":
-                System.out.println("Unsubscription Recived From: "+user);
-                
-                synchronized (this){
-
-                    if(subUsers.contains(user)){
-                        subUsers.remove(user);
-
-                        if(subUsers.isEmpty()){
-                            SensorManager.getInstance().stopNotifications();
-                        }
-
-                        if(contexts.containsKey(user))
-                            contexts.remove(user);
-
-                    }
-
-                    mngXML.transform(response.getOutputStream(), mngXML.newDocument("unsubscribed"));
-                    response.getOutputStream().close();  
-                }
-                break;
-                
-            case "GetSensors":
-                System.out.println("Get Sensors Recived From: "+session.getAttribute("username"));
-                SensorManager sm = SensorManager.getInstance();
-                
-                Document doc= mngXML.newDocument("SensorsList");
-                
-                for (Sensor s : sm.getSensorList().values()) {
-                    Element sensor = doc.createElement("Sensor");
-                    sensor.setAttribute("id", Integer.toString(s.getNumber()));
-                    sensor.setAttribute("value", Integer.toString(s.getValue()));
-                    sensor.appendChild(doc.createTextNode(s.getSensorState()));
-                    doc.getDocumentElement().appendChild(sensor);
-                }
-                              
-                mngXML.transform(response.getOutputStream(), doc);
-                response.getOutputStream().close();
-            break;
-                
-            case "GetValues":
-                System.out.println("GetValues Recived from: "+user);
-
-                boolean async;
-                synchronized (this) {
-                    if(subUsers.contains(user)){
-                        
-                        if(contexts.get(user) instanceof AsyncContext){
-                            //((AsyncContext)contexts.get(user)).complete();
-                            contexts.put(user, new LinkedList<Document>());
-                        }
-                        
-                        LinkedList<Document> list = (LinkedList<Document>) contexts.get(user);
-                        if (async = list.isEmpty()) {
-                            AsyncContext asyncContext = request.startAsync();
-                            asyncContext.setTimeout(10 * 1000);
-                            asyncContext.addListener(new AsyncAdapter() {
-                                @Override
-                                public void onTimeout(AsyncEvent e) {
-                                    try {
-                                        ManageXML mngXML = new ManageXML();
-
-                                        AsyncContext asyncContext = e.getAsyncContext();
-                                        HttpServletRequest reqAsync = (HttpServletRequest) asyncContext.getRequest();
-                                        String user = (String) reqAsync.getSession().getAttribute("username");
-                                        System.out.println(user+ " Async req Timeouted");
-
-                                        Document answer = mngXML.newDocument("timeout");
-                                        boolean confirm;
-                                        synchronized (SensorsService.this) {
-                                            if (confirm = (contexts.get(user) instanceof AsyncContext)) {
-                                                contexts.put(user, new LinkedList<>());
-                                            }
-                                        }
-                                        if (confirm) {
-                                            try (OutputStream tos = asyncContext.getResponse().getOutputStream()) {
-                                                mngXML.transform(tos, answer);
-                                            }
-                                            asyncContext.complete();
-                                        }
-                                    } catch (ParserConfigurationException | IOException | TransformerException ex) {
-                                        System.out.println(ex);
-                                    }
-                                }
-                            });
-                            contexts.put(user, asyncContext);
-                            System.out.println(user + " Async req Started");
-                        } else {
-                            answer = list.removeFirst();
-                        }                    
-                        if (!async) {
-                            mngXML.transform(response.getOutputStream(), answer);
-                            response.getOutputStream().close();
-                            System.out.println(user + " Message Sended");
+            @Override
+            public void onTimeout(AsyncEvent event) throws IOException {
+                AsyncContext asyncContext = event.getAsyncContext();
+                    boolean confirm;
+                    synchronized (this) {
+                        if ((confirm = contexts.contains(asyncContext))) {
+                            contexts.remove(asyncContext);
                         }
                     }
-                    else{
-                        mngXML.transform(response.getOutputStream(), mngXML.newDocument("userNotSubscribed"));
-                        response.getOutputStream().close(); 
+                    if (confirm) {
+                        try {
+                            sendMessage("Timeout", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                        } catch (TransformerException ex) {
+                            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        asyncContext.complete();
                     }
+            }
+
+            @Override
+            public void onError(AsyncEvent event) throws IOException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void onStartAsync(AsyncEvent event) throws IOException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        contexts.add(asyncContext);
+    }
+    
+    @Override
+    public void newEvent(SensorEventType se) {
+        System.out.println("New Event");
+        
+        synchronized (this) {
+            contexts.stream().forEach((asyncContext) -> {
+                try {
+                    ManageXML mngXML = new ManageXML();
+                    sendMessage("NewEvent", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                    asyncContext.complete();
+                } catch (ParserConfigurationException | IOException | TransformerException ex) {
+                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            break;
+            });
+            contexts.clear();
         }
     }
 }
+

@@ -15,16 +15,13 @@ import java.util.logging.Logger;
  * @author Thomas
  */
 public class Sensor{
-    private int value;
-    private Random rnd;
-    private ISensorListener list;
     private int id;
+    private int value;
+    private ISensorListener list;
     private String state;
 
     public Sensor(ISensorListener list, int number) {
         this.list= list;
-        rnd= new Random();
-        value = rnd.nextInt(101);
         this.id = number;
         this.state = "Active";
     }
@@ -35,6 +32,12 @@ public class Sensor{
     
     public synchronized void setValue(int val){
         this.value=val;
+        
+        if(list!= null){
+            new Thread(() -> {
+                this.list.update(SensorEventType.NewValue);
+            }).start();
+        }
     }
 
     public int getNumber() {

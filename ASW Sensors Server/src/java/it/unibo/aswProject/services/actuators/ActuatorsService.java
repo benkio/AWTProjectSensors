@@ -9,6 +9,7 @@ import it.unibo.aswProject.libraries.xml.ManageXML;
 import it.unibo.aswProject.model.actuators.Actuator;
 import it.unibo.aswProject.model.actuators.ActuatorList;
 import it.unibo.aswProject.model.actuators.ActuatorsManager;
+import it.unibo.aswProject.model.sensors.SensorManager;
 import it.unibo.aswProject.services.sensors.SensorsService;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,16 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ActuatorsService", urlPatterns = {"/actuators"})
 public class ActuatorsService extends HttpServlet {
 
+    private ActuatorsManager am;
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        
+        am = ActuatorsManager.getInstance();
+        am.setListener(SensorManager.getInstance());
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,7 +77,6 @@ public class ActuatorsService extends HttpServlet {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
-        ActuatorsManager am = ActuatorsManager.getInstance();
         
 //        String logged = (String) session.getAttribute("isLoggedIn");
 //        if(logged==null || !logged.equals("true")){
@@ -103,6 +113,7 @@ public class ActuatorsService extends HttpServlet {
                 }
 
                 break;
+                
             case "setValue":
                 mngXML.transform(System.out, data);
                 Element idEl = (Element) data.getElementsByTagName("id").item(0);
