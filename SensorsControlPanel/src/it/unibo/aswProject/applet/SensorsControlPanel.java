@@ -16,7 +16,12 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 import it.unibo.aswProject.libraries.ui.EntryListCellRenderer;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -25,10 +30,11 @@ import java.util.ArrayList;
 public class SensorsControlPanel extends JApplet {
 
     private ManageXML mngXML;
-    private HTTPClient hc = new HTTPClient();
+    private final HTTPClient hc = new HTTPClient();
     private AppletGUI appletGUI;
     private String username;
     private CometValueUpdaterThread cometValueUpdaterThread;
+    private SensorDownloadWorker sensorDownloadWorker;
 
     @Override
     public void init() {
@@ -44,7 +50,7 @@ public class SensorsControlPanel extends JApplet {
                     appletGUI.fillContainer(getContentPane());
                 }
             });
-        } catch (Exception e) {
+        } catch (MalformedURLException | TransformerConfigurationException | ParserConfigurationException | InterruptedException | InvocationTargetException e) {
             System.err.println("createGUI non eseguito con successo");
             Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -67,10 +73,8 @@ public class SensorsControlPanel extends JApplet {
         if (cometValueUpdaterThread != null && cometValueUpdaterThread.isAlive()) {
             cometValueUpdaterThread.stopComet();
         }
-        new SensorDownloadWorker().execute();
-
-        cometValueUpdaterThread = new CometValueUpdaterThread();
-        
+        sensorDownloadWorker = new SensorDownloadWorker();
+        sensorDownloadWorker.execute();
     }
 
     @Override
@@ -78,24 +82,15 @@ public class SensorsControlPanel extends JApplet {
         if (cometValueUpdaterThread.isAlive()) {
             cometValueUpdaterThread.stopComet();
         }
-        try{
-        hc.execute("Sensors", mngXML.newDocument("unsubscribe"));
-        } catch (Exception e) {
-            Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
-        }
-        
     }
 
-    private class SensorDownloadWorker extends SwingWorker<Boolean, NodeList> {
+    private class SensorDownloadWorker extends SwingWorker<Void, NodeList> {
 
         @Override
-        protected Boolean doInBackground() throws Exception {
-            if (serviceSubscribe()){
-                NodeList sensors = getSensors();
-                publish(sensors);
-                return true;
-            }
-            return false;
+        protected Void doInBackground() throws Exception {
+            NodeList sensors = getSensors();
+            publish(sensors);
+            return null;
         }
 
         @Override
@@ -112,39 +107,18 @@ public class SensorsControlPanel extends JApplet {
                 };
                 appletGUI.model.addElement(listElem);
             }
-            
-            cometValueUpdaterThread.start();
+            cometValueUpdaterThread = new CometValueUpdaterThread();
+            cometValueUpdaterThread.start(); 
         }
         
-        @Override
-        protected void done(){
-            try{
-            Boolean subscribeResult = get();
-            if (!subscribeResult){
-                appletGUI.errorLabel.setText("status: error is subscription");
-            }
-            }catch(Exception e){
-                Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
-
         private NodeList getSensors() throws Exception {
             // prepare the request xml
-            Document data = mngXML.newDocument("GetSensors");
+            Document data = mngXML.newDocument("getSensors");
             // do request
             Document answer = hc.execute("Sensors", data);
             // get response
             NodeList sensorsList = answer.getElementsByTagName("SensorsList");
             return sensorsList;
-        }
-        
-        private boolean serviceSubscribe() throws Exception{
-            //Send a subscribe request to the sensor service
-            Document data = mngXML.newDocument("subscribe");
-            // do request
-            Document answer = hc.execute("Sensors", data);
-            
-            return answer.getElementsByTagName("subscribed").getLength() != 0;
         }
     }
 
@@ -190,70 +164,20 @@ public class SensorsControlPanel extends JApplet {
                 System.out.println(runComet);
                 try {
                     // prepare the request xml
-                    Document data = mngXML.newDocument("GetValues");
+                    Document data = mngXML.newDocument("waitEvents");
                     Document answer = hc.execute("Sensors", data);
-                    if (runComet) {
-                        SwingUtilities.invokeAndWait(new UpdateValues(answer));
+                    mngXML.transform(System.out, answer);
+                    String message = answer.getElementsByTagName("message").item(0).getTextContent();
+                    if (message.equals("NewEvent")){
+                        runComet = false;
+                        sensorDownloadWorker = new SensorDownloadWorker();
+                        sensorDownloadWorker.execute();
                     }
-                } catch (Exception e) {
+                } catch (TransformerException | ParserConfigurationException | SAXException | IOException | DOMException e) {
                     runComet = false;
                     System.out.println(e);
                 }
             }
         }
-
-        private class UpdateValues implements Runnable {
-
-            private final Document answer;
-
-            public UpdateValues(Document answer) {
-                this.answer = answer;
-            }
-
-            @Override
-            public void run() {
-                ArrayList<String[]> sensors = new ArrayList<>();
-                try {
-                    for (int i = 0; i < appletGUI.model.getSize(); i++) {
-                        sensors.add(appletGUI.model.elementAt(i));
-                    }
-                    appletGUI.model.removeAllElements();
-                    mngXML.transform(System.out, answer);
-                    NodeList Notifiers = answer.getElementsByTagName("Notify");
-                    if (Notifiers.getLength() == 0) {
-                        for (String[] elem : sensors) {
-                            elem[1] = "Timeout Occurred";
-                        }
-                    } else {
-                        for (int i = 0; i < Notifiers.getLength(); i++) {
-                            Element e = (Element) Notifiers.item(i);
-                            String sensorId = e.getAttribute("number"); //TODO CHANGE WITH ID
-                            for (String[] elem : sensors) {
-                                if (elem[0].equals(sensorId)) {
-                                    switch (e.getAttribute("kind")) {
-                                        case "value":
-                                            elem[2] = e.getElementsByTagName("message").item(0).getTextContent();
-                                            break;
-                                        case "status":
-                                            elem[1] = e.getElementsByTagName("message").item(0).getTextContent();
-                                            break;
-                                    }
-                                    break;
-                                }
-                            }
-
-                        }
-                    }
-                    for (String[] elem : sensors) {
-                        appletGUI.model.addElement(elem);
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println(ex.getMessage());
-                }
-
-            }
-        }
     }
-
 }

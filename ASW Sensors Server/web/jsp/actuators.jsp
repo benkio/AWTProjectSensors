@@ -8,9 +8,6 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="<%= request.getContextPath()%>/js/requestBuilder.js" type="text/javascript"></script>
         <script src="<%= request.getContextPath()%>/js/xmlBuilder.js" type="text/javascript"></script>
-        <script>   
-            XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
-        </script>
     </head>
     <body>
         
@@ -39,5 +36,8 @@
             </tbody>
         </table>
         <p id="errorMessage" class="error"></p>
+        <script>   
+            XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
+        </script>
     </body>
 </html> 
