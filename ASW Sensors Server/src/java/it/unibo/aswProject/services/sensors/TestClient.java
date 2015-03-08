@@ -48,7 +48,7 @@ public class TestClient {
                 try {
                     while(true){
                         mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("waitEvents")));
-                        mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("getSensors")));
+                        //mngXML.transform(System.out, hc.execute("Sensors",  mngXML.newDocument("getSensors")));
                     }
                 } catch (TransformerException ex) {
                     Logger.getLogger(TestClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,6 +62,7 @@ public class TestClient {
             }
         });
         
+        t.start();
         System.in.read();
         t.stop();
         
