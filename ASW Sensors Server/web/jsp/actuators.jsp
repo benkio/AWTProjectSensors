@@ -16,6 +16,8 @@
         <%@ include file="/WEB-INF/jspf/navbar.jspf" %>     
         
         <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
+        
+        <%@include file="/WEB-INF/jspf/adminRedirect.jspf" %>
             
         <table border="0" cellpadding="1" cellspacing="1" id="ActuarorsTable">
             <thead>
