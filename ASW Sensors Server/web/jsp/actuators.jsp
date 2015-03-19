@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style-sheets/main.css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="<%= request.getContextPath()%>/js/requestBuilder.js" type="text/javascript"></script>
-        <script src="<%= request.getContextPath()%>/js/xmlBuilder.js" type="text/javascript"></script>
+        <script src="<%= request.getContextPath()%>/js/actuatorsXmlBuilder.js" type="text/javascript"></script>
         <script src="<%= request.getContextPath()%>/js/actuators.js" type="text/javascript"></script>
     </head>
     <body>
@@ -39,7 +39,8 @@
             </tbody>
         </table>
         <p id="errorMessage" class="error"></p>
-        <script>   
+        <script>  
+            //Made the request of the actuators and render the result.
             XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
         </script>
     </body>
