@@ -7,4 +7,16 @@
  * 
  */
 
+/*
+ * Return the Get Sensors request XML
+ * 
+ * @returns {GetSensorsXML.doc|Document}
+ */
+function GetSensorsXML() {
+    var doc = document.implementation.createDocument("", "", null);
+    var getActuatorsElem = doc.createElement("getSensors");
+    doc.appendChild(getActuatorsElem);
+    console.log(new XMLSerializer().serializeToString(doc));
+    return doc;
+}
 

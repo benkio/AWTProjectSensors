@@ -24,7 +24,7 @@ function loadInitialActuator(xmlhttp) {
     for (i = 0; i < actuator.length; i++) {
         actuator_name = actuator.item(i).getElementsByTagName("id").item(0).textContent;
         actuator_value = actuator.item(i).getElementsByTagName("value").item(0).textContent;
-        $("#TableBody").prepend(actuatorToHTML(actuator_name , actuator_value ));
+        $("#ActuatorsTableBody").prepend(actuatorToHTML(actuator_name , actuator_value ));
         try {
             $("p[name*='Name" + actuator_name + "']").text(actuator_name );
             updateActuatorValue(actuator_name, function (x, y) {

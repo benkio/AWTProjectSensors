@@ -87,11 +87,11 @@ header  h1{
 	text-align: center;
 }
 
-#ActuarorsTable {
+.ManageTable {
     width: 100%;
 }
 
-#ActuarorsTable td {
+.ManageTable td {
     text-align: center;
 }
 .ActuatorValue {

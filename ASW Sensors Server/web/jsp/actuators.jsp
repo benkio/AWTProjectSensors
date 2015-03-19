@@ -20,7 +20,7 @@
         
         <%@include file="/WEB-INF/jspf/adminRedirect.jspf" %>
             
-        <table border="0" cellpadding="1" cellspacing="1" id="ActuarorsTable">
+        <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
             <thead>
                 <tr>
                     <th scope="col">Nome Attuatore</th>
@@ -28,7 +28,7 @@
                     <th scope="col">Operazioni</th>
                 </tr>
             </thead>
-            <tbody id="TableBody">
+            <tbody id="ActuatorsTableBody">
             <tr>
                 <td/>
                 <td>
