@@ -30,6 +30,14 @@
                 </tr>
             </thead>
             <tbody id="SensorControlPanelTableBody">
+                <tr>
+                    <td>Nome Sensore Test</td>
+                    <td>Stato Sensore Test</td>
+                    <td>
+                        <input type="image" src="<%= request.getContextPath()%>/img/stopIcon.png" height="32" width="32">
+                    </td>
+                </tr>
+                
             </tbody>
         </table>
         
