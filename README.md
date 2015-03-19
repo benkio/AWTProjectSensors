@@ -13,7 +13,7 @@ Thomas Farneti -  - thomas.farneti@studio.unibo.it
 
 DESCRIZIONE DEL SERVIZIO OFFERTO DAL SITO
 =========================================
-Pannello di controllo di una serie di sensori ed eventualmente di attuatori che agiscono sui primi. In particolare il valore dei sensori variera' in maniera pseudo-random e notificheranno il loro valore e stato. Mentre tramite la modifica del valore degli attuatori si avra' un effetto sul valore dei sensori. La gestione e visualizzazione dei sensori e attuatori e' influenzata dalla tipologia di utenti.
+Pannello di controllo di una serie di sensori ed attuatori che agiscono sui primi. In particolare il valore dei sensori variera' in maniera pseudo-random e notificheranno il loro valore e stato. Mentre tramite la modifica del valore degli attuatori si avra' un effetto sul valore dei sensori. La gestione e visualizzazione dei sensori e attuatori e' influenzata dalla tipologia di utenti. Nel caso si tratti di utenti amministratori allora sara' possibile anche agire sui sensori per abilitarli o meno.
 
 UTILIZZO DEL SITO
 =================
@@ -30,6 +30,7 @@ Tipologie di utenti:
 3. Utenti amministratori
   * Tutto quello previsto per gli utenti registrati.
   * Agire sugli attuatori.
+  * Agire sull'abilitazione dei sensori
 
 REALIZZAZIONE DEL SITO - Sommario
 =================================
@@ -38,7 +39,7 @@ Computazione lato client
 Consiste in diverse RIA eseguite come applet e Javascript, incorporate in pagine web. In particolare:
 
 1. SensorsControlPanel, che si occupa di tutta la parte relativa al monitoraggio dei sensori e alla loro visualizzazione.
-2. All'interno di actuators.jsp sono contenute le funzioni javascript che realizzano la RIA apposita per la visualizzazione degli attuatori, dopo aver effettuato l'apposita richiesta al server.
+2. All'interno di actuators.jsp e' contenuta la RIA javascript che realizza la visualizzazione degli attuatori, dopo aver effettuato l'apposita richiesta al server. le funzioni javascript utilizzate si trovano nella cartella apposita per i file javascript all'interno della Web application.
 
 Computazione lato server
 ------------------------
@@ -48,6 +49,7 @@ Computazione lato server
 2. login.jsp, che verifica le credenziali dell'utente e lo redirige alla pagina principale, in caso di successo.
 3. sensors.jsp, contiene la applet apposita per la visualizzazione e monitoring dei sensori. Tramite questa si e' in grado di visualizzare i sensori che si e' abilitati a visualizzare e cotrollare il loro valore/stato.
 4. actuators.jsp, cosente di visualizzare gli attuatori e di modificarne il valore.
+5. sensorsControlPanel.jsp, consente di gestire i vari sensori, in particolare l'abilitazione.
 
 Le servlet utilizzate sono:
 
