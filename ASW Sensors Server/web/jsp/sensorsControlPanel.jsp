@@ -31,10 +31,10 @@
             </thead>
             <tbody id="SensorControlPanelTableBody">
                 <tr>
-                    <td>Nome Sensore Test</td>
-                    <td>Stato Sensore Test</td>
+                    <td><p name="SensorName1">Nome Sensore Test</p></td>
+                    <td><p name="SensorStatus1">Stato Sensore Test</p></td>
                     <td>
-                        <input type="image" src="<%= request.getContextPath()%>/img/stopIcon.png" height="32" width="32">
+                        <input name="SensorControlButton1" type="image" src="<%= request.getContextPath()%>/img/stopIcon.png" height="32" width="32">
                     </td>
                 </tr>
                 
