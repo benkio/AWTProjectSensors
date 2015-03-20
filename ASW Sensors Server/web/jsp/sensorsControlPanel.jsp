@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style-sheets/main.css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" > var contextPath='<%=request.getContextPath()%>'; </script>
         <script src="<%= request.getContextPath()%>/js/requestBuilder.js" type="text/javascript"></script>
         <script src="<%= request.getContextPath()%>/js/sensorControlPanel.js" type="text/javascript"></script>
         <script src="<%= request.getContextPath()%>/js/sensorControlPanelXmlBuilder.js" type="text/javascript"></script>
@@ -30,21 +31,13 @@
                 </tr>
             </thead>
             <tbody id="SensorControlPanelTableBody">
-                <tr>
-                    <td><p name="SensorName1">Nome Sensore Test</p></td>
-                    <td><p name="SensorStatus1">Stato Sensore Test</p></td>
-                    <td>
-                        <input name="SensorControlButton1" type="image" src="<%= request.getContextPath()%>/img/stopIcon.png" height="32" width="32">
-                    </td>
-                </tr>
-                
             </tbody>
         </table>
         
         
         <script>  
             //Made the request of the actuators and render the result.
-            XMLRequestPattern("../Sensors",undefined/*TODO RESPONSE FUNCTION MANAGEMENT*/,GetSensorsXML);
+            XMLRequestPattern("../Sensors", loadInitialSensor/*function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}*/,GetSensorsXML);
             
         </script>
     </body>
