@@ -30,7 +30,7 @@
                     <th scope="col">
                         <div>
                             <p id="operationCaption">Operazioni</p>
-                            <input id="addSensorButtonID" type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png">
+                            <input id="addSensorButtonID" type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png" onclick="XMLRequestPattern(&quot;..&#47;Sensors&quot;,function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetAddSensorXML);">
                         </div>
                     </th>
                 </tr>

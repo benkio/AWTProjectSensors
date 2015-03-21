@@ -23,34 +23,41 @@ function GetSensorsXML() {
 function GetOfflineXMLFunction(sensorID) {
     return function () {
         var doc = document.implementation.createDocument("", "", null);
-        var getSensorsElem = doc.createElement("disableSensor");
+        var disableSensorsElem = doc.createElement("disableSensor");
 
         var sensorIDElement = doc.createElement("id");
         var sensorIDTextElement = doc.createTextNode(sensorID);
         sensorIDElement.appendChild(sensorIDTextElement);
 
-        getSensorsElem.appendChild(sensorIDElement);
+        disableSensorsElem.appendChild(sensorIDElement);
 
-        doc.appendChild(getSensorsElem);
+        doc.appendChild(disableSensorsElem);
         console.log(new XMLSerializer().serializeToString(doc));
         return doc;
-    }
+    };
 }
 
 function GetActiveXMLFunction(sensorID){
     return function () {
         var doc = document.implementation.createDocument("", "", null);
-        var getSensorsElem = doc.createElement("enableSensor");
+        var enableSensorsElem = doc.createElement("enableSensor");
 
         var sensorIDElement = doc.createElement("id");
         var sensorIDTextElement = doc.createTextNode(sensorID);
         sensorIDElement.appendChild(sensorIDTextElement);
 
-        getSensorsElem.appendChild(sensorIDElement);
+        enableSensorsElem.appendChild(sensorIDElement);
 
-        doc.appendChild(getSensorsElem);
+        doc.appendChild(enableSensorsElem);
         console.log(new XMLSerializer().serializeToString(doc));
         return doc;
-    }
+    };
 }
 
+function GetAddSensorXML(){
+    var doc = document.implementation.createDocument("", "", null);
+    var addSensorsElem = doc.createElement("addSensor");
+    doc.appendChild(addSensorsElem);
+    console.log(new XMLSerializer().serializeToString(doc));
+    return doc;
+}
