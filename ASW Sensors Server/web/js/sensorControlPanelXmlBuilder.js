@@ -37,6 +37,23 @@ function GetOfflineXMLFunction(sensorID) {
     };
 }
 
+function GetRemoveXMLFunction(sensorID) {
+    return function () {
+        var doc = document.implementation.createDocument("", "", null);
+        var disableSensorsElem = doc.createElement("removeSensor");
+
+        var sensorIDElement = doc.createElement("id");
+        var sensorIDTextElement = doc.createTextNode(sensorID);
+        sensorIDElement.appendChild(sensorIDTextElement);
+
+        disableSensorsElem.appendChild(sensorIDElement);
+
+        doc.appendChild(disableSensorsElem);
+        console.log(new XMLSerializer().serializeToString(doc));
+        return doc;
+    };
+}
+
 function GetActiveXMLFunction(sensorID){
     return function () {
         var doc = document.implementation.createDocument("", "", null);

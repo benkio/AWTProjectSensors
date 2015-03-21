@@ -41,7 +41,7 @@ function sensorToHTML(sensorID, sensorStatus, playable) {
     var icon = contextPath + "/img/stopIcon.png";
     if (playable())
         icon = contextPath + "/img/playIcon.png";
-    return "<tr><td><p name=\"SensorName"+ sensorID + "\" >"+sensorID+"</p></td><td><p name=\"SensorStatus"+sensorID+"\" >"+sensorStatus+"</p></td><td><input name=\"SensorControlButton"+sensorID+"\" type=\"image\" src="+icon+" height=\"32\" width=\"32\"></td></tr>";   
+    return "<tr><td><p name=\"SensorName"+ sensorID + "\" >"+sensorID+"</p></td><td><p name=\"SensorStatus"+sensorID+"\" >"+sensorStatus+"</p></td><td><input name=\"SensorControlButton"+sensorID+"\" type=\"image\" src="+icon+" height=\"32\" width=\"32\"><input name=\"removeSensorControlButton"+sensorID+"\" type=\"image\" src="+ contextPath + "/img/removeIcon.png"+" height=\"32\" width=\"32\"></td></tr>";   
 }
 
 function setEventListener(sensorID) {
@@ -52,5 +52,10 @@ function setEventListener(sensorID) {
             } else {
                 XMLRequestPattern("../Sensors", function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetActiveXMLFunction(sensorID));
             }
+    });
+    
+    $("input[name='removeSensorControlButton"+sensorID+"']").click(function () {
+           console.log("remove operation button pressed:  " + sensorID);
+           XMLRequestPattern("../Sensors", function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetRemoveXMLFunction(sensorID));
     });
 };
