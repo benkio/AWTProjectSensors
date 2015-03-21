@@ -11,33 +11,33 @@ and open the template in the editor.
 /*Layout*/
 
 html {
-	margin: 0;
-	padding: 0;
-	background-color: whitesmoke;
+    margin: 0;
+    padding: 0;
+    background-color: whitesmoke;
 }
 
 body {
-	width: 940px;
-	margin: 0 auto;
-	font: 10pt/1.5em Helvetica,"Helvetica neue", Arial, sans-serif;
+    width: 940px;
+    margin: 0 auto;
+    font: 10pt/1.5em Helvetica,"Helvetica neue", Arial, sans-serif;
 }
 
 /*HTML 5 specific*/
 
 header,section,article,aside,footer{
-	display: block;
+    display: block;
 }
 
 /* HTML 5 Sections*/
 
 header  h1{
-        margin: 0;
-	font: 32pt Helvetica,"Helvetica neue", Arial, sans-serif;
-	text-align: center;
-	text-transform: uppercase;
-	color: graytext;
-	padding-top: 30px ;
-	text-shadow: 1px 1px 2px #fff; 
+    margin: 0;
+    font: 32pt Helvetica,"Helvetica neue", Arial, sans-serif;
+    text-align: center;
+    text-transform: uppercase;
+    color: graytext;
+    padding-top: 30px ;
+    text-shadow: 1px 1px 2px #fff; 
 }
 
 
@@ -84,19 +84,27 @@ header  h1{
 }
 
 #WelcomeMessage h3 {
-	text-align: center;
+    text-align: center;
 }
 
 .ManageTable {
     width: 100%;
 }
-
 .ManageTable td {
     text-align: center;
 }
 .ActuatorValue {
     display: inline;
     margin-left: .2em;
+}
+#operationCaption{
+    display: inline-block;
+    width: 70%;
+    margin-left: 12%;
+}
+#addSensorButtonID{
+    display: inline-block;
+    float: right;
 }
 
 .form{

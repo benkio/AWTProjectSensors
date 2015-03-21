@@ -27,7 +27,12 @@
                 <tr>
                     <th scope="col">Nome Sensore</th>
                     <th scope="col">Stato Sensore</th>
-                    <th scope="col">Operazioni</th>
+                    <th scope="col">
+                        <div>
+                            <p id="operationCaption">Operazioni</p>
+                            <input id="addSensorButtonID" type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png">
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody id="SensorControlPanelTableBody">
