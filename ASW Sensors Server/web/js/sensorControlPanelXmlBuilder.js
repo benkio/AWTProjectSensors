@@ -14,9 +14,43 @@
  */
 function GetSensorsXML() {
     var doc = document.implementation.createDocument("", "", null);
-    var getActuatorsElem = doc.createElement("getSensors");
-    doc.appendChild(getActuatorsElem);
+    var getSensorsElem = doc.createElement("getSensors");
+    doc.appendChild(getSensorsElem);
     console.log(new XMLSerializer().serializeToString(doc));
     return doc;
+}
+
+function GetOfflineXMLFunction(sensorID) {
+    return function () {
+        var doc = document.implementation.createDocument("", "", null);
+        var getSensorsElem = doc.createElement("disableSensor");
+
+        var sensorIDElement = doc.createElement("id");
+        var sensorIDTextElement = doc.createTextNode(sensorID);
+        sensorIDElement.appendChild(sensorIDTextElement);
+
+        getSensorsElem.appendChild(sensorIDElement);
+
+        doc.appendChild(getSensorsElem);
+        console.log(new XMLSerializer().serializeToString(doc));
+        return doc;
+    }
+}
+
+function GetActiveXMLFunction(sensorID){
+    return function () {
+        var doc = document.implementation.createDocument("", "", null);
+        var getSensorsElem = doc.createElement("enableSensor");
+
+        var sensorIDElement = doc.createElement("id");
+        var sensorIDTextElement = doc.createTextNode(sensorID);
+        sensorIDElement.appendChild(sensorIDTextElement);
+
+        getSensorsElem.appendChild(sensorIDElement);
+
+        doc.appendChild(getSensorsElem);
+        console.log(new XMLSerializer().serializeToString(doc));
+        return doc;
+    }
 }
 

@@ -4,6 +4,13 @@
  * and open the template in the editor.
  */
 
+/*
+ * Function used to manage the first call of sensor list
+ * Fetch the response and render the result to html
+ * 
+ * @param {type} xmlhttp
+ * @returns {undefined}
+ */
 function loadInitialSensor(xmlhttp) {
     var sensor_name, sensor_state, sensor, i;
     sensor = xmlhttp.responseXML.documentElement.getElementsByTagName("Sensor");
@@ -18,15 +25,32 @@ function loadInitialSensor(xmlhttp) {
         } catch (er) {
             $("p[name*='Name" + sensor_name + "']").text("XML Fetch Error");
         }
+        setEventListener(sensor_name);
     }
-    //TODO: CREATE AN EVENT LISTENER FOR THE BUTTON
-    //setEventListeners();
 }
 
-
+/*
+ * Render a new sersor to HTML with given sensorID and status
+ * 
+ * @param {type} sensorID
+ * @param {type} sensorStatus
+ * @param {type} playable: used to decide what icon choose
+ * @returns {String}
+ */
 function sensorToHTML(sensorID, sensorStatus, playable) {
     var icon = contextPath + "/img/stopIcon.png";
     if (playable())
         icon = contextPath + "/img/playIcon.png";
     return "<tr><td><p name=\"SensorName"+ sensorID + "\" >"+sensorID+"</p></td><td><p name=\"SensorStatus"+sensorID+"\" >"+sensorStatus+"</p></td><td><input name=\"SensorControlButton"+sensorID+"\" type=\"image\" src="+icon+" height=\"32\" width=\"32\"></td></tr>";   
 }
+
+function setEventListener(sensorID) {
+    $("input[name='SensorControlButton"+sensorID+"']").click(function () {
+           console.log("operation button pressed:  " + sensorID);
+            if ($("p[name='SensorStatus"+sensorID+"']").text("Active")){
+                XMLRequestPattern("../Sensors", function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetOfflineXMLFunction(sensorID));
+            } else {
+                XMLRequestPattern("../Sensors", function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetActiveXMLFunction(sensorID));
+            }
+    });
+};
