@@ -7,7 +7,8 @@
         <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style-sheets/main.css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="<%= request.getContextPath()%>/js/requestBuilder.js" type="text/javascript"></script>
-        <script src="<%= request.getContextPath()%>/js/xmlBuilder.js" type="text/javascript"></script>
+        <script src="<%= request.getContextPath()%>/js/actuatorsXmlBuilder.js" type="text/javascript"></script>
+        <script src="<%= request.getContextPath()%>/js/actuators.js" type="text/javascript"></script>
     </head>
     <body>
         
@@ -16,8 +17,10 @@
         <%@ include file="/WEB-INF/jspf/navbar.jspf" %>     
         
         <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
+        
+        <%@include file="/WEB-INF/jspf/adminRedirect.jspf" %>
             
-        <table border="0" cellpadding="1" cellspacing="1" id="ActuarorsTable">
+        <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
             <thead>
                 <tr>
                     <th scope="col">Nome Attuatore</th>
@@ -25,7 +28,7 @@
                     <th scope="col">Operazioni</th>
                 </tr>
             </thead>
-            <tbody id="TableBody">
+            <tbody id="ActuatorsTableBody">
             <tr>
                 <td/>
                 <td>
@@ -36,7 +39,8 @@
             </tbody>
         </table>
         <p id="errorMessage" class="error"></p>
-        <script>   
+        <script>  
+            //Made the request of the actuators and render the result.
             XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
         </script>
     </body>

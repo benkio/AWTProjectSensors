@@ -2,8 +2,15 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * 
+ * Function to build the XML Requests for the actuators RIA
+ * 
  */
 
+/*
+ * Return the Get Actuator request XML
+ * @returns {GetActuatorsXML.doc|Document}
+ */
 function GetActuatorsXML() {
     var doc = document.implementation.createDocument("", "", null);
     var getActuatorsElem = doc.createElement("getActuators");
@@ -12,6 +19,12 @@ function GetActuatorsXML() {
     return doc;
 }
 
+/*
+ * Return the Set actuators XML Request.
+ * 
+ * @param {type} numeric_part
+ * @returns {setActuatorsValueXML.data|Document}
+ */
 function setActuatorsValueXML(numeric_part) {
     var data = document.implementation.createDocument("", "", null);
     var actuatorTag = data.createElement("setValue");
