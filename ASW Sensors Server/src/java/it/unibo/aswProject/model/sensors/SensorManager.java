@@ -35,7 +35,7 @@ public class SensorManager implements ISensorListener , IActuatorListener {
     }
     
     public synchronized void addSensor(Sensor s){
-        sensorList.put(s.getNumber(), s);
+        sensorList.put(s.getId(), s);
         listener.newEvent(null);
     }
     
@@ -50,17 +50,16 @@ public class SensorManager implements ISensorListener , IActuatorListener {
     public void setListener(ISensorEventsListener listener) {
         this.listener = listener;
     }
-    
-    @Override
-    public void update(SensorEventType event) {
-        if(this.listener != null)
-            listener.newEvent(event);
-    }
 
     @Override
     public synchronized void actuatorUpdated(Actuator act) {
         for (Sensor s : sensorList.values()) {
             s.setValue(new Random().nextInt(101));
         }
+    }
+
+    @Override
+    public void update(SensorEventType event, Object state) {
+        
     }
 }

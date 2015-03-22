@@ -1,14 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.unibo.aswProject.model.sensors;
-
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,12 +8,12 @@ public class Sensor{
     private int id;
     private int value;
     private ISensorListener list;
-    private String state;
+    private SensorState state;
 
     public Sensor(ISensorListener list, int number) {
         this.list= list;
         this.id = number;
-        this.state = "Active";
+        this.state = SensorState.Active;
     }
     
     public synchronized int getValue(){
@@ -35,24 +25,24 @@ public class Sensor{
         
         if(list!= null){
             new Thread(() -> {
-                this.list.update(SensorEventType.NewValue);
+                this.list.update(SensorEventType.ValueChanged,val);
             }).start();
         }
     }
 
-    public int getNumber() {
+    public synchronized int getId() {
         return id;
     }
 
-    public void setNumber(int number) {
+    public synchronized void setId(int number) {
         this.id = number;
     }
 
-    public String getSensorState() {
+    public synchronized SensorState getState() {
         return state;
     }
 
-    public void setSensorState(String state) {
+    public synchronized void setState(SensorState state) {
         this.state = state;
     }
 }
