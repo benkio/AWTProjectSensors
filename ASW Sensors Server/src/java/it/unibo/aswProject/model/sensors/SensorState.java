@@ -9,7 +9,7 @@ package it.unibo.aswProject.model.sensors;
  *
  * @author Thomas
  */
-public enum SensorEventType {
-    ValueChanged,
-    StateChanged
+public enum SensorState {
+    Active,
+    Disabled,
 }
