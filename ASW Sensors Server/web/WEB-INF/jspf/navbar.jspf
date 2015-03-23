@@ -14,6 +14,7 @@
 				%>
 				<li><a href='<%= request.getContextPath()%>/jsp/actuators.jsp'><span>Actuators</span></a></li>
                                 <li><a href='<%= request.getContextPath()%>/jsp/sensorsControlPanel.jsp'><span>Sensors Control Panel</span></a></li>
+                                <li><a href='<%= request.getContextPath()%>/jsp/usersAuth.jsp'><span>Users Auth</span></a></li>
 			<%
 					}
                         %>
