@@ -135,7 +135,7 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
             Element sensor = doc.createElement("Sensor");
             sensor.setAttribute("id", Integer.toString(s.getId()));
             sensor.setAttribute("value", Integer.toString(s.getValue()));
-            sensor.appendChild(doc.createTextNode(s.getState()));
+            sensor.appendChild(doc.createTextNode(s.getState().toString()));
             doc.getDocumentElement().appendChild(sensor);
         }
 
