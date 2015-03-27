@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()%>/style-sheets/main.css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script type="text/javascript" > var contextPath='<%=request.getContextPath()%>'; </script>
     </head>
     <body>
 
@@ -37,7 +36,8 @@
                         <input type="checkbox" name="SensorEnable1" value="ON" checked="checked" />
                     </td>
                 </tr>
-                <jsp:include page="/UserAuthServlet" flush="true"></jsp:include>
+                <c:set var="myContext" value="${pageContext.request.contextPath}"/>
+                <jsp:include page="${myContext}/UserAuthServlet" flush="true"></jsp:include>
             </tbody>          
         </table>  
 
@@ -54,22 +54,21 @@
                     var sensorStatus = $("td[name='SensorStatus"+numeric_part+"']");
                     if(this.checked) {
                         //Do stuff
-                        console.log('Checked Changed');
-                        var request = $.post( contextPath + "/ShowSersor", { username: "<%= session.getAttribute("username")%>" } )
+                        var request = $.post( "<%= request.getContextPath()%>/ShowSersor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
                                     sensorName.show();
                                     sensorStatus.show();
                                     console.log('ShowSensor Returned');
                                     errorMessage.hide();
                                 }
-                            )
+                            );
                         request.fail(function(){
                                 errorMessage.show();
                             }
                         );
                     }
                     else{
-                        var request = $.post( contextPath + "/HideSensor", { username: "<%= session.getAttribute("username")%>" } )
+                        var request = $.post( "<%= request.getContextPath()%>/HideSensor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
                                     sensorName.hide();
                                     sensorStatus.hide();
