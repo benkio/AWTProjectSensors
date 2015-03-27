@@ -15,10 +15,7 @@
  */
 package it.unibo.aswProject.servlet;
 
-import it.unibo.aswProject.libraries.bean.User;
-import it.unibo.aswProject.util.UserListFile;
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +27,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet"})
+@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet","/HideSensor","/ShowSersor"})
 public class UserAuth extends HttpServlet {
 
     /**
@@ -47,7 +44,11 @@ public class UserAuth extends HttpServlet {
         String errorMsg = "";
         try {
             HttpSession session = request.getSession();
-
+            if (request.getServletPath().equals("/LoginServlet")) {
+                
+            }
+            else{
+            }
         } catch (Exception ex) {
 
         }
