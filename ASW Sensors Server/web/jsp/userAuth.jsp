@@ -30,34 +30,6 @@
             <tbody id="UserAuthTableBody">
                 <jsp:include page="/UserAuthServlet" flush="true"></jsp:include>
             </tbody>
-        </table>
-        
-        <table id="usersTable">
-            <thead>
-                <tr>
-                    <td>
-                        Utenti
-                    </td>
-                </tr>
-            </thead>
-            <tbody id="usersAuthUsersList">
-                <!-- HTML GENERATED FROM THE SERVLET -->
-            </tbody>
-        </table>
-        
-        
-        <table id="sensorsTable">
-            <thead>
-                <tr>
-                    <td>
-                        Sensori
-                    </td>
-                </tr>
-            </thead>
-            <tbody id="usersAuthUserSensors">
-                <!-- HTML GENERATED FROM THE SERVLET -->
-            </tbody>
-        </table>
-        
+        </table>       
     </body>
 </html>
