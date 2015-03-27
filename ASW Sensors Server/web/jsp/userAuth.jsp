@@ -14,8 +14,6 @@
         
         <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
         
-        <%@include file="/WEB-INF/jspf/adminRedirect.jspf" %>
-        
         <!-- TODO: Insert controls to add and remove association through users to sensors -->
         
     </body>

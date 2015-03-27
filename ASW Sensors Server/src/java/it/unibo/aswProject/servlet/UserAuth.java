@@ -30,8 +30,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "UsersAuthServlet", urlPatterns = {"/UsersAuthServlet"})
-public class UsersAuth extends HttpServlet {
+@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet"})
+public class UserAuth extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
