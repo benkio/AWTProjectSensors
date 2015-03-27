@@ -15,13 +15,19 @@
  */
 package it.unibo.aswProject.servlet;
 
+import CommonServiceRequests.SensorRequests;
+import it.unibo.aswProject.libraries.http.HTTPClient;
+import it.unibo.aswProject.libraries.http.HTTPClientFactory;
+import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
+import java.net.URL;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -30,6 +36,10 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet","/HideSensor","/ShowSersor"})
 public class UserAuth extends HttpServlet {
 
+    private ManageXML mngXML;
+    private HTTPClient hc;
+    private SensorRequests sensorsRequests = new SensorRequests();
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,18 +52,37 @@ public class UserAuth extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String errorMsg = "";
+
         try {
             HttpSession session = request.getSession();
-            if (request.getServletPath().equals("/LoginServlet")) {
-                
+            hc = HTTPClientFactory.GetHttpClient(   session.getId(), 
+                                                    new URL(request.getScheme(), 
+                                                            request.getServerName(), 
+                                                            request.getServerPort(), 
+                                                            request.getContextPath()));
+            mngXML = new ManageXML();
+            switch (request.getServletPath()) {
+                case "/LoginServlet" : break;
+                case "/HideSensor" : break;
+                case "/ShowSersor" : break;
             }
-            else{
-            }
+            
         } catch (Exception ex) {
-
+            /*
+            * TODO: manage the exception
+            */
         }
     }
 
+    private String fetchSensors() throws Exception{
+        NodeList sensors = sensorsRequests.getSensors(mngXML, hc);
+        /*
+        * TODO: build the string for the fetch se sensors
+        */
+        return "";
+    
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
