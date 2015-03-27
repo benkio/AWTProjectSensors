@@ -5,12 +5,12 @@
  */
 package it.unibo.aswProject.applet;
 
+import CommonServiceRequests.SensorRequests;
 import it.unibo.aswProject.libraries.http.HTTPClient;
+import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.awt.*;
-import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -30,7 +30,8 @@ import org.xml.sax.SAXException;
 public class SensorsControlPanel extends JApplet {
 
     private ManageXML mngXML;
-    private final HTTPClient hc = new HTTPClient();
+    private HTTPClient hc;
+    private SensorRequests sensorsRequests = new SensorRequests();
     private AppletGUI appletGUI;
     private String username;
     private CometValueUpdaterThread cometValueUpdaterThread;
@@ -40,7 +41,7 @@ public class SensorsControlPanel extends JApplet {
     public void init() {
         username = getParameter("username");
         try {
-            initHTTPClient();
+            hc = HTTPClientFactory.GetHttpClient(getParameter("sessionID"), getDocumentBase());
             mngXML = new ManageXML();
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
 
@@ -55,19 +56,7 @@ public class SensorsControlPanel extends JApplet {
             Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    
-    private void initHTTPClient() throws MalformedURLException {
-        hc.setSessionId(getParameter("sessionId"));
-        // represent the path portion of the URL as a file
-        URL url = getDocumentBase();
-        File file = new File(url.getPath());
-        // get the parent of the file
-        String parentPath = file.getParent();
-        // construct a new url with the parent path
-        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
-        hc.setBase(parentUrl);
-    }
-
+ 
     @Override
     public void start() {
         if (cometValueUpdaterThread != null && cometValueUpdaterThread.isAlive()) {
@@ -88,7 +77,7 @@ public class SensorsControlPanel extends JApplet {
 
         @Override
         protected Void doInBackground() throws Exception {
-            NodeList sensors = getSensors();
+            NodeList sensors = sensorsRequests.getSensors(mngXML,hc);
             publish(sensors);
             return null;
         }
@@ -111,15 +100,7 @@ public class SensorsControlPanel extends JApplet {
             cometValueUpdaterThread.start(); 
         }
         
-        private NodeList getSensors() throws Exception {
-            // prepare the request xml
-            Document data = mngXML.newDocument("getSensors");
-            // do request
-            Document answer = hc.execute("Sensors", data);
-            // get response
-            NodeList sensorsList = answer.getElementsByTagName("SensorsList");
-            return sensorsList;
-        }
+        
     }
 
     private class AppletGUI {
