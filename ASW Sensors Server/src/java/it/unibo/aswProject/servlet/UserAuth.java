@@ -21,12 +21,14 @@ import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.net.URL;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -61,10 +63,15 @@ public class UserAuth extends HttpServlet {
                                                             request.getServerPort(), 
                                                             request.getContextPath()));
             mngXML = new ManageXML();
-            switch (request.getServletPath()) {
-                case "/LoginServlet" : break;
-                case "/DisableSensor" : break;
-                case "/EnableSersor" : break;
+            String path = request.getContextPath();
+            if (request.getServletPath().equals("/UserAuthServlet")) {
+                fetchSensors();
+            }
+            
+            if (request.getServletPath().equals("/DisableSensor")) {
+                
+            }
+            if (request.getServletPath().equals("/EnableSersor")) {
             }
             
         } catch (Exception ex) {
@@ -74,12 +81,20 @@ public class UserAuth extends HttpServlet {
         }
     }
 
-    private String fetchSensors() throws Exception{
+    private String[] fetchSensors() throws Exception{
         NodeList sensors = sensorsRequests.getSensors(mngXML, hc);
+        String[] sensorsHTML = new String[sensors.getLength()];
         /*
         * TODO: build the string for the fetch se sensors
         */
-        return "";
+        for (int i = 0; i < sensors.getLength();i++){
+            Node sensor = sensors.item(i);
+            String sensor_name = sensor.getAttributes().getNamedItem("id").getNodeValue();
+            String sensor_state = sensor.getNodeValue();
+            sensorsHTML[i] = "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" checked=\"checked\" /></td></tr>";
+        }
+         
+        return sensorsHTML;
     
     }
     

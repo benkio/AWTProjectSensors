@@ -29,14 +29,7 @@
                 </tr>
             </thead>
             <tbody id="UserAuthTableBody">
-                <tr>
-                    <td name="SensorName1">test</td>
-                    <td name="SensorStatus1">test</td>
-                    <td>
-                        <input type="checkbox" name="SensorEnable1" value="ON" checked="checked" />
-                    </td>
-                </tr>
-                <c:set var="myContext" value="${pageContext.request.contextPath}"/>
+            <c:set var="myContext" value="<%=request.getContextPath()%>"/>
                 <jsp:include page="${myContext}/UserAuthServlet" flush="true"></jsp:include>
             </tbody>          
         </table>  
