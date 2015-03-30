@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet","/HideSensor","/ShowSersor"})
+@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet","/DisableSensor","/EnableSersor"})
 public class UserAuth extends HttpServlet {
 
     private ManageXML mngXML;
@@ -63,8 +63,8 @@ public class UserAuth extends HttpServlet {
             mngXML = new ManageXML();
             switch (request.getServletPath()) {
                 case "/LoginServlet" : break;
-                case "/HideSensor" : break;
-                case "/ShowSersor" : break;
+                case "/DisableSensor" : break;
+                case "/EnableSersor" : break;
             }
             
         } catch (Exception ex) {

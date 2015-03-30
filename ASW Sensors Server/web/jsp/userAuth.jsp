@@ -54,10 +54,10 @@
                     var sensorStatus = $("td[name='SensorStatus"+numeric_part+"']");
                     if(this.checked) {
                         //Do stuff
-                        var request = $.post( "<%= request.getContextPath()%>/ShowSersor", { username: "<%= session.getAttribute("username")%>" } )
+                        var request = $.post( "<%= request.getContextPath()%>/EnableSersor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
-                                    sensorName.css({ visibility: "visible"});
-                                    sensorStatus.css({ visibility: "visible"});
+                                    sensorName.css({ color: "Black"});
+                                    sensorStatus.css({ color: "Black"});
                                     console.log('ShowSensor Returned');
                                     errorMessage.hide();
                                 }
@@ -68,10 +68,10 @@
                         );
                     }
                     else{
-                        var request = $.post( "<%= request.getContextPath()%>/HideSensor", { username: "<%= session.getAttribute("username")%>" } )
+                        var request = $.post( "<%= request.getContextPath()%>/DisableSensor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
-                                    sensorName.css({ visibility: "hidden"});
-                                    sensorStatus.css({ visibility: "hidden"});
+                                    sensorName.css({ color: "DarkGray"});
+                                    sensorStatus.css({ color: "DarkGray"});
                                     console.log('HideSensor Returned');
                                     errorMessage.hide();
                                 }
