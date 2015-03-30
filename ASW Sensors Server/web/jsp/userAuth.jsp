@@ -56,8 +56,8 @@
                         //Do stuff
                         var request = $.post( "<%= request.getContextPath()%>/ShowSersor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
-                                    sensorName.show();
-                                    sensorStatus.show();
+                                    sensorName.css({ visibility: "visible"});
+                                    sensorStatus.css({ visibility: "visible"});
                                     console.log('ShowSensor Returned');
                                     errorMessage.hide();
                                 }
@@ -70,8 +70,8 @@
                     else{
                         var request = $.post( "<%= request.getContextPath()%>/HideSensor", { username: "<%= session.getAttribute("username")%>" } )
                         request.done(function(){
-                                    sensorName.hide();
-                                    sensorStatus.hide();
+                                    sensorName.css({ visibility: "hidden"});
+                                    sensorStatus.css({ visibility: "hidden"});
                                     console.log('HideSensor Returned');
                                     errorMessage.hide();
                                 }
