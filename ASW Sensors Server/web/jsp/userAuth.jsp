@@ -30,7 +30,7 @@
             </thead>
             <tbody id="UserAuthTableBody">
             <c:set var="myContext" value="<%=request.getContextPath()%>"/>
-                <jsp:include page="${myContext}/UserAuthServlet" flush="true"></jsp:include>
+                <%=(String)request.getAttribute("sensorsRendered")%>
             </tbody>          
         </table>  
 

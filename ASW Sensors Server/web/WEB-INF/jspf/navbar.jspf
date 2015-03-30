@@ -7,7 +7,7 @@
 				 {
 			%>
 				<li><a href='<%= request.getContextPath()%>/jsp/sensors.jsp'><span>Sensors</span></a></li>
-                                <li><a href='<%= request.getContextPath()%>/jsp/userAuth.jsp'><span>User Auth</span></a></li>
+                                <li><a href='<%= request.getContextPath()%>//UserAuthServlet'><span>User Auth</span></a></li>
 				<%
 					if (session.getAttribute("isAdmin") != null && (Boolean) session.getAttribute("isAdmin"))
 					{

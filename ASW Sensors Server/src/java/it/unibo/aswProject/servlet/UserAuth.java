@@ -35,7 +35,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet","/DisableSensor","/EnableSersor"})
+@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet"})
 public class UserAuth extends HttpServlet {
 
     private ManageXML mngXML;
@@ -61,23 +61,16 @@ public class UserAuth extends HttpServlet {
                                                     new URL(request.getScheme(), 
                                                             request.getServerName(), 
                                                             request.getServerPort(), 
-                                                            request.getContextPath()));
+                                                            request.getContextPath()+request.getServletPath()));
             mngXML = new ManageXML();
-            String path = request.getContextPath();
-            if (request.getServletPath().equals("/UserAuthServlet")) {
-                fetchSensors();
-            }
-            
-            if (request.getServletPath().equals("/DisableSensor")) {
-                
-            }
-            if (request.getServletPath().equals("/EnableSersor")) {
-            }
+            fetchSensors();
+
             
         } catch (Exception ex) {
             /*
             * TODO: manage the exception
             */
+            String e = ex.getMessage();
         }
     }
 
