@@ -21,6 +21,7 @@ import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
 import java.net.URL;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -63,8 +64,9 @@ public class UserAuth extends HttpServlet {
                                                             request.getServerPort(), 
                                                             request.getContextPath()+request.getServletPath()));
             mngXML = new ManageXML();
-            fetchSensors();
-
+            request.setAttribute("sensorList",fetchSensors());
+            RequestDispatcher rd = request.getRequestDispatcher("/jsp/userAuth.jsp");
+            rd.forward(request, response);
             
         } catch (Exception ex) {
             /*
@@ -74,17 +76,17 @@ public class UserAuth extends HttpServlet {
         }
     }
 
-    private String[] fetchSensors() throws Exception{
-        NodeList sensors = sensorsRequests.getSensors(mngXML, hc);
-        String[] sensorsHTML = new String[sensors.getLength()];
+    private String fetchSensors() throws Exception{
+        NodeList sensors = sensorsRequests.getSensors(mngXML, hc).item(0).getChildNodes();
+        String sensorsHTML = "";
         /*
         * TODO: build the string for the fetch se sensors
         */
         for (int i = 0; i < sensors.getLength();i++){
             Node sensor = sensors.item(i);
             String sensor_name = sensor.getAttributes().getNamedItem("id").getNodeValue();
-            String sensor_state = sensor.getNodeValue();
-            sensorsHTML[i] = "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" checked=\"checked\" /></td></tr>";
+            String sensor_state = sensor.getTextContent();
+            sensorsHTML += "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" checked=\"checked\" /></td></tr>";
         }
          
         return sensorsHTML;

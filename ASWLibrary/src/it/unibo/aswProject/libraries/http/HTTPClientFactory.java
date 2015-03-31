@@ -23,7 +23,7 @@ public class HTTPClientFactory {
         // get the parent of the file
         String parentPath = file.getParent();
         // construct a new url with the parent path
-        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath);
+        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath.replace('\\','/') + "/");
         hc.setBase(parentUrl);
         return hc;
     }

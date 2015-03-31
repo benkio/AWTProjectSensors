@@ -29,8 +29,7 @@
                 </tr>
             </thead>
             <tbody id="UserAuthTableBody">
-            <c:set var="myContext" value="<%=request.getContextPath()%>"/>
-                <%=(String)request.getAttribute("sensorsRendered")%>
+                <%= request.getAttribute("sensorList") %>
             </tbody>          
         </table>  
 
