@@ -32,7 +32,7 @@
                 <%= request.getAttribute("sensorList") %>
             </tbody>          
         </table>  
-
+            <input type="submit" value="Send Preferences" name="sendAuth" />
         <h3 name="ErrorMessage"><strong>ERROR occurred:</strong> something goes wrong in the server! </h3>
             
         <script type="text/javascript" >
@@ -40,42 +40,33 @@
             errorMessage.hide();
             
             $("input[name*='SensorEnable']").each(function(){
-                $(this).change(function() {
                     var numeric_part = $(this).attr('name').substr(12);
                     var sensorName = $("td[name='SensorName"+numeric_part+"']");
                     var sensorStatus = $("td[name='SensorStatus"+numeric_part+"']");
                     if(this.checked) {
                         //Do stuff
-                        var request = $.post( "<%= request.getContextPath()%>/EnableSersor", { username: "<%= session.getAttribute("username")%>" } )
-                        request.done(function(){
-                                    sensorName.css({ color: "Black"});
-                                    sensorStatus.css({ color: "Black"});
-                                    console.log('ShowSensor Returned');
-                                    errorMessage.hide();
-                                }
-                            );
-                        request.fail(function(){
-                                errorMessage.show();
-                            }
-                        );
+                        sensorName.css({ color: "Black"});
+                        sensorStatus.css({ color: "Black"});
+                    } else {
+                        sensorName.css({ color: "DarkGray"});
+                        sensorStatus.css({ color: "DarkGray"});
                     }
-                    else{
-                        var request = $.post( "<%= request.getContextPath()%>/DisableSensor", { username: "<%= session.getAttribute("username")%>" } )
-                        request.done(function(){
-                                    sensorName.css({ color: "DarkGray"});
-                                    sensorStatus.css({ color: "DarkGray"});
-                                    console.log('HideSensor Returned');
-                                    errorMessage.hide();
-                                }
-                            );
-                        request.fail(function(){
-                                errorMessage.show();
-                            }
-                        );
-                    }
-                });
-            })
+            });
 
+            $("input[name='sendAuth']").click(function(){
+                var data = $.map($("input[name*='SensorEnable']").toArray(), function(val,i){
+                    var numeric_part = val.getAttribute("name").substr(12);
+                    return {
+                        name: $("td[name='SensorName"+numeric_part+"']").val(),
+                        enable: val.checked 
+                      };
+                });
+                var request = $.post( "<%= request.getContextPath()%>/EnableSersor",{ data: data } );
+                request.fail(function(){
+                    errorMessage.show();
+                });
+            });
+            
         </script>
 
     </body>
