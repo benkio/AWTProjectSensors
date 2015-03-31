@@ -55,6 +55,7 @@
             $("input[name*='SensorEnable']").each(function(){
                 var numeric_part = $(this).attr('name').substr(12);
                 refreshCheckboxValues(numeric_part,$(this).prop('checked'));
+                errorMessage.hide();
             });
             $("input[name*='SensorEnable']").change(function(){
                 var numeric_part = $(this).attr('name').substr(12);
@@ -65,8 +66,8 @@
                 var data = $.map($("input[name*='SensorEnable']").toArray(), function(val,i){
                     var numeric_part = val.getAttribute("name").substr(12);
                     return {
-                        name: $("td[name='SensorName"+numeric_part+"']").val(),
-                        enable: val.checked 
+                        name: $("td[name='SensorName"+numeric_part+"']").text(),
+                        enable: val.checked
                       };
                 });
                 var request = $.post( "<%= request.getContextPath()%>/EnableSersor",{ data: data } );
