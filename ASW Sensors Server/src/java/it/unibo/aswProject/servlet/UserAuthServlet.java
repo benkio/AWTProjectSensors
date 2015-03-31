@@ -37,7 +37,7 @@ import org.w3c.dom.NodeList;
  * @author Enrico Benini
  */
 @WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet"})
-public class UserAuth extends HttpServlet {
+public class UserAuthServlet extends HttpServlet {
 
     private ManageXML mngXML;
     private HTTPClient hc;
@@ -69,10 +69,8 @@ public class UserAuth extends HttpServlet {
             rd.forward(request, response);
             
         } catch (Exception ex) {
-            /*
-            * TODO: manage the exception
-            */
-            String e = ex.getMessage();
+            errorMsg = ex.getMessage();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -70,10 +70,17 @@
                         enable: val.checked
                       };
                 });
-                var request = $.post( "<%= request.getContextPath()%>/EnableSersor",{ data: data } );
-                request.fail(function(){
+                debugger;
+                var sensorNames = data.map(function(elem){ return elem['name']; });
+                var sensorEnabled = data.map(function(elem){ return elem['enable']; });
+                
+                $.ajax({
+                    method: "POST",
+                    url: "<%= request.getContextPath()%>/UserSensorsServlet",
+                    data: 'names=' + sensorNames + '&enabled=' + sensorEnabled 
+                }).fail(function(){
                     errorMessage.show();
-                });
+                    });
             });
             
         </script>
