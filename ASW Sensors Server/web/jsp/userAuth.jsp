@@ -39,11 +39,10 @@
             var errorMessage = $("h3[name='ErrorMessage']");
             errorMessage.hide();
             
-            $("input[name*='SensorEnable']").each(function(){
-                    var numeric_part = $(this).attr('name').substr(12);
+            function refreshCheckboxValues(numeric_part,checked){
                     var sensorName = $("td[name='SensorName"+numeric_part+"']");
                     var sensorStatus = $("td[name='SensorStatus"+numeric_part+"']");
-                    if(this.checked) {
+                    if(checked) {
                         //Do stuff
                         sensorName.css({ color: "Black"});
                         sensorStatus.css({ color: "Black"});
@@ -51,6 +50,15 @@
                         sensorName.css({ color: "DarkGray"});
                         sensorStatus.css({ color: "DarkGray"});
                     }
+            }
+            
+            $("input[name*='SensorEnable']").each(function(){
+                var numeric_part = $(this).attr('name').substr(12);
+                refreshCheckboxValues(numeric_part,$(this).prop('checked'));
+            });
+            $("input[name*='SensorEnable']").change(function(){
+                var numeric_part = $(this).attr('name').substr(12);
+                refreshCheckboxValues(numeric_part,$(this).prop('checked'));
             });
 
             $("input[name='sendAuth']").click(function(){
