@@ -70,7 +70,6 @@
                         enable: val.checked
                       };
                 });
-                debugger;
                 var sensorNames = data.map(function(elem){ return elem['name']; });
                 var sensorEnabled = data.map(function(elem){ return elem['enable']; });
                 

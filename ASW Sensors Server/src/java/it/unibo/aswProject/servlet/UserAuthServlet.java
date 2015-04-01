@@ -77,9 +77,6 @@ public class UserAuthServlet extends HttpServlet {
     private String fetchSensors() throws Exception{
         NodeList sensors = sensorsRequests.getSensors(mngXML, hc).item(0).getChildNodes();
         String sensorsHTML = "";
-        /*
-        * TODO: build the string for the fetch se sensors
-        */
         for (int i = 0; i < sensors.getLength();i++){
             Node sensor = sensors.item(i);
             String sensor_name = sensor.getAttributes().getNamedItem("id").getNodeValue();

@@ -24,4 +24,10 @@ public class SensorRequests {
             NodeList sensorsList = answer.getElementsByTagName("SensorsList");
             return sensorsList;
     }
+
+    public void setSensorVisibility(String l, Boolean r) {
+        /*
+        *   TODO: CALL THE SERVICE OR SET THE VISIBILITY OF THE SENSOR BASED ON THE BOOLEAN INPUT, TRUE VISIBLE, FALSE INVISIBLE.
+        */
+    }
 }
