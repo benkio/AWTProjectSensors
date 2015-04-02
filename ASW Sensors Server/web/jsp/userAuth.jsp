@@ -16,72 +16,81 @@
         <%@include file="/WEB-INF/jspf/sessionRedirect.jspf" %>
 
         <!-- TODO: Insert controls to add and remove association through users to sensors -->
-        <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
-            <thead>
-                <tr>
-                    <th scope="col">Nome Sensore</th>
-                    <th scope="col">Stato Sensore</th>
-                    <th scope="col">
-                        <div>
-                            <p>Abilita Visualizzazione</p>
-                        </div>
-                    </th>
+        <form method="POST">
+            <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome Sensore</th>
+                        <th scope="col">Stato Sensore</th>
+                        <th scope="col">
+                <div>
+                    <p>Abilita Visualizzazione</p>
+                </div>
+                </th>
                 </tr>
-            </thead>
-            <tbody id="UserAuthTableBody">
-                <%= request.getAttribute("sensorList") %>
-            </tbody>          
-        </table>  
+                </thead>
+                <tbody id="UserAuthTableBody">
+                    <%= request.getAttribute("sensorList")%>
+                </tbody>          
+            </table>  
             <input type="submit" value="Send Preferences" name="sendAuth" />
-        <h3 name="ErrorMessage"><strong>ERROR occurred:</strong> something goes wrong in the server! </h3>
-            
+        </form>
+                <h3 name="ErrorMessage" class="error"></h3>
+
         <script type="text/javascript" >
             var errorMessage = $("h3[name='ErrorMessage']");
-            errorMessage.hide();
-            
-            function refreshCheckboxValues(numeric_part,checked){
-                    var sensorName = $("td[name='SensorName"+numeric_part+"']");
-                    var sensorStatus = $("td[name='SensorStatus"+numeric_part+"']");
-                    if(checked) {
-                        //Do stuff
-                        sensorName.css({ color: "Black"});
-                        sensorStatus.css({ color: "Black"});
-                    } else {
-                        sensorName.css({ color: "DarkGray"});
-                        sensorStatus.css({ color: "DarkGray"});
-                    }
+
+            function refreshCheckboxValues(numeric_part, checked) {
+                var sensorName = $("td[name='SensorName" + numeric_part + "']");
+                var sensorStatus = $("td[name='SensorStatus" + numeric_part + "']");
+                if (checked) {
+                    //Do stuff
+                    sensorName.css({color: "Black"});
+                    sensorStatus.css({color: "Black"});
+                } else {
+                    sensorName.css({color: "DarkGray"});
+                    sensorStatus.css({color: "DarkGray"});
+                }
             }
-            
-            $("input[name*='SensorEnable']").each(function(){
-                var numeric_part = $(this).attr('name').substr(12);
-                refreshCheckboxValues(numeric_part,$(this).prop('checked'));
-                errorMessage.hide();
-            });
-            $("input[name*='SensorEnable']").change(function(){
-                var numeric_part = $(this).attr('name').substr(12);
-                refreshCheckboxValues(numeric_part,$(this).prop('checked'));
+
+            $(document).ready(function () {
+                $("input[name*='SensorEnable']").each(function () {
+                    var numeric_part = $(this).attr('name').substr(12);
+                    refreshCheckboxValues(numeric_part, $(this).prop('checked'));
+                });
             });
 
-            $("input[name='sendAuth']").click(function(){
-                var data = $.map($("input[name*='SensorEnable']").toArray(), function(val,i){
+            $("input[name*='SensorEnable']").change(function () {
+                debugger;
+                var numeric_part = $(this).attr('name').substr(12);
+                refreshCheckboxValues(numeric_part, $(this).prop('checked'));
+            });
+
+            $("input[name='sendAuth']").click(function () {
+                var data = $.map($("input[name*='SensorEnable']").toArray(), function (val, i) {
                     var numeric_part = val.getAttribute("name").substr(12);
                     return {
-                        name: $("td[name='SensorName"+numeric_part+"']").text(),
+                        name: $("td[name='SensorName" + numeric_part + "']").text(),
                         enable: val.checked
-                      };
+                    };
                 });
-                var sensorNames = data.map(function(elem){ return elem['name']; });
-                var sensorEnabled = data.map(function(elem){ return elem['enable']; });
-                
+                var sensorNames = data.map(function (elem) {
+                    return elem['name'];
+                });
+                var sensorEnabled = data.map(function (elem) {
+                    return elem['enable'];
+                });
+
                 $.ajax({
                     method: "POST",
                     url: "<%= request.getContextPath()%>/UserSensorsServlet",
-                    data: 'names=' + sensorNames + '&enabled=' + sensorEnabled 
-                }).fail(function(){
-                    errorMessage.show();
-                    });
+                    data: 'names=' + sensorNames + '&enabled=' + sensorEnabled,
+                    fail: function () {
+                                errorMessage.html("<strong>ERROR occurred:</strong> something goes wrong in the server! ");
+                            } 
+                });
             });
-            
+
         </script>
 
     </body>
