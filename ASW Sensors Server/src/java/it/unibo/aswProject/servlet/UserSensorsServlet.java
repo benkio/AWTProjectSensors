@@ -6,17 +6,15 @@
 package it.unibo.aswProject.servlet;
 
 import CommonServiceRequests.SensorRequests;
+import CommonServiceRequests.UserRequests;
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +31,7 @@ public class UserSensorsServlet extends HttpServlet {
 
     private ManageXML mngXML;
     private HTTPClient hc;
-    private SensorRequests sensorsRequests = new SensorRequests();
+    private UserRequests userRequests = new UserRequests();
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -57,8 +55,8 @@ public class UserSensorsServlet extends HttpServlet {
             List<String> sensorNames = Arrays.asList(request.getParameter("names").split("\\s*,\\s*"));
             List<String> sensorEnables = Arrays.asList(request.getParameter("enabled").split("\\s*,\\s*"));
             List<Pair<String,Boolean>> parameters = castParameters(sensorNames, sensorEnables);
-            parameters.stream().forEach(param -> {
-                sensorsRequests.setSensorVisibility(param.l,param.r);
+            parameters.stream().forEach((Pair<String, Boolean> param) -> {
+                userRequests.setSensorVisibility(mngXML,hc,param.l,param.r, session.getAttribute("username").toString());
             });
             response.sendRedirect(request.getContextPath() + "/UserAuthServlet");
             

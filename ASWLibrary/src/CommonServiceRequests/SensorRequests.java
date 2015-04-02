@@ -21,13 +21,13 @@ public class SensorRequests {
             // do request
             Document answer = hc.execute("Sensors", data);
             // get response
-            NodeList sensorsList = answer.getElementsByTagName("SensorsList");
-            return sensorsList;
+            return answer.getElementsByTagName("SensorsList");
     }
 
-    public void setSensorVisibility(String l, Boolean r) {
-        /*
-        *   TODO: CALL THE SERVICE OR SET THE VISIBILITY OF THE SENSOR BASED ON THE BOOLEAN INPUT, TRUE VISIBLE, FALSE INVISIBLE.
-        */
-    }
+    public String getNewEvent(ManageXML mngXML, HTTPClient hc) throws Exception{
+        Document data = mngXML.newDocument("waitEvents");
+        Document answer = hc.execute("Sensors", data);
+        mngXML.transform(System.out, answer);
+        return answer.getElementsByTagName("message").item(0).getTextContent();
+    } 
 }

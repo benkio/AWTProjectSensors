@@ -145,16 +145,13 @@ public class SensorsControlPanel extends JApplet {
                 System.out.println(runComet);
                 try {
                     // prepare the request xml
-                    Document data = mngXML.newDocument("waitEvents");
-                    Document answer = hc.execute("Sensors", data);
-                    mngXML.transform(System.out, answer);
-                    String message = answer.getElementsByTagName("message").item(0).getTextContent();
+                    String message = sensorsRequests.getNewEvent(mngXML, hc);
                     if (message.equals("NewEvent")){
                         runComet = false;
                         sensorDownloadWorker = new SensorDownloadWorker();
                         sensorDownloadWorker.execute();
                     }
-                } catch (TransformerException | ParserConfigurationException | SAXException | IOException | DOMException e) {
+                } catch (Exception e) {
                     runComet = false;
                     System.out.println(e);
                 }

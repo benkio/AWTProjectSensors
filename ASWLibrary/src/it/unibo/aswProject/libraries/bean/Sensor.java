@@ -11,6 +11,13 @@ package it.unibo.aswProject.libraries.bean;
  */
 public class Sensor {
     public String Name;
-    public String Status;
+    public SensorState Status;
     public int Value;
+    
+    private enum SensorState{
+        Active,
+        Disabled,
+        Warning,
+        Critical
+    }
 }
