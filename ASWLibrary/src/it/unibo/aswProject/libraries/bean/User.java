@@ -24,8 +24,10 @@ public class User {
     public String pass;
     public String email;
     public boolean isAdmin;
-
+    public SensorList sensors;
+    
     public User() {
+        sensors = new SensorList();
     }
 }
 
