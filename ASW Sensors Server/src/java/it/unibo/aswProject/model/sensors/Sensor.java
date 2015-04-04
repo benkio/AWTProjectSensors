@@ -1,5 +1,7 @@
 package it.unibo.aswProject.model.sensors;
 
+import java.util.Random;
+
 /**
  *
  * @author Thomas
@@ -14,6 +16,7 @@ public class Sensor{
         this.list= list;
         this.id = number;
         this.state = SensorState.Active;
+        this.value = new Random().nextInt(101);
     }
     
     public synchronized int getValue(){
