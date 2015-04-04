@@ -6,6 +6,7 @@
 package it.unibo.aswProject.libraries.bean;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
     @XmlRootElement
     public class ActuatorList{
-        public ArrayList<Actuator> actuators;
+        public List<Actuator> actuators;
         
         public ActuatorList(){
             actuators= new ArrayList<>();

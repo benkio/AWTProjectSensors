@@ -6,13 +6,14 @@
 package it.unibo.aswProject.libraries.bean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Enrico Benini
  */
 public class SensorList {
-    public ArrayList<Sensor> sensors;
+    public List<Sensor> sensors;
     
     public SensorList(){
         sensors = new ArrayList<>();

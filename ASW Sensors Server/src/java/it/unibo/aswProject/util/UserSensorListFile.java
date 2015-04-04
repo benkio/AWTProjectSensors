@@ -16,6 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -84,8 +86,29 @@ public class UserSensorListFile {
         out.close();
     }
     
-    public synchronized SensorList getSensorListByUser(User user){}
-    public synchronized void addSensorToUser(User user){}
-    public synchronized void removeSensorToUser(User user){}
-    public synchronized void setSensorToUsers(UserList users, SensorList sensors){}
+    public synchronized List<String> getSensorIdsByUser(User user) throws Exception{
+        return readFile().userSensor.get(user.username);
+    }
+    
+    public synchronized void addSensorToUser(User user, String sensor) throws Exception{
+        UserSensorList usl = readFile();
+        List<String> userSensors = usl.userSensor.get(user.username);
+        userSensors.add(sensor);
+        usl.userSensor.put(user.username, userSensors);
+        writeFile(usl);
+    }
+    public synchronized void removeSensorToUser(User user, String sensor) throws Exception{
+        UserSensorList usl = readFile();
+        List<String> userSensors = usl.userSensor.get(user.username);
+        userSensors.remove(sensor);
+        usl.userSensor.put(user.username, userSensors);
+        writeFile(usl);
+    }
+    public synchronized void setSensorsToUsers(UserList users, SensorList sensors) throws Exception{
+        UserSensorList usl = readFile();
+        users.users.forEach( (User u) -> {
+            List<String> sen = sensors.sensors.stream().map(s -> s.Name).collect(Collectors.toList());
+            usl.userSensor.put(u.username, sen );
+        });
+    }
 }
