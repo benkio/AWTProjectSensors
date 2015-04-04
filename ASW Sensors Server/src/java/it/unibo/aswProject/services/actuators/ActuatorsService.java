@@ -6,7 +6,6 @@
 package it.unibo.aswProject.services.actuators;
 
 import it.unibo.aswProject.libraries.xml.ManageXML;
-import it.unibo.aswProject.model.actuators.ActuatorWrapper;
 import it.unibo.aswProject.libraries.bean.ActuatorList;
 import it.unibo.aswProject.model.actuators.ActuatorsManager;
 import it.unibo.aswProject.model.sensors.SensorManager;

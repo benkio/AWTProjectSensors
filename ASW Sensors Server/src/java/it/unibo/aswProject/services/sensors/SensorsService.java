@@ -1,13 +1,17 @@
 package it.unibo.aswProject.services.sensors;
 
 import it.unibo.aswProject.model.sensors.SensorManager;
-import it.unibo.aswProject.model.sensors.Sensor;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import it.unibo.aswProject.libraries.interfaces.ISensorEventsListener;
 import it.unibo.aswProject.enums.SensorEventType;
+import it.unibo.aswProject.libraries.bean.Sensor;
+import it.unibo.aswProject.libraries.bean.User;
+import it.unibo.aswProject.util.SensorListFile;
+import it.unibo.aswProject.util.UserSensorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
@@ -31,8 +35,9 @@ import org.w3c.dom.Element;
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
 public class SensorsService extends HttpServlet implements ISensorEventsListener{
 
-    private SensorManager sm;
-    
+    //private SensorManager sm;
+    private UserSensorListFile uslf;
+    private SensorListFile slf;
     private LinkedList<AsyncContext> contexts;
 
     @Override
@@ -41,6 +46,12 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         
         contexts= new LinkedList<>();
         sm = SensorManager.getInstance();
+        try {
+            uslf = UserSensorListFile.getInstance(getServletContext());
+            slf = SensorListFile.getInstance(getServletContext());
+        } catch (Exception ex) {
+            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+        }
         sm.setListener(this);
     }
     
@@ -64,7 +75,7 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         }
     }
 
-    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws IOException, TransformerException {
+    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws IOException, TransformerException, Exception {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         
@@ -87,7 +98,7 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         }else{
             switch (operation) {
                 case "getSensors":
-                    sendSensors(mngXML,response);
+                    sendSensors(mngXML,response,user);
                     break;
                 case "getValues":
                     //sendSensorsValues(mngXML,response);
@@ -126,17 +137,20 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         response.getOutputStream().close(); 
     }
 
-    private void sendSensors(ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
+    private void sendSensors(ManageXML mngXML, HttpServletResponse response, String username) throws Exception {
         System.out.println("Get Sensors Recived");
 
         Document doc= mngXML.newDocument("SensorsList");
-
-        for (Sensor s : sm.getSensorList().values()) {
-            Element sensor = doc.createElement("Sensor");
-            sensor.setAttribute("id", Integer.toString(s.getId()));
-            sensor.setAttribute("value", Integer.toString(s.getValue()));
-            sensor.appendChild(doc.createTextNode(s.getState().toString()));
-            doc.getDocumentElement().appendChild(sensor);
+        User tempUser = new User();
+        tempUser.username = username;
+        List<String> sensorList = uslf.getSensorIdsByUser(tempUser);
+        for (String s : sensorList) {
+            Sensor sensor = slf.getSensorByName(s);
+            Element sensorXml = doc.createElement("Sensor");
+            sensorXml.setAttribute("id", sensor.Name);
+            sensorXml.setAttribute("value", Integer.toString(sensor.Value));
+            sensorXml.appendChild(doc.createTextNode(sensor.Status.name()));
+            doc.getDocumentElement().appendChild(sensorXml);
         }
 
         mngXML.transform(response.getOutputStream(), doc);

@@ -17,8 +17,6 @@ public class SensorManager implements ISensorListener , IActuatorListener {
     
     private static SensorManager instance;
     private ISensorEventsListener listener;
-    private HashMap<Integer,Sensor> sensorList;
-    
     
     private SensorManager(){
         sensorList= new HashMap<>();
@@ -37,19 +35,6 @@ public class SensorManager implements ISensorListener , IActuatorListener {
         return instance;  
     }
     
-    public synchronized void addSensor(Sensor s){
-        sensorList.put(s.getId(), s);
-        listener.newEvent(null);
-    }
-    
-    public synchronized Sensor getSensor(int num){
-        return sensorList.get(num);
-    }
-
-    public synchronized HashMap<Integer, Sensor> getSensorList() {
-        return sensorList;
-    }
-
     public void setListener(ISensorEventsListener listener) {
         this.listener = listener;
     }
