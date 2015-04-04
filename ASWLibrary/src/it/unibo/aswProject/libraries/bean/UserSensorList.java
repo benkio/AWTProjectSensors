@@ -11,10 +11,10 @@ import java.util.HashMap;
  *
  * @author enricobenini
  */
-public class UserSensor {
+public class UserSensorList {
     public HashMap<String,String> userSensor;
     
-    public UserSensor(){
+    public UserSensorList(){
         userSensor = new HashMap<>();
     }
 }
