@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.model.sensors;
+package it.unibo.aswProject.libraries.interfaces;
+
+import it.unibo.aswProject.libraries.bean.Actuator;
+
 
 /**
  *
  * @author Thomas
  */
-public interface ISensorListener {
-    public void update(SensorEventType event, Object state);
+public interface IActuatorListener {
+    void actuatorUpdated(Actuator act);
 }

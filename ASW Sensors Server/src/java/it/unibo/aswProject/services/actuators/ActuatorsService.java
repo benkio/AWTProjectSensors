@@ -6,8 +6,8 @@
 package it.unibo.aswProject.services.actuators;
 
 import it.unibo.aswProject.libraries.xml.ManageXML;
-import it.unibo.aswProject.model.actuators.Actuator;
-import it.unibo.aswProject.model.actuators.ActuatorList;
+import it.unibo.aswProject.model.actuators.ActuatorWrapper;
+import it.unibo.aswProject.libraries.bean.ActuatorList;
 import it.unibo.aswProject.model.actuators.ActuatorsManager;
 import it.unibo.aswProject.model.sensors.SensorManager;
 import it.unibo.aswProject.services.sensors.SensorsService;
@@ -90,8 +90,8 @@ public class ActuatorsService extends HttpServlet {
             case"getActuators":
                 
                 if(am.getList().isEmpty()){
-                    am.addActuator(new Actuator(1, 1, null));
-                    am.addActuator(new Actuator(2, 2, null));
+                    am.addActuator(new ActuatorWrapper(1, 1, null));
+                    am.addActuator(new ActuatorWrapper(2, 2, null));
                 }
                 if(!am.getList().isEmpty())
                 {

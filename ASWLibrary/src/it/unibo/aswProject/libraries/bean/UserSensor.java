@@ -5,17 +5,16 @@
  */
 package it.unibo.aswProject.libraries.bean;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
- * @author Enrico Benini
+ * @author enricobenini
  */
-public class SensorList {
-    public ArrayList<Sensor> sensors;
+public class UserSensor {
+    public HashMap<String,String> userSensor;
     
-    public SensorList(){
-        sensors = new ArrayList<>();
+    public UserSensor(){
+        userSensor = new HashMap<>();
     }
-    
 }

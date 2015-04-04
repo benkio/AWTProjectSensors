@@ -3,11 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.model.actuators;
+package it.unibo.aswProject.libraries.bean;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import javax.xml.bind.annotation.XmlList;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,17 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
     @XmlRootElement
     public class ActuatorList{
-        private ArrayList<Actuator> actuatorList;
+        public ArrayList<Actuator> actuatorList;
         
         public ActuatorList(){
             actuatorList= new ArrayList<>();
-        }
-
-        public ArrayList<Actuator> getList() {
-            return actuatorList;
-        }
-
-        public void setList(ArrayList<Actuator> list) {
-            this.actuatorList = list;
-        }        
+        }   
     }

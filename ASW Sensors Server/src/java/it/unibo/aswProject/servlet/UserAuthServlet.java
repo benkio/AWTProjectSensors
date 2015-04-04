@@ -15,7 +15,7 @@
  */
 package it.unibo.aswProject.servlet;
 
-import it.unibo.aswProject.libraries.CommonServiceRequests.SensorRequests;
+import it.unibo.aswProject.libraries.commonServiceRequests.SensorRequests;
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;

@@ -5,17 +5,16 @@
  */
 package it.unibo.aswProject.libraries.bean;
 
-import java.util.ArrayList;
-
 /**
  *
- * @author Enrico Benini
+ * @author enricobenini
  */
-public class SensorList {
-    public ArrayList<Sensor> sensors;
+public class Actuator {
+    public int id;
+    public int value;
     
-    public SensorList(){
-        sensors = new ArrayList<>();
+    public Actuator(){
+        this.id = 0;
+        this.value = 0;
     }
-    
 }

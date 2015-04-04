@@ -5,6 +5,9 @@
  */
 package it.unibo.aswProject.libraries.bean;
 
+import it.unibo.aswProject.enums.SensorState;
+import java.util.Random;
+
 /**
  *
  * @author Enrico Benini
@@ -14,10 +17,9 @@ public class Sensor {
     public SensorState Status;
     public int Value;
     
-    private enum SensorState{
-        Active,
-        Disabled,
-        Warning,
-        Critical
+    public Sensor(String name) {
+        this.Name = name;
+        this.Status = SensorState.Active;
+        this.Value = new Random().nextInt(101);
     }
 }

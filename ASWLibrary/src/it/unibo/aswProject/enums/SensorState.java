@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.model.sensors;
+package it.unibo.aswProject.enums;
 
 /**
  *
  * @author Thomas
  */
-public enum SensorEventType {
-    ValueChanged,
-    StateChanged
+public enum SensorState {
+    Active,
+    Disabled,
 }

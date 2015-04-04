@@ -5,8 +5,11 @@
  */
 package it.unibo.aswProject.model.sensors;
 
-import it.unibo.aswProject.model.actuators.Actuator;
-import it.unibo.aswProject.model.actuators.IActuatorListener;
+import it.unibo.aswProject.enums.SensorEventType;
+import it.unibo.aswProject.libraries.interfaces.ISensorListener;
+import it.unibo.aswProject.libraries.interfaces.ISensorEventsListener;
+import it.unibo.aswProject.model.actuators.ActuatorWrapper;
+import it.unibo.aswProject.libraries.interfaces.IActuatorListener;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -52,7 +55,7 @@ public class SensorManager implements ISensorListener , IActuatorListener {
     }
 
     @Override
-    public synchronized void actuatorUpdated(Actuator act) {
+    public synchronized void actuatorUpdated(ActuatorWrapper act) {
         for (Sensor s : sensorList.values()) {
             s.setValue(new Random().nextInt(101));
         }

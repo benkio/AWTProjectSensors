@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.unibo.aswProject.libraries.CommonServiceRequests;
+package it.unibo.aswProject.libraries.commonServiceRequests;
 
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.xml.ManageXML;
@@ -21,6 +21,7 @@ public class SensorRequests {
             // do request
             Document answer = hc.execute("Sensors", data);
             // get response
+            mngXML.transform(System.out, answer);
             return answer.getElementsByTagName("SensorsList");
     }
 
