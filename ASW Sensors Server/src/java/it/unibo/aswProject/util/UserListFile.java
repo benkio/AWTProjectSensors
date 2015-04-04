@@ -77,9 +77,9 @@ public class UserListFile {
             createFile();
         }
         InputStream in = new FileInputStream(userFile);
-        Document tweetsDoc = mngXML.parse(in);
+        Document userDoc = mngXML.parse(in);
         Unmarshaller u = context.createUnmarshaller();
-        UserList users = (UserList) u.unmarshal(tweetsDoc);
+        UserList users = (UserList) u.unmarshal(userDoc);
         return users;
     }
 

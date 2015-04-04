@@ -67,9 +67,9 @@ public class SensorListFile {
             writeFile(new SensorList());
         }
         InputStream in = new FileInputStream(sensorFile);
-        Document tweetsDoc = mngXML.parse(in);
+        Document sensorDoc = mngXML.parse(in);
         Unmarshaller u = context.createUnmarshaller();
-        SensorList sensors = (SensorList) u.unmarshal(tweetsDoc);
+        SensorList sensors = (SensorList) u.unmarshal(sensorDoc);
         return sensors;
     }
     

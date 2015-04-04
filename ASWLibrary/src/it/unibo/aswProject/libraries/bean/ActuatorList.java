@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
     @XmlRootElement
     public class ActuatorList{
-        public ArrayList<Actuator> actuatorList;
+        public ArrayList<Actuator> actuators;
         
         public ActuatorList(){
-            actuatorList= new ArrayList<>();
+            actuators= new ArrayList<>();
         }   
     }
