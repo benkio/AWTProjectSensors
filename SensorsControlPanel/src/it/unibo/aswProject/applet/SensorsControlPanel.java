@@ -10,18 +10,11 @@ import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.awt.*;
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 import it.unibo.aswProject.libraries.ui.EntryListCellRenderer;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -31,7 +24,7 @@ public class SensorsControlPanel extends JApplet {
 
     private ManageXML mngXML;
     private HTTPClient hc;
-    private SensorRequests sensorsRequests = new SensorRequests();
+    private final SensorRequests sensorsRequests = new SensorRequests();
     private AppletGUI appletGUI;
     private String username;
     private CometValueUpdaterThread cometValueUpdaterThread;
@@ -51,7 +44,7 @@ public class SensorsControlPanel extends JApplet {
                     appletGUI.fillContainer(getContentPane());
                 }
             });
-        } catch (MalformedURLException | TransformerConfigurationException | ParserConfigurationException | InterruptedException | InvocationTargetException e) {
+        } catch (Exception e) {
             System.err.println("createGUI non eseguito con successo");
             Logger.getLogger(SensorsControlPanel.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -116,7 +109,7 @@ public class SensorsControlPanel extends JApplet {
             contentPane = cp;
             contentPane.setLayout(new BorderLayout());
 
-            model = new DefaultListModel<String[]>();
+            model = new DefaultListModel<>();
             sensorsList = new JList(model);
             sensorsList.setCellRenderer(new EntryListCellRenderer());
             jScrollPane = new JScrollPane(sensorsList);

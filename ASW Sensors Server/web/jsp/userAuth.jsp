@@ -61,7 +61,6 @@
             });
 
             $("input[name*='SensorEnable']").change(function () {
-                debugger;
                 var numeric_part = $(this).attr('name').substr(12);
                 refreshCheckboxValues(numeric_part, $(this).prop('checked'));
             });
