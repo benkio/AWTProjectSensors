@@ -22,9 +22,15 @@ public class HTTPClientFactory {
         File file = new File(url.getPath());
         // get the parent of the file
         String parentPath = file.getParent();
-        // construct a new url with the parent path
-        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), parentPath.replace('\\','/') + "/");
+        // construct a new url with the parent path        
+        URL parentUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), fixParentPath(parentPath));
         hc.setBase(parentUrl);
         return hc;
+    }
+
+    public static String fixParentPath(String parentPath) {
+        if (parentPath.contains("/jsp"))
+            parentPath = parentPath.replace("/jsp", "");
+        return parentPath.replace('\\','/') + "/";
     }
 }
