@@ -64,7 +64,7 @@ public class SensorListFile {
      */
     public synchronized SensorList readFile() throws Exception {
         if (!sensorFile.exists()) {
-            writeFile(new SensorList());
+            createFile();
         }
         InputStream in = new FileInputStream(sensorFile);
         Document sensorDoc = mngXML.parse(in);
@@ -80,6 +80,14 @@ public class SensorListFile {
         OutputStream out = new FileOutputStream(sensorFile);
         mngXML.transform(out, doc);
         out.close();
+    }
+    
+    private void createFile() throws Exception {
+        SensorList sl = new SensorList();
+        for(int cont =0; cont <5; cont++){
+            sl.sensors.add(cont, new Sensor(Integer.toString(cont)));
+        }
+        writeFile(sl);
     }
     
      /**
@@ -127,7 +135,7 @@ public class SensorListFile {
             sl.sensors.add(sensor);
             writeFile(sl);
         } else {
-            throw new Exception("Sensor already registered.");
+            throw new Exception("Sensor already exist.");
         }
     }
 
@@ -143,4 +151,15 @@ public class SensorListFile {
         return getSensorByName(sensor.Name).Status;
     }
     
+    public synchronized void setValue(Sensor sensor, int newValue) throws Exception{
+        SensorList sl = readFile();
+        if (isSensorInDB(sensor,sl)){
+            int index = sl.sensors.indexOf(sensor);
+            sensor.Value = newValue;
+            sl.sensors.set(index, sensor);
+            writeFile(sl);
+        }
+        else
+            throw new Exception("Actuator does not exist.");
+    }
 }

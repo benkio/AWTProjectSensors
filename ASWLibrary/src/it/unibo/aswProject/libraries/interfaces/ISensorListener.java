@@ -12,5 +12,5 @@ import it.unibo.aswProject.enums.SensorEventType;
  * @author Thomas
  */
 public interface ISensorListener {
-    public void update(SensorEventType event, Object state);
+    public void update(SensorEventType event);
 }

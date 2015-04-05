@@ -6,15 +6,17 @@
 package it.unibo.aswProject.servlet;
 
 import it.unibo.aswProject.libraries.commonServiceRequests.SensorRequests;
-import it.unibo.aswProject.libraries.commonServiceRequests.UserRequests;
 import it.unibo.aswProject.libraries.http.HTTPClient;
 import it.unibo.aswProject.libraries.http.HTTPClientFactory;
 import it.unibo.aswProject.libraries.xml.ManageXML;
+import it.unibo.aswProject.util.UserSensorListFile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,9 +31,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UserSensorsServlet", urlPatterns = {"/UserSensorsServlet"})
 public class UserSensorsServlet extends HttpServlet {
 
-    private ManageXML mngXML;
-    private HTTPClient hc;
-    private UserRequests userRequests = new UserRequests();
+    private UserSensorListFile uslf;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,16 +47,16 @@ public class UserSensorsServlet extends HttpServlet {
         String errorMsg = "";
         try {
             HttpSession session = request.getSession();
-            hc = HTTPClientFactory.GetHttpClient(   session.getId(), 
-                                                    new URL(request.getScheme(), 
-                                                            request.getServerName(), 
-                                                            request.getServerPort(), 
-                                                            request.getContextPath()+request.getServletPath()));
+            uslf = UserSensorListFile.getInstance(getServletContext());
             List<String> sensorNames = Arrays.asList(request.getParameter("names").split("\\s*,\\s*"));
             List<String> sensorEnables = Arrays.asList(request.getParameter("enabled").split("\\s*,\\s*"));
             List<Pair<String,Boolean>> parameters = castParameters(sensorNames, sensorEnables);
             parameters.stream().forEach((Pair<String, Boolean> param) -> {
-                userRequests.setSensorVisibility(mngXML,hc,param.l,param.r, session.getAttribute("username").toString());
+                try {
+                    uslf.setUserSensorRelation(param.l,param.r, session.getAttribute("username").toString());
+                } catch (Exception ex) {
+                    Logger.getLogger(UserSensorsServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
             response.sendRedirect(request.getContextPath() + "/UserAuthServlet");
             

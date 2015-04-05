@@ -20,6 +20,6 @@ public class Sensor {
     public Sensor(String name) {
         this.Name = name;
         this.Status = SensorState.Active;
-        this.Value = new Random().nextInt(101);
+        this.Value = new Random().nextInt(100) + 1;
     }
 }

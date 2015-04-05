@@ -77,7 +77,7 @@ public class UserSensorListFile {
         return sensors;
     }
     
-    private synchronized void writeFile(UserSensorList userSensorList) throws Exception {
+    private void writeFile(UserSensorList userSensorList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
         marsh.marshal(userSensorList, doc);
@@ -90,25 +90,32 @@ public class UserSensorListFile {
         return readFile().userSensor.get(user.username);
     }
     
-    public synchronized void addSensorToUser(User user, String sensor) throws Exception{
+    private void addSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         List<String> userSensors = usl.userSensor.get(user.username);
         userSensors.add(sensor);
         usl.userSensor.put(user.username, userSensors);
         writeFile(usl);
     }
-    public synchronized void removeSensorToUser(User user, String sensor) throws Exception{
+    private void removeSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         List<String> userSensors = usl.userSensor.get(user.username);
         userSensors.remove(sensor);
         usl.userSensor.put(user.username, userSensors);
         writeFile(usl);
     }
-    public synchronized void setSensorsToUsers(UserList users, SensorList sensors) throws Exception{
+    public synchronized void setSensorsToUser(User user, SensorList sensors) throws Exception{
         UserSensorList usl = readFile();
-        users.users.forEach( (User u) -> {
-            List<String> sen = sensors.sensors.stream().map(s -> s.Name).collect(Collectors.toList());
-            usl.userSensor.put(u.username, sen );
-        });
+        List<String> sen = sensors.sensors.stream().map(s -> s.Name).collect(Collectors.toList());
+        usl.userSensor.put(user.username, sen );
+    }
+    
+    public synchronized void setUserSensorRelation(String sensorName, Boolean sensorEnable, String username) throws Exception {
+        User tempUser = new User();
+        tempUser.username = username;
+        if (sensorEnable)
+            addSensorToUser(tempUser,sensorName);
+        else
+            removeSensorToUser(tempUser,sensorName);
     }
 }

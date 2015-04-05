@@ -40,7 +40,8 @@ public class UserListFile {
     private final File userFile;
     private JAXBContext context;
     private ManageXML mngXML;
-
+    private String webPagesPath;
+    private final ServletContext servletContext;
     /**
      * Return a singleton object of UserListFile
      *     
@@ -58,8 +59,9 @@ public class UserListFile {
         }
         return instance;
     }
-
+    
     private UserListFile(ServletContext servletContext) throws Exception {
+        this.servletContext = servletContext;
         context = JAXBContext.newInstance(UserList.class);
         mngXML = new ManageXML();
         String webPagesPath = servletContext.getRealPath("/");
@@ -95,6 +97,7 @@ public class UserListFile {
             user.isAdmin = false;
             ul.users.add(user);
             writeFile(ul);
+            UserSensorListFile.getInstance(servletContext).setSensorsToUser(user, SensorListFile.getInstance(servletContext).readFile());
         } else {
             throw new Exception("User already registered.");
         }
@@ -193,6 +196,7 @@ public class UserListFile {
         admin.isAdmin = true;
         UserList ul = new UserList();
         ul.users.add(admin);
+        UserSensorListFile.getInstance(servletContext).setSensorsToUser(admin, SensorListFile.getInstance(servletContext).readFile());
         writeFile(ul);
     }
 }

@@ -63,7 +63,7 @@ public class ActuatorListFile {
      */
     public synchronized ActuatorList readFile() throws Exception {
         if (!actuatorFile.exists()) {
-            writeFile(new ActuatorList());
+            createFile();
         }
         InputStream in = new FileInputStream(actuatorFile);
         Document actuatorDoc = mngXML.parse(in);
@@ -81,6 +81,18 @@ public class ActuatorListFile {
         out.close();
     }
     
+    private void createFile() throws Exception {
+        ActuatorList al = new ActuatorList();
+        Actuator a1 = new Actuator();
+        Actuator a2 = new Actuator();
+        a1.id = 1;
+        a1.value = 50;
+        a2.id = 2;
+        a2.value = 50;
+        al.actuators.add(a1);
+        al.actuators.add(a2);
+        writeFile(al);
+    }
      /**
      * @param id
      * @return actuator information
@@ -126,12 +138,24 @@ public class ActuatorListFile {
             al.actuators.add(actuator);
             writeFile(al);
         } else {
-            throw new Exception("Actuator already registered.");
+            throw new Exception("Actuator already exist.");
         }
+    }
+    
+    public synchronized void setValue(Actuator actuator, int newValue) throws Exception {
+        ActuatorList al = readFile();
+        if (isActuatorInDB(actuator,al)){
+            int index = al.actuators.indexOf(actuator);
+            actuator.value = newValue;
+            al.actuators.set(index, actuator);
+            writeFile(al);
+        }
+        else
+            throw new Exception("Actuator does not exist.");
     }
 
     private boolean isActuatorInDB(Actuator actuator, ActuatorList al) {
-        return al.actuators.stream().anyMatch((a) -> (a.id == actuator.id));
+        return al.actuators.contains(actuator);
     }
 
     public synchronized int getValue(Actuator actuator) throws Exception{

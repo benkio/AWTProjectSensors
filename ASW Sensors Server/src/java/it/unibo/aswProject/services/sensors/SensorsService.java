@@ -1,11 +1,11 @@
 package it.unibo.aswProject.services.sensors;
 
-import it.unibo.aswProject.model.sensors.SensorManager;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import it.unibo.aswProject.libraries.interfaces.ISensorEventsListener;
 import it.unibo.aswProject.enums.SensorEventType;
 import it.unibo.aswProject.libraries.bean.Sensor;
 import it.unibo.aswProject.libraries.bean.User;
+import it.unibo.aswProject.controller.EventDispatcher;
 import it.unibo.aswProject.util.SensorListFile;
 import it.unibo.aswProject.util.UserSensorListFile;
 import java.io.IOException;
@@ -39,20 +39,22 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
     private UserSensorListFile uslf;
     private SensorListFile slf;
     private LinkedList<AsyncContext> contexts;
+    private EventDispatcher ed;
 
     @Override
     public void init() throws ServletException {
         super.init();
         
         contexts= new LinkedList<>();
-        sm = SensorManager.getInstance();
+        ed = EventDispatcher.getInstance();
         try {
             uslf = UserSensorListFile.getInstance(getServletContext());
             slf = SensorListFile.getInstance(getServletContext());
         } catch (Exception ex) {
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sm.setListener(this);
+        ed.setListener(this, slf);
+        
     }
     
     @Override
@@ -99,9 +101,6 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
             switch (operation) {
                 case "getSensors":
                     sendSensors(mngXML,response,user);
-                    break;
-                case "getValues":
-                    //sendSensorsValues(mngXML,response);
                     break;
                 case "waitEvents":
                     waitEvents(mngXML,response,request);

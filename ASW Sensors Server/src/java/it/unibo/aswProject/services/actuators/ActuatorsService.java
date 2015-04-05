@@ -5,11 +5,11 @@
  */
 package it.unibo.aswProject.services.actuators;
 
+import it.unibo.aswProject.libraries.bean.Actuator;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import it.unibo.aswProject.libraries.bean.ActuatorList;
-import it.unibo.aswProject.model.actuators.ActuatorsManager;
-import it.unibo.aswProject.model.sensors.SensorManager;
 import it.unibo.aswProject.services.sensors.SensorsService;
+import it.unibo.aswProject.util.ActuatorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,14 +39,17 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ActuatorsService", urlPatterns = {"/actuators"})
 public class ActuatorsService extends HttpServlet {
 
-    private ActuatorsManager am;
-
+    private ActuatorListFile afl;
+    
     @Override
     public void init() throws ServletException {
         super.init();
         
-        am = ActuatorsManager.getInstance();
-        am.setListener(SensorManager.getInstance());
+        try {
+            afl = ActuatorListFile.getInstance(getServletContext());
+        } catch (Exception ex) {
+            Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -69,47 +72,29 @@ public class ActuatorsService extends HttpServlet {
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (JAXBException ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws JAXBException, IOException, TransformerException, ParserConfigurationException {
+    private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws JAXBException, IOException, TransformerException, ParserConfigurationException, Exception {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
         Document answer= null;
         
-//        String logged = (String) session.getAttribute("isLoggedIn");
-//        if(logged==null || !logged.equals("true")){
-//            answer = mngXML.newDocument("notLogged");
-//            mngXML.transform(response.getOutputStream(), answer);
-//            response.getOutputStream().close();
-//            return;
-//        }
-        
         switch (operation) {
             case"getActuators":
                 
-                if(am.getList().isEmpty()){
-                    am.addActuator(new ActuatorWrapper(1, 1, null));
-                    am.addActuator(new ActuatorWrapper(2, 2, null));
-                }
-                if(!am.getList().isEmpty())
-                {
                     JAXBContext jc = JAXBContext.newInstance(ActuatorList.class);
                     Marshaller marsh = jc.createMarshaller();
 
                     try (OutputStream os = response.getOutputStream()) {
                             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                            ActuatorList al = new ActuatorList();
-                            al.setList(am.getList());
+                            ActuatorList al = afl.readFile();
                             marsh.marshal(al, doc);
                             mngXML.transform(os, doc);
                             mngXML.transform(System.out, doc);
                     }
-
-                }
-                else{
-                    //TODO: No actuators
-                }
 
                 break;
                 
@@ -118,9 +103,7 @@ public class ActuatorsService extends HttpServlet {
                 Element idEl = (Element) data.getElementsByTagName("id").item(0);
                 Element valEl = (Element) data.getElementsByTagName("value").item(0);
                 
-                int id = Integer.parseInt(idEl.getTextContent());
-                int val = Integer.parseInt(valEl.getTextContent());
-                am.setActuatorValue(id, val);
+                afl.setValue(afl.getActuatorByName(Integer.parseInt(idEl.getTextContent())),Integer.parseInt(valEl.getTextContent()));
                 
                 answer = mngXML.newDocument("done");
                 mngXML.transform(response.getOutputStream(), answer);
