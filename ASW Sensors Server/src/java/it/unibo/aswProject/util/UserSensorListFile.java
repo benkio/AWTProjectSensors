@@ -10,7 +10,6 @@ import it.unibo.aswProject.controller.EventDispatcher;
 import it.unibo.aswProject.enums.SensorEventType;
 import it.unibo.aswProject.libraries.bean.SensorList;
 import it.unibo.aswProject.libraries.bean.User;
-import it.unibo.aswProject.libraries.bean.UserList;
 import it.unibo.aswProject.libraries.bean.UserSensorList;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import java.io.File;
@@ -26,6 +25,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
+
 
 /**
  *
@@ -46,7 +46,7 @@ public class UserSensorListFile {
      */
     public static UserSensorListFile getInstance(ServletContext servletContext) throws Exception {
         if (instance == null) {
-            synchronized (UserListFile.class) {
+            synchronized (UserSensorListFile.class) {
                 if (instance == null) {
                     instance = new UserSensorListFile(servletContext);
                 }

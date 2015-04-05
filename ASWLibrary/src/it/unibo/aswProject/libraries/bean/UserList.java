@@ -22,9 +22,10 @@ package it.unibo.aswProject.libraries.bean;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+
 /**
-* A list of users
-*/
+ * A list of users
+ */
 @XmlRootElement
 public class UserList {
 

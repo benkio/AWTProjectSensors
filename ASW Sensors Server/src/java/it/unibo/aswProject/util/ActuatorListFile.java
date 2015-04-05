@@ -40,7 +40,7 @@ public class ActuatorListFile {
      */
     public static ActuatorListFile getInstance(ServletContext servletContext) throws Exception {
         if (instance == null) {
-            synchronized (UserListFile.class) {
+            synchronized (ActuatorListFile.class) {
                 if (instance == null) {
                     instance = new ActuatorListFile(servletContext);
                 }

@@ -46,7 +46,7 @@ public class SensorListFile {
      */
     public static SensorListFile getInstance(ServletContext servletContext) throws Exception {
         if (instance == null) {
-            synchronized (UserListFile.class) {
+            synchronized (SensorListFile.class) {
                 if (instance == null) {
                     instance = new SensorListFile(servletContext);
                 }

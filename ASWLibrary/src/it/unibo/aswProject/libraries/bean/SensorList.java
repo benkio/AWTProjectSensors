@@ -7,16 +7,19 @@ package it.unibo.aswProject.libraries.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Enrico Benini
  */
+@XmlRootElement
 public class SensorList {
+
     public List<Sensor> sensors;
-    
-    public SensorList(){
+
+    public SensorList() {
         sensors = new ArrayList<>();
     }
-    
+
 }

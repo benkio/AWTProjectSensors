@@ -13,11 +13,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Thomas
  */
-    @XmlRootElement
-    public class ActuatorList{
-        public List<Actuator> actuators;
-        
-        public ActuatorList(){
-            actuators= new ArrayList<>();
-        }   
+@XmlRootElement
+public class ActuatorList {
+
+    public List<Actuator> actuators;
+
+    public ActuatorList() {
+        actuators = new ArrayList<>();
     }
+}
