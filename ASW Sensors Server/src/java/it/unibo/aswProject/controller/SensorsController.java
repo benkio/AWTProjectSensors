@@ -11,6 +11,7 @@ import it.unibo.aswProject.libraries.bean.Sensor;
 import it.unibo.aswProject.libraries.bean.SensorList;
 import it.unibo.aswProject.util.SensorListFile;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -39,16 +40,14 @@ public class SensorsController {
     public void computeSensorValues(Actuator act) throws Exception {
         if (slf != null) {
             List<Sensor> tempList = slf.readFile().sensors;
+            int actuatorInfluence = new Random().nextInt(((act.value +20)-(act.value-20)) + 1) +(act.value -20);
             for (Sensor s : tempList) {
                 int sensorNewValue = s.Value;
-
-                if (act.id % 2 == 0) {
-                    sensorNewValue = sensorNewValue * (sensorNewValue / act.value);
-                } else {
-                    sensorNewValue = sensorNewValue / (sensorNewValue / act.value);
-                }
+                
+                sensorNewValue = (act.id % 2 == 0) ? sensorNewValue + actuatorInfluence : sensorNewValue - actuatorInfluence;
+                
                 do {
-                    sensorNewValue = sensorNewValue < 0 ? sensorNewValue + 25 : sensorNewValue - 25;
+                    sensorNewValue = sensorNewValue < 0 ? sensorNewValue + actuatorInfluence : sensorNewValue - actuatorInfluence;
                 } while (!(sensorNewValue > 0 && sensorNewValue < 100));
 
                 slf.setValue(s, sensorNewValue);
