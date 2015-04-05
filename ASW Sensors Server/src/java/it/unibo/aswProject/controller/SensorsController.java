@@ -17,10 +17,10 @@ import java.util.List;
  * @author enricobenini
  */
 public class SensorsController {
-    
+
     private static SensorsController instance;
-    private SensorListFile slf;    
-    
+    private SensorListFile slf;
+
     static SensorsController getInstance() {
         if (instance == null) {
             synchronized (SensorsController.class) {
@@ -31,27 +31,29 @@ public class SensorsController {
         }
         return instance;
     }
-    
-    public void setSensorListFile(SensorListFile slf){
-        this.slf = slf; 
-    }
-    
-    public void computeSensorValues(Actuator act) throws Exception {
-        List<Sensor> tempList = slf.readFile().sensors;
-        for (Sensor s: tempList){
-            int sensorNewValue = s.Value;
 
-            if(act.id % 2 == 0){
-                sensorNewValue = sensorNewValue * (sensorNewValue/act.value);
-            }else{
-                sensorNewValue = sensorNewValue / (sensorNewValue/act.value);
+    public void setSensorListFile(SensorListFile slf) {
+        this.slf = slf;
+    }
+
+    public void computeSensorValues(Actuator act) throws Exception {
+        if (slf != null) {
+            List<Sensor> tempList = slf.readFile().sensors;
+            for (Sensor s : tempList) {
+                int sensorNewValue = s.Value;
+
+                if (act.id % 2 == 0) {
+                    sensorNewValue = sensorNewValue * (sensorNewValue / act.value);
+                } else {
+                    sensorNewValue = sensorNewValue / (sensorNewValue / act.value);
+                }
+                do {
+                    sensorNewValue = sensorNewValue < 0 ? sensorNewValue + 25 : sensorNewValue - 25;
+                } while (!(sensorNewValue > 0 && sensorNewValue < 100));
+
+                slf.setValue(s, sensorNewValue);
             }
-            do{    
-                sensorNewValue = sensorNewValue < 0 ? sensorNewValue + 25 : sensorNewValue - 25;
-            }while(sensorNewValue> 0 && sensorNewValue< 100);
-            
-            slf.setValue(s, sensorNewValue);
         }
     }
-    
+
 }

@@ -55,16 +55,11 @@ public class EventDispatcher implements ISensorListener, IActuatorListener {
 
     @Override
     public void actuatorUpdated(Actuator act) {
-        new Thread(new Runnable() {
+        try {
+            sc.computeSensorValues(act);
+        } catch (Exception ex) {
+            Logger.getLogger(EventDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-            @Override
-            public void run() {
-                try {
-                    sc.computeSensorValues(act);
-                } catch (Exception ex) {
-                    Logger.getLogger(EventDispatcher.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }).start();
     }
 }

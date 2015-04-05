@@ -145,7 +145,7 @@ public class SensorListFile {
      */
     public synchronized void addSensor(Sensor sensor) throws Exception {
         SensorList sl = readFile();
-        if (!isSensorInDB(sensor, sl)) {
+        if (getSensorIndexInDB(sensor.Name, sl) == -1) {
             sl.sensors.add(sensor);
             writeFile(sl);
             UserListFile.getInstance(servletContext).readFile().users.stream().forEach(u -> {
@@ -160,10 +160,14 @@ public class SensorListFile {
         }
     }
 
-    private boolean isSensorInDB(Sensor sensor, SensorList sl) {
-        return sl.sensors.stream().anyMatch((s) -> (s.Name.equals(sensor.Name)));
+    private int getSensorIndexInDB(String sensorName, SensorList sl) {
+        int index = -1;
+        for (int i = 0; i < sl.sensors.size(); i++){
+            if (sl.sensors.get(i).Name.equals(sensorName)){ index = i; break;}
+        }
+        return index;
     }
-
+    
     public synchronized int getValue(Sensor sensor) throws Exception {
         return getSensorByName(sensor.Name).Value;
     }
@@ -174,8 +178,8 @@ public class SensorListFile {
 
     public synchronized void setValue(Sensor sensor, int newValue) throws Exception {
         SensorList sl = readFile();
-        if (isSensorInDB(sensor, sl)) {
-            int index = sl.sensors.indexOf(sensor);
+        int index = getSensorIndexInDB(sensor.Name,sl);
+        if (index != -1) {
             sensor.Value = newValue;
             sl.sensors.set(index, sensor);
             writeFile(sl);
