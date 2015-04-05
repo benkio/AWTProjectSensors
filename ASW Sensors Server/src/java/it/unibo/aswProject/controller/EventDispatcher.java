@@ -39,7 +39,6 @@ public class EventDispatcher implements ISensorListener, IActuatorListener {
 
     public EventDispatcher() {
         sc = SensorsController.getInstance();
-        sc.setListener(this);
     }
 
     public void setListener(ISensorEventsListener listener, SensorListFile slf) {

@@ -92,14 +92,14 @@ public class UserSensorListFile {
         return readFile().userSensor.get(user.username);
     }
     
-    private void addSensorToUser(User user, String sensor) throws Exception{
+    public synchronized void addSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         List<String> userSensors = usl.userSensor.get(user.username);
         userSensors.add(sensor);
         usl.userSensor.put(user.username, userSensors);
         writeFile(usl);
     }
-    private void removeSensorToUser(User user, String sensor) throws Exception{
+    public synchronized void removeSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         List<String> userSensors = usl.userSensor.get(user.username);
         userSensors.remove(sensor);

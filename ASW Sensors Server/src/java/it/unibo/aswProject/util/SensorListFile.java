@@ -16,26 +16,30 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
+
 /**
  *
  * @author Enrico Benini
  */
 public class SensorListFile {
-    
+
     private volatile static SensorListFile instance = null;
     private final File sensorFile;
     private JAXBContext context;
     private ManageXML mngXML;
+    private final ServletContext servletContext;
 
-     /**
+    /**
      * Return a singleton object of UserListFile
-     *     
+     *
      * @param servletContext
      * @return
      * @throws Exception
@@ -53,12 +57,13 @@ public class SensorListFile {
 
     private SensorListFile(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(SensorList.class);
+        this.servletContext = servletContext;
         mngXML = new ManageXML();
         String webPagesPath = servletContext.getRealPath("/");
         sensorFile = new File(webPagesPath + "WEB-INF/xml/sensors.xml"); // this only works with default config of tomcat
     }
-    
-     /**
+
+    /**
      * Read the xml db
      *
      * @return the list of sensor
@@ -74,7 +79,7 @@ public class SensorListFile {
         SensorList sensors = (SensorList) u.unmarshal(sensorDoc);
         return sensors;
     }
-    
+
     private synchronized void writeFile(SensorList sensorList) throws Exception {
         Marshaller marsh = context.createMarshaller();
         Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -83,16 +88,16 @@ public class SensorListFile {
         mngXML.transform(out, doc);
         out.close();
     }
-    
+
     private void createFile() throws Exception {
         SensorList sl = new SensorList();
-        for(int cont =0; cont <5; cont++){
+        for (int cont = 0; cont < 5; cont++) {
             sl.sensors.add(cont, new Sensor(Integer.toString(cont)));
         }
         writeFile(sl);
     }
-    
-     /**
+
+    /**
      * @param name
      * @return sensor information
      * @throws Exception
@@ -106,8 +111,8 @@ public class SensorListFile {
         }
         throw new Exception("Sensor does not exist.");
     }
-    
-     /**
+
+    /**
      * Delete a sensor, removing its entry from the xml db
      *
      * @param name
@@ -119,13 +124,20 @@ public class SensorListFile {
             if (name.equals(s.Name)) {
                 sl.sensors.remove(s);
                 writeFile(sl);
+                UserListFile.getInstance(servletContext).readFile().users.stream().forEach(u -> {
+                    try {
+                        UserSensorListFile.getInstance(servletContext).removeSensorToUser(u, s.Name);
+                    } catch (Exception ex) {
+                        Logger.getLogger(SensorListFile.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
                 return;
             }
         }
         throw new Exception("Sensor does not exist.");
     }
-    
-     /**
+
+    /**
      * Add a new sensor, adding a new entry in the xml db
      *
      * @param sensor
@@ -136,6 +148,13 @@ public class SensorListFile {
         if (!isSensorInDB(sensor, sl)) {
             sl.sensors.add(sensor);
             writeFile(sl);
+            UserListFile.getInstance(servletContext).readFile().users.stream().forEach(u -> {
+                try {
+                    UserSensorListFile.getInstance(servletContext).addSensorToUser(u, sensor.Name);
+                } catch (Exception ex) {
+                    Logger.getLogger(SensorListFile.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
         } else {
             throw new Exception("Sensor already exist.");
         }
@@ -145,24 +164,24 @@ public class SensorListFile {
         return sl.sensors.stream().anyMatch((s) -> (s.Name.equals(sensor.Name)));
     }
 
-    public synchronized int getValue(Sensor sensor) throws Exception{
+    public synchronized int getValue(Sensor sensor) throws Exception {
         return getSensorByName(sensor.Name).Value;
     }
-    
-    public synchronized SensorState getStatus(Sensor sensor) throws Exception{
+
+    public synchronized SensorState getStatus(Sensor sensor) throws Exception {
         return getSensorByName(sensor.Name).Status;
     }
-    
-    public synchronized void setValue(Sensor sensor, int newValue) throws Exception{
+
+    public synchronized void setValue(Sensor sensor, int newValue) throws Exception {
         SensorList sl = readFile();
-        if (isSensorInDB(sensor,sl)){
+        if (isSensorInDB(sensor, sl)) {
             int index = sl.sensors.indexOf(sensor);
             sensor.Value = newValue;
             sl.sensors.set(index, sensor);
             writeFile(sl);
             EventDispatcher.getInstance().update(SensorEventType.ValueChanged);
-        }
-        else
+        } else {
             throw new Exception("Actuator does not exist.");
+        }
     }
 }
