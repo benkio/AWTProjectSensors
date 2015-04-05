@@ -5,6 +5,7 @@
  */
 package it.unibo.aswProject.util;
 
+import it.unibo.aswProject.controller.EventDispatcher;
 import it.unibo.aswProject.libraries.bean.Actuator;
 import it.unibo.aswProject.libraries.bean.ActuatorList;
 import it.unibo.aswProject.libraries.xml.ManageXML;
@@ -149,6 +150,7 @@ public class ActuatorListFile {
             actuator.value = newValue;
             al.actuators.set(index, actuator);
             writeFile(al);
+            EventDispatcher.getInstance().actuatorUpdated(actuator);
         }
         else
             throw new Exception("Actuator does not exist.");

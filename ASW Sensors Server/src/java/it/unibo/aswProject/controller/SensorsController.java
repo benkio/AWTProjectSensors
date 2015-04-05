@@ -20,7 +20,6 @@ public class SensorsController {
     
     private static SensorsController instance;
     private SensorListFile slf;    
-    private EventDispatcher eventDispatcher;
     
     static SensorsController getInstance() {
         if (instance == null) {
@@ -37,10 +36,6 @@ public class SensorsController {
         this.slf = slf; 
     }
     
-    public void setListener(EventDispatcher eventDispatcher) {
-        this.eventDispatcher = eventDispatcher;
-    }
-
     public void computeSensorValues(Actuator act) throws Exception {
         List<Sensor> tempList = slf.readFile().sensors;
         for (Sensor s: tempList){
@@ -57,7 +52,6 @@ public class SensorsController {
             
             slf.setValue(s, sensorNewValue);
         }
-        eventDispatcher.update(SensorEventType.ValueChanged);
     }
     
 }

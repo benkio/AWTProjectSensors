@@ -5,6 +5,8 @@
  */
 package it.unibo.aswProject.util;
 
+import it.unibo.aswProject.controller.EventDispatcher;
+import it.unibo.aswProject.enums.SensorEventType;
 import it.unibo.aswProject.enums.SensorState;
 import it.unibo.aswProject.libraries.bean.Sensor;
 import it.unibo.aswProject.libraries.bean.SensorList;
@@ -158,6 +160,7 @@ public class SensorListFile {
             sensor.Value = newValue;
             sl.sensors.set(index, sensor);
             writeFile(sl);
+            EventDispatcher.getInstance().update(SensorEventType.ValueChanged);
         }
         else
             throw new Exception("Actuator does not exist.");

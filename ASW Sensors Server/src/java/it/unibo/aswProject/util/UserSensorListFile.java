@@ -6,6 +6,8 @@
 package it.unibo.aswProject.util;
 
 
+import it.unibo.aswProject.controller.EventDispatcher;
+import it.unibo.aswProject.enums.SensorEventType;
 import it.unibo.aswProject.libraries.bean.SensorList;
 import it.unibo.aswProject.libraries.bean.User;
 import it.unibo.aswProject.libraries.bean.UserList;
@@ -117,5 +119,6 @@ public class UserSensorListFile {
             addSensorToUser(tempUser,sensorName);
         else
             removeSensorToUser(tempUser,sensorName);
+        EventDispatcher.getInstance().update(SensorEventType.ValueChanged);
     }
 }
