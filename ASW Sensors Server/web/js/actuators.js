@@ -20,7 +20,7 @@
  */
 function loadInitialActuator(xmlhttp) {
     var actuator_name, actuator_value, actuator, i;
-    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("list");
+    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("actuators");
     for (i = 0; i < actuator.length; i++) {
         actuator_name = actuator.item(i).getElementsByTagName("id").item(0).textContent;
         actuator_value = actuator.item(i).getElementsByTagName("value").item(0).textContent;

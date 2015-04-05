@@ -82,12 +82,14 @@ public class SensorsControlPanel extends JApplet {
             appletGUI.model.removeAllElements();
             for (int i = sensorsList.getChildNodes().getLength() - 1; i >= 0; i--) {
                 Element sensorElem = (Element) sensorsList.getChildNodes().item(i);
-                String[] listElem = {
-                    sensorElem.getAttribute("id"),
-                    sensorElem.getTextContent(),
-                    sensorElem.getAttribute("value")
-                };
-                appletGUI.model.addElement(listElem);
+                if (Boolean.valueOf(sensorElem.getAttribute("visible"))){
+                    String[] listElem = {
+                        sensorElem.getAttribute("id"),
+                        sensorElem.getTextContent(),
+                        sensorElem.getAttribute("value")
+                    };
+                    appletGUI.model.addElement(listElem);
+                }
             }
             cometValueUpdaterThread = new CometValueUpdaterThread();
             cometValueUpdaterThread.start(); 

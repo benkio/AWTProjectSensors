@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
@@ -142,12 +143,13 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         Document doc= mngXML.newDocument("SensorsList");
         User tempUser = new User();
         tempUser.username = username;
-        List<String> sensorList = uslf.getSensorIdsByUser(tempUser);
-        for (String s : sensorList) {
-            Sensor sensor = slf.getSensorByName(s);
+        Map<String,Boolean> sensorList = uslf.getSensorIdsByUser(tempUser);
+        for (Map.Entry<String, Boolean> s : sensorList.entrySet()){
+            Sensor sensor = slf.getSensorByName(s.getKey());
             Element sensorXml = doc.createElement("Sensor");
             sensorXml.setAttribute("id", sensor.Name);
             sensorXml.setAttribute("value", Integer.toString(sensor.Value));
+            sensorXml.setAttribute("visible", s.getValue().toString());
             sensorXml.appendChild(doc.createTextNode(sensor.Status.name()));
             doc.getDocumentElement().appendChild(sensorXml);
         }

@@ -73,7 +73,8 @@ header  h1{
 #navbarMenu li:hover{
     background-color: #fff;
 }
-#WelcomeUser {  //welcome user in the navbar
+/*welcome user in the navbar*/
+#WelcomeUser {  
     float: right;
     text-decoration: none;
     color: #fff;

@@ -5,7 +5,9 @@
  */
 package it.unibo.aswProject.libraries.bean;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
@@ -15,9 +17,12 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 public class ListWrapper {
 
     @XmlElementWrapper(name = "SensorList")
-    public List<String> sensorlist;
-
+    public Map<String,Boolean> sensorList;
+    
     public void setList(List<String> list) {
-        this.sensorlist = list;
+        list.stream().forEach(e -> this.sensorList.put(e, Boolean.TRUE));
+    }
+    public ListWrapper(){
+        sensorList = new HashMap<>();
     }
 }

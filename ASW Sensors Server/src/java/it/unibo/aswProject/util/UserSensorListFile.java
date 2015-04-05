@@ -18,7 +18,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBContext;
@@ -89,23 +91,27 @@ public class UserSensorListFile {
         out.close();
     }
     
-    public synchronized List<String> getSensorIdsByUser(User user) throws Exception{
-        return (List<String>) readFile().userSensor.get(user.username);
+    public synchronized Map<String,Boolean> getSensorIdsByUser(User user) throws Exception{
+        return readFile().userSensor.get(user.username).sensorList;
     }
     
     public synchronized void addSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         ListWrapper userSensors = usl.userSensor.get(user.username);
-        userSensors.sensorlist.add(sensor);
-        usl.userSensor.put(user.username, userSensors);
-        writeFile(usl);
+        if (!isSensorUserRelationExist(userSensors.sensorList,sensor)){
+            userSensors.sensorList.put(sensor,true);
+            usl.userSensor.put(user.username, userSensors);
+            writeFile(usl);
+        }
     }
     public synchronized void removeSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
         ListWrapper userSensors = usl.userSensor.get(user.username);
-        userSensors.sensorlist.remove(sensor);
-        usl.userSensor.put(user.username, userSensors);
-        writeFile(usl);
+        if (isSensorUserRelationExist(userSensors.sensorList,sensor)){
+            userSensors.sensorList.remove(sensor);
+            usl.userSensor.put(user.username, userSensors);
+            writeFile(usl);
+        }
     }
     public synchronized void setSensorsToUser(User user, SensorList sensors) throws Exception{
         UserSensorList usl = readFile();
@@ -119,10 +125,13 @@ public class UserSensorListFile {
     public synchronized void setUserSensorRelation(String sensorName, Boolean sensorEnable, String username) throws Exception {
         User tempUser = new User();
         tempUser.username = username;
-        if (sensorEnable)
-            addSensorToUser(tempUser,sensorName);
-        else
-            removeSensorToUser(tempUser,sensorName);
+        UserSensorList usl = readFile();
+        usl.userSensor.get(username).sensorList.replace(sensorName, sensorEnable);
+        writeFile(usl);
         EventDispatcher.getInstance().update(SensorEventType.ValueChanged);
+    }
+
+    private boolean isSensorUserRelationExist(Map<String,Boolean> sensorMap, String sensor) {
+        return sensorMap.containsKey(sensor);
     }
 }

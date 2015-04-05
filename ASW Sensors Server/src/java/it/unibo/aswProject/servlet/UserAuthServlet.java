@@ -81,7 +81,8 @@ public class UserAuthServlet extends HttpServlet {
             Node sensor = sensors.item(i);
             String sensor_name = sensor.getAttributes().getNamedItem("id").getNodeValue();
             String sensor_state = sensor.getTextContent();
-            sensorsHTML += "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" checked=\"checked\" /></td></tr>";
+            String sensor_checked = Boolean.valueOf(sensor.getAttributes().getNamedItem("visible").getNodeValue()) ? "checked=\"checked\"" : "";
+            sensorsHTML += "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" "+sensor_checked+" /></td></tr>";
         }
          
         return sensorsHTML;

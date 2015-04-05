@@ -135,7 +135,7 @@ public class ActuatorListFile {
      */
     public synchronized void addActuator(Actuator actuator) throws Exception {
         ActuatorList al = readFile();
-        if (!isActuatorInDB(actuator, al)) {
+        if (getActuatorIndexInDB(actuator.id, al)==-1) {
             al.actuators.add(actuator);
             writeFile(al);
         } else {
@@ -145,8 +145,8 @@ public class ActuatorListFile {
     
     public synchronized void setValue(Actuator actuator, int newValue) throws Exception {
         ActuatorList al = readFile();
-        if (isActuatorInDB(actuator,al)){
-            int index = al.actuators.indexOf(actuator);
+        int index = getActuatorIndexInDB(actuator.id, al);
+        if (index != -1){
             actuator.value = newValue;
             al.actuators.set(index, actuator);
             writeFile(al);
@@ -156,8 +156,12 @@ public class ActuatorListFile {
             throw new Exception("Actuator does not exist.");
     }
 
-    private boolean isActuatorInDB(Actuator actuator, ActuatorList al) {
-        return al.actuators.contains(actuator);
+    private int getActuatorIndexInDB(int actuatorId, ActuatorList al) {
+        int index = -1;
+        for (int i = 0; i < al.actuators.size(); i++){
+            if (al.actuators.get(i).id == actuatorId){ index = i; break;}
+        }
+        return index;
     }
 
     public synchronized int getValue(Actuator actuator) throws Exception{
