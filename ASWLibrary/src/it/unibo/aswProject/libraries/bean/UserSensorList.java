@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,10 +21,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * SEE http://www.dotnetperls.com/listmultimap
  */
 @XmlRootElement
-@XmlAccessorType (XmlAccessType.FIELD)
 public class UserSensorList {
-
-    public Map<String, List<String>> userSensor;
+    
+    @XmlElementWrapper(name = "UserSensorMap")
+    public Map<String, ListWrapper> userSensor;
 
     public UserSensorList() {
         userSensor = new LinkedHashMap<>();

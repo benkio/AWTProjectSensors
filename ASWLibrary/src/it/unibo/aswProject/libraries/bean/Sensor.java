@@ -22,4 +22,10 @@ public class Sensor {
         this.Status = SensorState.Active;
         this.Value = new Random().nextInt(100) + 1;
     }
+    
+    public Sensor(){
+        this.Name = "";
+        this.Status = SensorState.Active;
+        this.Value = 1;
+    }
 }

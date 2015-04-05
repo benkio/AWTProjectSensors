@@ -8,6 +8,7 @@ package it.unibo.aswProject.util;
 
 import it.unibo.aswProject.controller.EventDispatcher;
 import it.unibo.aswProject.enums.SensorEventType;
+import it.unibo.aswProject.libraries.bean.ListWrapper;
 import it.unibo.aswProject.libraries.bean.SensorList;
 import it.unibo.aswProject.libraries.bean.User;
 import it.unibo.aswProject.libraries.bean.UserSensorList;
@@ -89,27 +90,30 @@ public class UserSensorListFile {
     }
     
     public synchronized List<String> getSensorIdsByUser(User user) throws Exception{
-        return readFile().userSensor.get(user.username);
+        return (List<String>) readFile().userSensor.get(user.username);
     }
     
     public synchronized void addSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
-        List<String> userSensors = usl.userSensor.get(user.username);
-        userSensors.add(sensor);
+        ListWrapper userSensors = usl.userSensor.get(user.username);
+        userSensors.sensorlist.add(sensor);
         usl.userSensor.put(user.username, userSensors);
         writeFile(usl);
     }
     public synchronized void removeSensorToUser(User user, String sensor) throws Exception{
         UserSensorList usl = readFile();
-        List<String> userSensors = usl.userSensor.get(user.username);
-        userSensors.remove(sensor);
+        ListWrapper userSensors = usl.userSensor.get(user.username);
+        userSensors.sensorlist.remove(sensor);
         usl.userSensor.put(user.username, userSensors);
         writeFile(usl);
     }
     public synchronized void setSensorsToUser(User user, SensorList sensors) throws Exception{
         UserSensorList usl = readFile();
         List<String> sen = sensors.sensors.stream().map(s -> s.Name).collect(Collectors.toList());
-        usl.userSensor.put(user.username, sen );
+        ListWrapper lw = new ListWrapper();
+        lw.setList(sen);
+        usl.userSensor.put(user.username, lw);
+        writeFile(usl);
     }
     
     public synchronized void setUserSensorRelation(String sensorName, Boolean sensorEnable, String username) throws Exception {

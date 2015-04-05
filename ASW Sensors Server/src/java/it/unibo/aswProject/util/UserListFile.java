@@ -15,6 +15,7 @@
  */
 package it.unibo.aswProject.util;
 
+import it.unibo.aswProject.libraries.bean.SensorList;
 import it.unibo.aswProject.libraries.xml.ManageXML;
 import it.unibo.aswProject.libraries.bean.User;
 import it.unibo.aswProject.libraries.bean.UserList;
@@ -42,6 +43,9 @@ public class UserListFile {
     private ManageXML mngXML;
     private String webPagesPath;
     private final ServletContext servletContext;
+    private UserSensorListFile uslf;
+    private SensorListFile slf;
+    
     /**
      * Return a singleton object of UserListFile
      *     
@@ -65,7 +69,9 @@ public class UserListFile {
         context = JAXBContext.newInstance(UserList.class);
         mngXML = new ManageXML();
         String webPagesPath = servletContext.getRealPath("/");
-        userFile = new File(webPagesPath + "WEB-INF/xml/users.xml"); // this only works with default config of tomcat
+        userFile = new File(webPagesPath + "WEB-INF/xml/users.xml"); // this only works with default config of tomcat        
+        uslf = UserSensorListFile.getInstance(servletContext);
+        slf = SensorListFile.getInstance(servletContext);
     }
 
     /**
@@ -196,7 +202,8 @@ public class UserListFile {
         admin.isAdmin = true;
         UserList ul = new UserList();
         ul.users.add(admin);
-        UserSensorListFile.getInstance(servletContext).setSensorsToUser(admin, SensorListFile.getInstance(servletContext).readFile());
+        SensorList sl = slf.readFile();
+        uslf.setSensorsToUser(admin, sl);
         writeFile(ul);
     }
 }
