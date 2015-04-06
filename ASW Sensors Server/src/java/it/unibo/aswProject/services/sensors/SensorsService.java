@@ -106,7 +106,18 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
                 case "waitEvents":
                     waitEvents(mngXML,response,request);
                     break;
-                    
+                case "addSensor":
+                    addSensor(mngXML,response,request);
+                    break;
+                case "removeSensor":
+                    removeSensor(mngXML,response,request);
+                    break;
+                case "enableSensor":
+                    enableSensor(mngXML,response,request);
+                    break;
+                case "disableSensor":
+                    disableSensor(mngXML,response,request);
+                    break;
                 default:
                     sendErrorMsg("Errore", "Operazione non supportata", response, mngXML);
                     break;
@@ -215,6 +226,22 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
             });
             contexts.clear();
         }
+    }
+
+    private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void enableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
 
