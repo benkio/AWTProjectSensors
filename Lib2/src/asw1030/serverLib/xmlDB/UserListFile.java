@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.util;
+package asw1030.serverLib.xmlDB;
 
 import asw1030.libraries.bean.SensorList;
 import asw1030.libraries.xml.ManageXML;

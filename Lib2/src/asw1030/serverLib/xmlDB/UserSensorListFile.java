@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.util;
+package asw1030.serverLib.xmlDB;
 
 
 import asw1030.controller.EventDispatcher;

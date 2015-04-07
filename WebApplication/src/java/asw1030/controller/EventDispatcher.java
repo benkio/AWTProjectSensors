@@ -11,7 +11,7 @@ import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.interfaces.IActuatorListener;
 import asw1030.libraries.interfaces.ISensorEventsListener;
 import asw1030.libraries.interfaces.ISensorListener;
-import asw1030.util.SensorListFile;
+import asw1030.serverLib.xmlDB.SensorListFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

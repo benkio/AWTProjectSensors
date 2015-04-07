@@ -31,3 +31,5 @@ built-jar.properties
 /Applet1/dist/
 /WebApplication/dist/
 /Lib2/nbproject/private/
+/Lib2/build/
+/Lib2/dist/

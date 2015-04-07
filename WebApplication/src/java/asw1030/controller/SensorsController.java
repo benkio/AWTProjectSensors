@@ -9,7 +9,7 @@ import asw1030.enums.SensorEventType;
 import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.bean.Sensor;
 import asw1030.libraries.bean.SensorList;
-import asw1030.util.SensorListFile;
+import asw1030.serverLib.xmlDB.SensorListFile;
 import java.util.List;
 import java.util.Random;
 

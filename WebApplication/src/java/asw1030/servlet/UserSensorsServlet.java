@@ -9,7 +9,7 @@ import asw1030.libraries.commonServiceRequests.SensorRequests;
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.http.HTTPClientFactory;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.util.UserSensorListFile;
+import asw1030.serverLib.xmlDB.UserSensorListFile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

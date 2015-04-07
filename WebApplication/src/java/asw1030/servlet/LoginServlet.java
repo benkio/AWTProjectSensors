@@ -16,7 +16,7 @@
 package asw1030.servlet;
 
 import asw1030.libraries.bean.User;
-import asw1030.util.UserListFile;
+import asw1030.serverLib.xmlDB.UserListFile;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
