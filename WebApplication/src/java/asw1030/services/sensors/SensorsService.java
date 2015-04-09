@@ -1,17 +1,13 @@
 package asw1030.services.sensors;
 
-import asw1030.libraries.xml.ManageXML;
-import asw1030.libraries.interfaces.ISensorEventsListener;
-import asw1030.enums.SensorEventType;
 import asw1030.libraries.bean.Sensor;
-import asw1030.libraries.bean.User;
-import asw1030.controller.EventDispatcher;
-import asw1030.xmlDB.SensorDB;
+import asw1030.libraries.xml.ManageXML;
+import asw1030.model.IXMLTable;
+import asw1030.model.XMLTable;
 import asw1030.xmlDB.UserSensorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.AsyncContext;
@@ -23,7 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.bind.JAXBException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,10 +31,10 @@ import org.w3c.dom.Element;
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
 public class SensorsService extends HttpServlet{
 
-    //private SensorManager sm;
-    private UserSensorListFile uslf;
+    private IXMLTable<Sensor> sensorTable;
     private LinkedList<AsyncContext> contexts;
 
+    
     @Override
     public void init() throws ServletException {
         super.init();
@@ -198,7 +194,7 @@ public class SensorsService extends HttpServlet{
     }
     
     private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        
+        sensorTable.addRecord(null);
     }
 
     private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {

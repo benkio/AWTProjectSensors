@@ -7,11 +7,13 @@ package asw1030.libraries.bean;
 
 import asw1030.enums.SensorState;
 import java.util.Random;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Enrico Benini
  */
+@XmlRootElement
 public class Sensor {
     public String Name;
     public SensorState Status;
