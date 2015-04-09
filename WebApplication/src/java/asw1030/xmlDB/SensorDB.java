@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.serverLib.xmlDB;
+package asw1030.xmlDB;
 
 import asw1030.controller.EventDispatcher;
 import asw1030.enums.SensorEventType;
@@ -29,9 +29,9 @@ import org.w3c.dom.Document;
  *
  * @author Enrico Benini
  */
-public class SensorListFile {
+public class SensorDB {
 
-    private volatile static SensorListFile instance = null;
+    private volatile static SensorDB instance = null;
     private final File sensorFile;
     private JAXBContext context;
     private ManageXML mngXML;
@@ -44,18 +44,18 @@ public class SensorListFile {
      * @return
      * @throws Exception
      */
-    public static SensorListFile getInstance(ServletContext servletContext) throws Exception {
+    public static SensorDB getInstance(ServletContext servletContext) throws Exception {
         if (instance == null) {
-            synchronized (SensorListFile.class) {
+            synchronized (SensorDB.class) {
                 if (instance == null) {
-                    instance = new SensorListFile(servletContext);
+                    instance = new SensorDB(servletContext);
                 }
             }
         }
         return instance;
     }
 
-    private SensorListFile(ServletContext servletContext) throws Exception {
+    private SensorDB(ServletContext servletContext) throws Exception {
         context = JAXBContext.newInstance(SensorList.class);
         this.servletContext = servletContext;
         mngXML = new ManageXML();
@@ -128,7 +128,7 @@ public class SensorListFile {
                     try {
                         UserSensorListFile.getInstance(servletContext).removeSensorToUser(u, s.Name);
                     } catch (Exception ex) {
-                        Logger.getLogger(SensorListFile.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SensorDB.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 });
                 return;
@@ -152,7 +152,7 @@ public class SensorListFile {
                 try {
                     UserSensorListFile.getInstance(servletContext).addSensorToUser(u, sensor.Name);
                 } catch (Exception ex) {
-                    Logger.getLogger(SensorListFile.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SensorDB.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
         } else {

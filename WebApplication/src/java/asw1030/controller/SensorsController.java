@@ -9,7 +9,7 @@ import asw1030.enums.SensorEventType;
 import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.bean.Sensor;
 import asw1030.libraries.bean.SensorList;
-import asw1030.serverLib.xmlDB.SensorListFile;
+import asw1030.xmlDB.SensorDB;
 import java.util.List;
 import java.util.Random;
 
@@ -20,7 +20,7 @@ import java.util.Random;
 public class SensorsController {
 
     private static SensorsController instance;
-    private SensorListFile slf;
+    private SensorDB slf;
 
     static SensorsController getInstance() {
         if (instance == null) {
@@ -33,7 +33,7 @@ public class SensorsController {
         return instance;
     }
 
-    public void setSensorListFile(SensorListFile slf) {
+    public void setSensorListFile(SensorDB slf) {
         this.slf = slf;
     }
 

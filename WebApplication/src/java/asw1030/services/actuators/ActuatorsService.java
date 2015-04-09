@@ -9,7 +9,7 @@ import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.libraries.bean.ActuatorList;
 import asw1030.services.sensors.SensorsService;
-import asw1030.serverLib.xmlDB.ActuatorListFile;
+import asw1030.xmlDB.ActuatorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

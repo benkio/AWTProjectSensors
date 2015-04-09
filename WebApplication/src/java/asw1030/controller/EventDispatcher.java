@@ -11,7 +11,7 @@ import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.interfaces.IActuatorListener;
 import asw1030.libraries.interfaces.ISensorEventsListener;
 import asw1030.libraries.interfaces.ISensorListener;
-import asw1030.serverLib.xmlDB.SensorListFile;
+import asw1030.xmlDB.SensorDB;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +41,7 @@ public class EventDispatcher implements ISensorListener, IActuatorListener {
         sc = SensorsController.getInstance();
     }
 
-    public void setListener(ISensorEventsListener listener, SensorListFile slf) {
+    public void setListener(ISensorEventsListener listener, SensorDB slf) {
         this.listener = listener;
         sc.setSensorListFile(slf);
     }

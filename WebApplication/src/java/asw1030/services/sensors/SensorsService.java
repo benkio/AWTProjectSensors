@@ -6,8 +6,8 @@ import asw1030.enums.SensorEventType;
 import asw1030.libraries.bean.Sensor;
 import asw1030.libraries.bean.User;
 import asw1030.controller.EventDispatcher;
-import asw1030.serverLib.xmlDB.SensorListFile;
-import asw1030.serverLib.xmlDB.UserSensorListFile;
+import asw1030.xmlDB.SensorDB;
+import asw1030.xmlDB.UserSensorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -33,28 +33,16 @@ import org.w3c.dom.Element;
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet implements ISensorEventsListener{
+public class SensorsService extends HttpServlet{
 
     //private SensorManager sm;
     private UserSensorListFile uslf;
-    private SensorListFile slf;
     private LinkedList<AsyncContext> contexts;
-    private EventDispatcher ed;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        
-        contexts= new LinkedList<>();
-        ed = EventDispatcher.getInstance();
-        try {
-            uslf = UserSensorListFile.getInstance(getServletContext());
-            slf = SensorListFile.getInstance(getServletContext());
-        } catch (Exception ex) {
-            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ed.setListener(this, slf);
-        
+        contexts= new LinkedList<>();        
     }
     
     @Override
@@ -151,18 +139,18 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         System.out.println("Get Sensors Recived");
 
         Document doc= mngXML.newDocument("SensorsList");
-        User tempUser = new User();
-        tempUser.username = username;
-        Map<String,Boolean> sensorList = uslf.getSensorIdsByUser(tempUser);
-        for (Map.Entry<String, Boolean> s : sensorList.entrySet()){
-            Sensor sensor = slf.getSensorByName(s.getKey());
-            Element sensorXml = doc.createElement("Sensor");
-            sensorXml.setAttribute("id", sensor.Name);
-            sensorXml.setAttribute("value", Integer.toString(sensor.Value));
-            sensorXml.setAttribute("visible", s.getValue().toString());
-            sensorXml.appendChild(doc.createTextNode(sensor.Status.name()));
-            doc.getDocumentElement().appendChild(sensorXml);
-        }
+//        User tempUser = new User();
+//        tempUser.username = username;
+//        Map<String,Boolean> sensorList = uslf.getSensorIdsByUser(tempUser);
+//        for (Map.Entry<String, Boolean> s : sensorList.entrySet()){
+//            Sensor sensor = slf.getSensorByName(s.getKey());
+//            Element sensorXml = doc.createElement("Sensor");
+//            sensorXml.setAttribute("id", sensor.Name);
+//            sensorXml.setAttribute("value", Integer.toString(sensor.Value));
+//            sensorXml.setAttribute("visible", s.getValue().toString());
+//            sensorXml.appendChild(doc.createTextNode(sensor.Status.name()));
+//            doc.getDocumentElement().appendChild(sensorXml);
+//        }
 
         mngXML.transform(response.getOutputStream(), doc);
         response.getOutputStream().close();
@@ -209,26 +197,8 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
         contexts.add(asyncContext);
     }
     
-    @Override
-    public void newEvent(SensorEventType se) {
-        System.out.println("New Event");
-        
-        synchronized (this) {
-            contexts.stream().forEach((asyncContext) -> {
-                try {
-                    ManageXML mngXML = new ManageXML();
-                    sendMessage("NewEvent", mngXML, (HttpServletResponse)asyncContext.getResponse());
-                    asyncContext.complete();
-                } catch (ParserConfigurationException | IOException | TransformerException ex) {
-                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            contexts.clear();
-        }
-    }
-
     private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
@@ -242,5 +212,24 @@ public class SensorsService extends HttpServlet implements ISensorEventsListener
     private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+//    @Override
+//    public void newEvent(SensorEventType se) {
+//        System.out.println("New Event");
+//        
+//        synchronized (this) {
+//            contexts.stream().forEach((asyncContext) -> {
+//                try {
+//                    ManageXML mngXML = new ManageXML();
+//                    sendMessage("NewEvent", mngXML, (HttpServletResponse)asyncContext.getResponse());
+//                    asyncContext.complete();
+//                } catch (ParserConfigurationException | IOException | TransformerException ex) {
+//                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            });
+//            contexts.clear();
+//        }
+//    }
+
 }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.serverLib.xmlDB;
+package asw1030.xmlDB;
 
 import asw1030.libraries.bean.SensorList;
 import asw1030.libraries.xml.ManageXML;
@@ -44,7 +44,7 @@ public class UserListFile {
     private String webPagesPath;
     private final ServletContext servletContext;
     private UserSensorListFile uslf;
-    private SensorListFile slf;
+    private SensorDB slf;
     
     /**
      * Return a singleton object of UserListFile
@@ -71,7 +71,7 @@ public class UserListFile {
         String webPagesPath = servletContext.getRealPath("/");
         userFile = new File(webPagesPath + "WEB-INF/xml/users.xml"); // this only works with default config of tomcat        
         uslf = UserSensorListFile.getInstance(servletContext);
-        slf = SensorListFile.getInstance(servletContext);
+        slf = SensorDB.getInstance(servletContext);
     }
 
     /**
@@ -103,7 +103,7 @@ public class UserListFile {
             user.isAdmin = false;
             ul.users.add(user);
             writeFile(ul);
-            UserSensorListFile.getInstance(servletContext).setSensorsToUser(user, SensorListFile.getInstance(servletContext).readFile());
+            UserSensorListFile.getInstance(servletContext).setSensorsToUser(user, SensorDB.getInstance(servletContext).readFile());
         } else {
             throw new Exception("User already registered.");
         }
