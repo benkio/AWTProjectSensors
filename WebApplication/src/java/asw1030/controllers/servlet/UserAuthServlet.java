@@ -13,26 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.servlet;
+package asw1030.controllers.servlet;
 
-import asw1030.libraries.bean.User;
-import asw1030.xmlDB.UserListFile;
+import asw1030.libraries.commonServiceRequests.SensorRequests;
+import asw1030.libraries.http.HTTPClient;
+import asw1030.libraries.http.HTTPClientFactory;
+import asw1030.libraries.xml.ManageXML;
 import java.io.IOException;
+import java.net.URL;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/LogoutServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "UserAuthServlet", urlPatterns = {"/UserAuthServlet"})
+public class UserAuthServlet extends HttpServlet {
 
+    private ManageXML mngXML;
+    private HTTPClient hc;
+    private SensorRequests sensorsRequests = new SensorRequests();
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,38 +55,40 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String errorMsg = "";
+
         try {
             HttpSession session = request.getSession();
-            if (request.getServletPath().equals("/LoginServlet")) {
-                // setting user as logged in
-                User user = new User();
-                user.pass = request.getParameter("password");
-                user.username = request.getParameter("username");
-                UserListFile ulf = UserListFile.getInstance(getServletContext());
-                user = ulf.loginUser(user);
-                // setting user as logged in
-                session.setAttribute("isLoggedIn", true);
-                session.setAttribute("username", user.username);
-                session.setAttribute("email", user.email);
-                session.setAttribute("isAdmin", user.isAdmin);
-            } else {
-                // setting user as logged out
-                session.removeAttribute("isLoggedIn");
-                session.removeAttribute("username");
-                session.removeAttribute("email");
-            }
-            response.sendRedirect( request.getContextPath() + "/index.jsp");
-        } catch (Exception ex) {
-            errorMsg = "Error Occurred: " + ex.getMessage();
-            
-            request.setAttribute("errorMsg", errorMsg);
-
-            // forward request (along with its attributes) to the status JSP
-            RequestDispatcher rd = request.getRequestDispatcher("/jsp/login.jsp");
+            hc = HTTPClientFactory.GetHttpClient(   session.getId(), 
+                                                    new URL(request.getScheme(), 
+                                                            request.getServerName(), 
+                                                            request.getServerPort(), 
+                                                            request.getContextPath()+request.getServletPath()));
+            mngXML = new ManageXML();
+            request.setAttribute("sensorList",fetchSensors());
+            RequestDispatcher rd = request.getRequestDispatcher("/jsp/userAuth.jsp");
             rd.forward(request, response);
+            
+        } catch (Exception ex) {
+            errorMsg = ex.getMessage();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
+    private String fetchSensors() throws Exception{
+        NodeList sensors = sensorsRequests.getSensors(mngXML, hc).item(0).getChildNodes();
+        String sensorsHTML = "";
+        for (int i = 0; i < sensors.getLength();i++){
+            Node sensor = sensors.item(i);
+            String sensor_name = sensor.getAttributes().getNamedItem("id").getNodeValue();
+            String sensor_state = sensor.getTextContent();
+            String sensor_checked = Boolean.valueOf(sensor.getAttributes().getNamedItem("visible").getNodeValue()) ? "checked=\"checked\"" : "";
+            sensorsHTML += "<tr><td name=\"SensorName"+i+"\">"+sensor_name+"</td><td name=\"SensorStatus"+i+"\">"+sensor_state+"</td><td><input type=\"checkbox\" name=\"SensorEnable"+i+"\" value=\"ON\" "+sensor_checked+" /></td></tr>";
+        }
+         
+        return sensorsHTML;
+    
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

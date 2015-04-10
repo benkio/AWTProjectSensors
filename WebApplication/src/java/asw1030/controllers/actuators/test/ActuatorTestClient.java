@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.services.actuators;
+package asw1030.controllers.actuators.test;
 
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.xml.ManageXML;

@@ -9,12 +9,6 @@ package asw1030.model;
  *
  * @author Farneti Thomas
  */
-public interface IXMLTable <T>{
-    int addRecord(T item);
-    
-    void removeRecord(int index);
-    
-    void addListener(IModelEventListener list);
-    
-    void removeListener(IModelEventListener list);
+public interface IModelEventListener {
+    void modelEventHandler(ModelEventType type, Object arg);
 }

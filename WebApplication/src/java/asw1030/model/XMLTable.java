@@ -21,9 +21,9 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 
 /**
- *
+ * Class to model a XML table
  * @author Farneti Thomas
- * @param <T>
+ * @param <T> Type of the objects stored as records of the table
  */
 public class XMLTable<T> implements IXMLTable<T> {
 
@@ -31,6 +31,8 @@ public class XMLTable<T> implements IXMLTable<T> {
     private static final Object locker= new Object();
     
     private final List<T> records;
+    
+    private final List<IModelEventListener> listeners;
    
     private JAXBContext context;
     private final ManageXML mngXML;
@@ -54,20 +56,18 @@ public class XMLTable<T> implements IXMLTable<T> {
     private XMLTable() throws JAXBException, TransformerConfigurationException, ParserConfigurationException {
         records = new ArrayList<>();
         mngXML= new ManageXML();
+        listeners = new ArrayList<>();
     }
     
     @Override
     public int addRecord(T item) {
         this.records.add(item);
-
-        new Thread( () -> {
-                try {
-                    saveFile(records, item.getClass());
-                } catch (JAXBException | ParserConfigurationException | TransformerException | IOException ex) {
-                    Logger.getLogger(XMLTable.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }).start();
-           
+        saveFile(records, item.getClass());
+        
+        for (IModelEventListener list : listeners) {
+            list.modelEventHandler(ModelEventType.NEWRECORD, item);
+        }
+        
         return 0;
     }
 
@@ -77,18 +77,34 @@ public class XMLTable<T> implements IXMLTable<T> {
     }
     
     
-    private void saveFile(List<?> list, Class<?> c) throws JAXBException, ParserConfigurationException, TransformerException, IOException {
-        ListWrapper wrapper = new ListWrapper(list);
+    private void saveFile(List<?> list, Class<?> c) {
+        new Thread( () -> {        
+            try {
+                ListWrapper wrapper = new ListWrapper(list);
 
-        context = JAXBContext.newInstance(ListWrapper.class, c);
-        
-        Marshaller marsh = context.createMarshaller();
-        
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        marsh.marshal(wrapper, doc);
-        mngXML.transform(System.out, doc);
-//        OutputStream out = new FileOutputStream(userFile);
-//        mngXML.transform(out, doc);
-//        out.close();
+                context = JAXBContext.newInstance(ListWrapper.class, c);
+
+                Marshaller marsh = context.createMarshaller();
+
+                Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                marsh.marshal(wrapper, doc);
+                mngXML.transform(System.out, doc);
+        //        OutputStream out = new FileOutputStream(userFile);
+        //        mngXML.transform(out, doc);
+        //        out.close();
+            } catch (JAXBException | ParserConfigurationException | TransformerException | IOException ex) {
+                Logger.getLogger(XMLTable.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+    }
+
+    @Override
+    public void addListener(IModelEventListener list) {
+        this.listeners.add(list);
+    }
+
+    @Override
+    public void removeListener(IModelEventListener list) {
+        this.listeners.remove(list);
     }
 }

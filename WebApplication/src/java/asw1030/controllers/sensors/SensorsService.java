@@ -1,10 +1,10 @@
-package asw1030.services.sensors;
+package asw1030.controllers.sensors;
 
 import asw1030.libraries.bean.Sensor;
 import asw1030.libraries.xml.ManageXML;
+import asw1030.model.IModelEventListener;
 import asw1030.model.IXMLTable;
-import asw1030.model.XMLTable;
-import asw1030.xmlDB.UserSensorListFile;
+import asw1030.model.ModelEventType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.bind.JAXBException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,7 +28,7 @@ import org.w3c.dom.Element;
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet{
+public class SensorsService extends HttpServlet implements IModelEventListener{
 
     private IXMLTable<Sensor> sensorTable;
     private LinkedList<AsyncContext> contexts;
@@ -42,8 +41,7 @@ public class SensorsService extends HttpServlet{
     }
     
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
         
         response.setContentType("text/xml;charset=UTF-8");
         
@@ -123,8 +121,7 @@ public class SensorsService extends HttpServlet{
         response.getOutputStream().close();
     }
 
-    private void sendMessage(String msg, ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException
-    {
+    private void sendMessage(String msg, ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
         Document answer = mngXML.newDocument("message");
         answer.getDocumentElement().appendChild(answer.createTextNode(msg));
         mngXML.transform(response.getOutputStream(), answer);
@@ -194,7 +191,9 @@ public class SensorsService extends HttpServlet{
     }
     
     private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        sensorTable.addRecord(null);
+        synchronized(this){
+            int index = sensorTable.addRecord(null);
+        }
     }
 
     private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
@@ -207,6 +206,14 @@ public class SensorsService extends HttpServlet{
 
     private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void modelEventHandler(ModelEventType type, Object arg) {
+        switch(type)
+        {
+            case NEWRECORD:break;
+        }
     }
     
 //    @Override
@@ -226,6 +233,5 @@ public class SensorsService extends HttpServlet{
 //            contexts.clear();
 //        }
 //    }
-
 }
 

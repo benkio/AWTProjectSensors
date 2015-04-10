@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.controller;
+package asw1030.oldStuff;
 
 import asw1030.enums.SensorEventType;
 import asw1030.enums.SensorState;
@@ -11,7 +11,7 @@ import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.interfaces.IActuatorListener;
 import asw1030.libraries.interfaces.ISensorEventsListener;
 import asw1030.libraries.interfaces.ISensorListener;
-import asw1030.xmlDB.SensorDB;
+import asw1030.oldStuff.SensorDB;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

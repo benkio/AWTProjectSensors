@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.servlet;
+package asw1030.controllers.servlet;
 
 import asw1030.libraries.bean.User;
-import asw1030.xmlDB.UserListFile;
+import asw1030.oldStuff.UserListFile;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;

@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.xmlDB;
+package asw1030.oldStuff;
 
-import asw1030.controller.EventDispatcher;
 import asw1030.libraries.bean.Actuator;
 import asw1030.libraries.bean.ActuatorList;
 import asw1030.libraries.xml.ManageXML;

@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.servlet;
+package asw1030.controllers.servlet;
 
 import asw1030.libraries.commonServiceRequests.SensorRequests;
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.http.HTTPClientFactory;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.xmlDB.UserSensorListFile;
+import asw1030.oldStuff.UserSensorListFile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
