@@ -6,9 +6,12 @@
 package asw1030.model;
 
 import asw1030.libraries.bean.Sensor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -22,8 +25,8 @@ public class XMLTableTest {
      * @throws javax.xml.transform.TransformerConfigurationException
      * @throws javax.xml.parsers.ParserConfigurationException
      */
-    public static void main(String[] args) throws JAXBException, TransformerConfigurationException, ParserConfigurationException {
-        IXMLTable<Sensor> table = XMLTable.getInstance();
+    public static void main(String[] args) throws JAXBException, TransformerConfigurationException, ParserConfigurationException, IOException, FileNotFoundException, SAXException {
+        IXMLTable<Sensor> table = XMLTable.getInstance("C:\\Users\\Thomas\\Desktop\\Test.txt");
         
         table.addRecord(new Sensor("test"));
     }

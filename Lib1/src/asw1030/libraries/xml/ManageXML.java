@@ -28,6 +28,12 @@ public class ManageXML {
         transformer.transform(new DOMSource(document), new StreamResult(out));
     }
 
+    public void transformIndented(OutputStream out, Document document) throws TransformerException, IOException {
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(new DOMSource(document), new StreamResult(out));
+        transformer.setOutputProperty(OutputKeys.INDENT, "no");
+    }
+    
     public Document parse(InputStream in) throws IOException, SAXException {
         return builder.parse(in);
     }
