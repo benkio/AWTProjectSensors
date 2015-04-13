@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.controllers.servlet;
+package asw1030.controllers.servlets;
 
 import asw1030.libraries.commonServiceRequests.SensorRequests;
 import asw1030.libraries.http.HTTPClient;

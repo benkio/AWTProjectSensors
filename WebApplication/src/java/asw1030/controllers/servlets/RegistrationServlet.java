@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.controllers.servlet;
+package asw1030.controllers.servlets;
 
 import asw1030.libraries.bean.User;
 import asw1030.oldStuff.UserListFile;
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,8 +32,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Enrico Benini
  */
-@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/LogoutServlet"})
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "RegistrationServlet", urlPatterns = {"/RegistrationServlet"})
+public class RegistrationServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,37 +46,31 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String errorMsg = "";
+        response.setContentType("text/html;charset=UTF-8");
         try {
+            PrintWriter out = response.getWriter();
+                        
+            User user = new User();
+
+            user.email = request.getParameter("emailsignup");
+            user.pass = request.getParameter("passwordsignup");
+            user.username = request.getParameter("usernamesignup");
+
+            UserListFile ulf = UserListFile.getInstance(getServletContext());
+            ulf.registerUser(user);
+            
+             // setting user as logged in
             HttpSession session = request.getSession();
-            if (request.getServletPath().equals("/LoginServlet")) {
-                // setting user as logged in
-                User user = new User();
-                user.pass = request.getParameter("password");
-                user.username = request.getParameter("username");
-                UserListFile ulf = UserListFile.getInstance(getServletContext());
-                user = ulf.loginUser(user);
-                // setting user as logged in
-                session.setAttribute("isLoggedIn", true);
-                session.setAttribute("username", user.username);
-                session.setAttribute("email", user.email);
-                session.setAttribute("isAdmin", user.isAdmin);
-            } else {
-                // setting user as logged out
-                session.removeAttribute("isLoggedIn");
-                session.removeAttribute("username");
-                session.removeAttribute("email");
-            }
+            session.setAttribute("isLoggedIn", true);
+            session.setAttribute("username", user.username);
+            session.setAttribute("email", user.email);
+            session.setAttribute("isAdmin", false);
+            
             response.sendRedirect( request.getContextPath() + "/index.jsp");
         } catch (Exception ex) {
-            errorMsg = "Error Occurred: " + ex.getMessage();
-            
-            request.setAttribute("errorMsg", errorMsg);
-
-            // forward request (along with its attributes) to the status JSP
-            RequestDispatcher rd = request.getRequestDispatcher("/jsp/login.jsp");
-            rd.forward(request, response);
-        }
+            Logger.getLogger(RegistrationServlet.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ServletException(ex);
+}
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

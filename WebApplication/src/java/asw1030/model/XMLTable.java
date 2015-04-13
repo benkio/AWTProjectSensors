@@ -43,7 +43,7 @@ public class XMLTable<T> implements IXMLTable<T> {
      * @throws javax.xml.transform.TransformerConfigurationException
      * @throws javax.xml.parsers.ParserConfigurationException
      */
-    public static XMLTable getInstance() throws JAXBException, TransformerConfigurationException, ParserConfigurationException{
+    public static XMLTable getInstance(String dbPath) throws JAXBException, TransformerConfigurationException, ParserConfigurationException{
         synchronized(locker){
             if (instance == null) {
                     instance = new XMLTable<>();
