@@ -15,10 +15,10 @@
  */
 package asw1030.oldStuff;
 
-import asw1030.libraries.bean.SensorList;
+import asw1030.beans.SensorList;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.libraries.bean.User;
-import asw1030.libraries.bean.UserList;
+import asw1030.beans.User;
+import asw1030.beans.UserList;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

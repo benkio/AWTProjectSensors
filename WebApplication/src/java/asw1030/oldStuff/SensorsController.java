@@ -6,9 +6,9 @@
 package asw1030.oldStuff;
 
 import asw1030.enums.SensorEventType;
-import asw1030.libraries.bean.Actuator;
-import asw1030.libraries.bean.Sensor;
-import asw1030.libraries.bean.SensorList;
+import asw1030.beans.Actuator;
+import asw1030.beans.Sensor;
+import asw1030.beans.SensorList;
 import asw1030.oldStuff.SensorDB;
 import java.util.List;
 import java.util.Random;

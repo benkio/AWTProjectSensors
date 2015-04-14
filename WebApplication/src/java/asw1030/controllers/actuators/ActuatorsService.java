@@ -5,9 +5,9 @@
  */
 package asw1030.controllers.actuators;
 
-import asw1030.libraries.bean.Actuator;
+import asw1030.beans.Actuator;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.libraries.bean.ActuatorList;
+import asw1030.beans.ActuatorList;
 import asw1030.controllers.sensors.SensorsService;
 import asw1030.oldStuff.ActuatorListFile;
 import java.io.IOException;

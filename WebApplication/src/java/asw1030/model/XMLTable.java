@@ -6,6 +6,7 @@
 package asw1030.model;
 
 import asw1030.libraries.xml.ManageXML;
+import asw1030.beans.interfaces.IXmlRecord;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -49,7 +50,7 @@ public class XMLTable<T> implements IXMLTable<T> {
     private final List<T> records;
     
     @XmlTransient
-    private final List<IModelEventListener> listeners;
+    private final List<IModelEventsListener> listeners;
     
     @XmlTransient
     private JAXBContext context;
@@ -79,7 +80,7 @@ public class XMLTable<T> implements IXMLTable<T> {
     }
     
     private XMLTable() throws TransformerConfigurationException, ParserConfigurationException{
-        records = new ArrayList<>();
+        records = new ArrayList<T>();
         mngXML= new ManageXML();
         listeners = new ArrayList<>();
         idProg=0;
@@ -104,27 +105,29 @@ public class XMLTable<T> implements IXMLTable<T> {
     
     @Override
     public synchronized int addRecord(T item) {
+        ((IXmlRecord)item).setId(idProg);
+        idProg+=1;
+        
         this.records.add(item);
-        save(records, item.getClass());
+        save(item.getClass());
         
         listeners.stream().forEach((list) -> {
             list.modelEventHandler(ModelEventType.NEWRECORD, item);
         });
         
-        idProg+=1;
         return idProg;
     }
 
     @Override
     public void removeRecord(int index) {
-        
+        records.forEach((T record) -> {
+            if(((IXmlRecord)record).getId()==index) records.remove(record);
+        });
     }
  
-    private void save(List<?> list, Class<?> c) {
+    private void save(Class<?> c) {
         new Thread( () -> {        
             try {
-                ListWrapper wrapper = new ListWrapper(list);
-
                 context = JAXBContext.newInstance(this.getClass(),c);
 
                 Marshaller marsh = context.createMarshaller();
@@ -151,12 +154,12 @@ public class XMLTable<T> implements IXMLTable<T> {
     }
     
     @Override
-    public void addListener(IModelEventListener list) {
+    public void addListener(IModelEventsListener list) {
         this.listeners.add(list);
     }
 
     @Override
-    public void removeListener(IModelEventListener list) {
+    public void removeListener(IModelEventsListener list) {
         this.listeners.remove(list);
     }
 }

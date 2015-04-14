@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package asw1030.libraries.bean;
+package asw1030.beans;
 
 /**
  *
  * @author Enrico Benini
  */
-public class User {
-    public String username;
-    public String pass;
-    public String email;
-    public boolean isAdmin;
-}
+import java.util.ArrayList;
+import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * A list of users
+ */
+@XmlRootElement
+public class UserList {
+
+    public List<User> users;
+
+    public UserList() {
+        this.users = new ArrayList<User>();
+    }
+}

@@ -1,8 +1,8 @@
 package asw1030.controllers.sensors;
 
-import asw1030.libraries.bean.Sensor;
+import asw1030.beans.Sensor;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.model.IModelEventListener;
+import asw1030.model.IModelEventsListener;
 import asw1030.model.IXMLTable;
 import asw1030.model.ModelEventType;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet implements IModelEventListener{
+public class SensorsService extends HttpServlet implements IModelEventsListener{
 
     private IXMLTable<Sensor> sensorTable;
     private LinkedList<AsyncContext> contexts;

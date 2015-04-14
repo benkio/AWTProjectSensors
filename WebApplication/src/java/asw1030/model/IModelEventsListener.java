@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.libraries.interfaces;
-
-import asw1030.beans.Actuator;
-
+package asw1030.model;
 
 /**
  *
- * @author Thomas
+ * @author Farneti Thomas
  */
-public interface IActuatorListener {
-    void actuatorUpdated(Actuator act);
+public interface IModelEventsListener {
+    void modelEventHandler(ModelEventType type, Object arg);
 }

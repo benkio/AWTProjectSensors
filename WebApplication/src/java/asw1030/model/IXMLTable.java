@@ -5,16 +5,18 @@
  */
 package asw1030.model;
 
+import asw1030.beans.interfaces.IXmlRecord;
 /**
  *
  * @author Farneti Thomas
  */
 public interface IXMLTable <T>{
+    
     int addRecord(T item);
     
     void removeRecord(int index);
     
-    void addListener(IModelEventListener list);
+    void addListener(IModelEventsListener list);
     
-    void removeListener(IModelEventListener list);
+    void removeListener(IModelEventsListener list);
 }

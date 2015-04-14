@@ -5,7 +5,7 @@
  */
 package asw1030.model;
 
-import asw1030.libraries.bean.Sensor;
+import asw1030.beans.Sensor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.xml.bind.JAXBException;
@@ -28,7 +28,7 @@ public class XMLTableTest {
     public static void main(String[] args) throws JAXBException, TransformerConfigurationException, ParserConfigurationException, IOException, FileNotFoundException, SAXException {
         IXMLTable<Sensor> table = XMLTable.getInstance("C:\\Users\\Thomas\\Desktop\\Test.txt");
         
-        table.addRecord(new Sensor("test"));
+        table.addRecord(new Sensor("TEST"));
     }
     
 }

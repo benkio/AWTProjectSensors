@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.libraries.bean;
+package asw1030.beans;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +11,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Thomas
+ * @author Enrico Benini
  */
 @XmlRootElement
-public class ActuatorList {
+public class SensorList {
 
-    public List<Actuator> actuators;
+    public List<Sensor> sensors;
 
-    public ActuatorList() {
-        actuators = new ArrayList<>();
+    public SensorList() {
+        sensors = new ArrayList<>();
     }
+
 }

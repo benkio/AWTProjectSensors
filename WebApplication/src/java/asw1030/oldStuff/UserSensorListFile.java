@@ -7,10 +7,10 @@ package asw1030.oldStuff;
 
 
 import asw1030.enums.SensorEventType;
-import asw1030.libraries.bean.ListWrapper;
-import asw1030.libraries.bean.SensorList;
-import asw1030.libraries.bean.User;
-import asw1030.libraries.bean.UserSensorList;
+import asw1030.beans.ListWrapper;
+import asw1030.beans.SensorList;
+import asw1030.beans.User;
+import asw1030.beans.UserSensorList;
 import asw1030.libraries.xml.ManageXML;
 import java.io.File;
 import java.io.FileInputStream;

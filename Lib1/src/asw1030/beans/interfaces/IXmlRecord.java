@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.beans.interfaces;
 
 /**
  *
  * @author Farneti Thomas
  */
-public interface IModelEventListener {
-    void modelEventHandler(ModelEventType type, Object arg);
+public interface IXmlRecord {
+    int getId();
+    void setId(int id);
 }

@@ -5,8 +5,8 @@
  */
 package asw1030.oldStuff;
 
-import asw1030.libraries.bean.Actuator;
-import asw1030.libraries.bean.ActuatorList;
+import asw1030.beans.Actuator;
+import asw1030.beans.ActuatorList;
 import asw1030.libraries.xml.ManageXML;
 import java.io.File;
 import java.io.FileInputStream;
