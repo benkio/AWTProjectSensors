@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.oldStuff;
+package asw1030.controllers.actuators;
 
 import asw1030.beans.Actuator;
 import asw1030.beans.ActuatorList;
@@ -149,7 +149,6 @@ public class ActuatorListFile {
             actuator.value = newValue;
             al.actuators.set(index, actuator);
             writeFile(al);
-            EventDispatcher.getInstance().actuatorUpdated(actuator);
         }
         else
             throw new Exception("Actuator does not exist.");

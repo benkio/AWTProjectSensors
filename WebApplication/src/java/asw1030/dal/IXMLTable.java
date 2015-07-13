@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.dal;
 
 import asw1030.beans.interfaces.IXmlRecord;
+import asw1030.model.IModelEventsListener;
+import java.util.HashMap;
 /**
  *
  * @author Farneti Thomas
@@ -16,7 +18,5 @@ public interface IXMLTable <T>{
     
     void removeRecord(int index);
     
-    void addListener(IModelEventsListener list);
-    
-    void removeListener(IModelEventsListener list);
+    HashMap<Integer,T> fetchRecords();
 }

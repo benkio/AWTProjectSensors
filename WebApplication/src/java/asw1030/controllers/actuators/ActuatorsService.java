@@ -9,7 +9,6 @@ import asw1030.beans.Actuator;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.beans.ActuatorList;
 import asw1030.controllers.sensors.SensorsService;
-import asw1030.oldStuff.ActuatorListFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,14 +38,14 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ActuatorsService", urlPatterns = {"/actuators"})
 public class ActuatorsService extends HttpServlet {
 
-    private ActuatorListFile afl;
+    //private ActuatorListFile afl;
     
     @Override
     public void init() throws ServletException {
         super.init();
         
         try {
-            afl = ActuatorListFile.getInstance(getServletContext());
+            //afl = ActuatorListFile.getInstance(getServletContext());
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,8 +89,8 @@ public class ActuatorsService extends HttpServlet {
 
                     try (OutputStream os = response.getOutputStream()) {
                             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                            ActuatorList al = afl.readFile();
-                            marsh.marshal(al, doc);
+                            //ActuatorList al = afl.readFile();
+                            //marsh.marshal(al, doc);
                             mngXML.transform(os, doc);
                             mngXML.transform(System.out, doc);
                     }
@@ -103,7 +102,7 @@ public class ActuatorsService extends HttpServlet {
                 Element idEl = (Element) data.getElementsByTagName("id").item(0);
                 Element valEl = (Element) data.getElementsByTagName("value").item(0);
                 
-                afl.setValue(afl.getActuatorByName(Integer.parseInt(idEl.getTextContent())),Integer.parseInt(valEl.getTextContent()));
+                //afl.setValue(afl.getActuatorByName(Integer.parseInt(idEl.getTextContent())),Integer.parseInt(valEl.getTextContent()));
                 
                 answer = mngXML.newDocument("done");
                 mngXML.transform(response.getOutputStream(), answer);

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.dal;
 
 import asw1030.libraries.xml.ManageXML;
 import asw1030.beans.interfaces.IXmlRecord;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +23,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -50,9 +50,6 @@ public class XMLTable<T> implements IXMLTable<T> {
     private final List<T> records;
     
     @XmlTransient
-    private final List<IModelEventsListener> listeners;
-    
-    @XmlTransient
     private JAXBContext context;
     @XmlTransient
     private final ManageXML mngXML;
@@ -65,6 +62,7 @@ public class XMLTable<T> implements IXMLTable<T> {
     
     /**
      *
+     * @param dbPath
      * @return
      * @throws javax.xml.bind.JAXBException
      * @throws javax.xml.transform.TransformerConfigurationException
@@ -82,7 +80,6 @@ public class XMLTable<T> implements IXMLTable<T> {
     private XMLTable() throws TransformerConfigurationException, ParserConfigurationException{
         records = new ArrayList<T>();
         mngXML= new ManageXML();
-        listeners = new ArrayList<>();
         idProg=0;
     }
     
@@ -110,11 +107,7 @@ public class XMLTable<T> implements IXMLTable<T> {
         
         this.records.add(item);
         save(item.getClass());
-        
-        listeners.stream().forEach((list) -> {
-            list.modelEventHandler(ModelEventType.NEWRECORD, item);
-        });
-        
+               
         return idProg;
     }
 
@@ -152,14 +145,13 @@ public class XMLTable<T> implements IXMLTable<T> {
     public int getIdProg() {
         return idProg;
     }
-    
+   
     @Override
-    public void addListener(IModelEventsListener list) {
-        this.listeners.add(list);
-    }
-
-    @Override
-    public void removeListener(IModelEventsListener list) {
-        this.listeners.remove(list);
+    public HashMap<Integer, T> fetchRecords() {
+        HashMap<Integer,T> rec= new HashMap<Integer, T>();
+        
+        this.records.forEach(r-> rec.put(((IXmlRecord)r).getId(), r));
+        
+        return rec;
     }
 }

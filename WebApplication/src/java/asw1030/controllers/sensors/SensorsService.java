@@ -1,10 +1,12 @@
 package asw1030.controllers.sensors;
 
 import asw1030.beans.Sensor;
+import asw1030.beans.Sensor.SensorKind;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
-import asw1030.model.IXMLTable;
+import asw1030.dal.IXMLTable;
 import asw1030.model.ModelEventType;
+import asw1030.model.SensorModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -22,22 +24,24 @@ import javax.servlet.http.HttpSession;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  *
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet implements IModelEventsListener{
+public class SensorsService extends HttpServlet{
 
-    private IXMLTable<Sensor> sensorTable;
     private LinkedList<AsyncContext> contexts;
-
+    private SensorModel sm;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        contexts= new LinkedList<>();        
+        contexts= new LinkedList<>();      
+        sm = SensorModel.getInstance( this.getServletContext());
     }
     
     @Override
@@ -72,6 +76,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                 case "testLogin":
                     request.getSession(true).setAttribute("username", "test");
                     request.getSession().setAttribute("isLoggedIn", true);
+                    request.getSession().setAttribute("isAdmin", true);
                     sendMessage("Creata sessione test", mngXML, response);
                 break;
                     
@@ -88,10 +93,10 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                     waitEvents(mngXML,response,request);
                     break;
                 case "addSensor":
-                    addSensor(mngXML,response,request);
+                    addSensor(mngXML,response,request,data);
                     break;
                 case "removeSensor":
-                    removeSensor(mngXML,response,request);
+                    removeSensor(mngXML,response,request,data);
                     break;
                 case "enableSensor":
                     enableSensor(mngXML,response,request);
@@ -190,14 +195,42 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
         contexts.add(asyncContext);
     }
     
-    private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        synchronized(this){
-            int index = sensorTable.addRecord(null);
+    private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+        if ((boolean) request.getSession().getAttribute("isAdmin")) {
+            
+            mngXML.transform(System.out, data);
+            Element root = data.getDocumentElement();
+            NodeList childs = root.getElementsByTagName("sensor");
+            
+            if (childs.getLength() !=0) {
+                Element sensor = (Element) childs.item(0);
+                Text kind =(Text) sensor.getChildNodes().item(0).getFirstChild();
+                Text status =(Text) sensor.getChildNodes().item(1).getFirstChild();
+                
+                Sensor s = new Sensor(SensorKind.valueOf(kind.getNodeValue()));
+                
+                int id = sm.addSensor(s);
+                
+                sendMessage(""+id, mngXML, response);
+            }
         }
     }
 
-    private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+        if ((boolean) request.getSession().getAttribute("isAdmin")) {
+            Element root = data.getDocumentElement();
+            NodeList childs = root.getElementsByTagName("sensorId");
+            mngXML.transform(System.out, data);
+            
+            if (childs.getLength() !=0) {
+                Element sensor = (Element) childs.item(0);
+                Text textNode = (Text) sensor.getFirstChild();
+                
+                sm.removeSensor(Integer.parseInt(textNode.getData()));
+                
+                sendMessage("done", mngXML, response);
+            }
+        }
     }
 
     private void enableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
@@ -207,15 +240,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
     private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    @Override
-    public void modelEventHandler(ModelEventType type, Object arg) {
-        switch(type)
-        {
-            case NEWRECORD:break;
-        }
-    }
-    
+        
 //    @Override
 //    public void newEvent(SensorEventType se) {
 //        System.out.println("New Event");

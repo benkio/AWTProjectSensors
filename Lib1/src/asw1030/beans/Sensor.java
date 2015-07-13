@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package asw1030.beans;
 
 import asw1030.beans.interfaces.IXmlRecord;
@@ -10,29 +5,20 @@ import asw1030.enums.SensorState;
 import java.util.Random;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Enrico Benini
- */
+
 @XmlRootElement(name="sensor")
 public class Sensor implements IXmlRecord{
-    private String name;
+    private SensorKind kind;
     private SensorState status;
     private int value;
     private int id;
     
-    public Sensor(String name) {
-        this.name = name;
+    public Sensor(SensorKind kind) {
+        this.kind = kind;
         this.status = SensorState.Active;
         this.value = new Random().nextInt(100) + 1;
     }
     
-    public Sensor(){
-        this.name = "";
-        this.status = SensorState.Active;
-        this.value = 1;
-    }
-
     @Override
     public int getId() {
         return id;
@@ -43,13 +29,14 @@ public class Sensor implements IXmlRecord{
         this.id=id;
     }
 
-    public String getName() {
-        return name;
+    public SensorKind getKind() {
+        return kind;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setKind(SensorKind kind) {
+        this.kind = kind;
     }
+
 
     public SensorState getStatus() {
         return status;
@@ -63,9 +50,16 @@ public class Sensor implements IXmlRecord{
         return value;
     }
 
-    public void setValue(int value) {
+    private void setValue(int value) {
         this.value = value;
     }
     
-    
+    public enum SensorKind
+    {
+        TEMPERATURE,
+        HUMIDITY,
+        GAS_PRESSURE
+    }
 }
+
+

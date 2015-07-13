@@ -16,7 +16,6 @@
 package asw1030.controllers.servlets;
 
 import asw1030.beans.User;
-import asw1030.oldStuff.UserListFile;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
