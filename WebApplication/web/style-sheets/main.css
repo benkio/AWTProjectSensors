@@ -105,26 +105,6 @@ header  h1{
     float: right;
 }
 
-/* UsersAuth jsp*/
-#usersTable{
-    width: 35%;
-    float: left;
-}
-#usersTable thead{
-    text-align: center;
-}
-#usersTable tbody{
-    border-width:3px;	
-    border-right-style:ridge;
-}
-#sensorsTable{
-    width: 64%;
-    float: right;
-}
-#sensorsTable thead{
-    text-align: center;
-}
-
 /* Login and Registation jsps */
 .form{
     font: 20pt Helvetica,"Helvetica neue", Arial, sans-serif;
