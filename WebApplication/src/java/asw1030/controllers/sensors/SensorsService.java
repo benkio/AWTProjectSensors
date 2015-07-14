@@ -2,6 +2,7 @@ package asw1030.controllers.sensors;
 
 import asw1030.beans.Sensor;
 import asw1030.beans.enums.SensorKind;
+import asw1030.beans.enums.SensorState;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
 import asw1030.model.ModelEventType;
@@ -157,7 +158,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
             value.appendChild(doc.createTextNode(""+s.getValue()));
             sensor.appendChild(value);
             
-            doc.appendChild(sensor);
+            doc.getDocumentElement().appendChild(sensor);
         });
 
         mngXML.transform(response.getOutputStream(), doc);
@@ -214,10 +215,9 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
             if (childs.getLength() !=0) {
                 Element sensor = (Element) childs.item(0);
                 Text kind =(Text) sensor.getChildNodes().item(0).getFirstChild();
-                Text status =(Text) sensor.getChildNodes().item(1).getFirstChild();
                 
                 Sensor s = new Sensor(SensorKind.valueOf(kind.getNodeValue()));
-                
+                s.setStatus(SensorState.Active);
                 int id = sm.addSensor(s);
                 
                 sendMessage(""+id, mngXML, response);

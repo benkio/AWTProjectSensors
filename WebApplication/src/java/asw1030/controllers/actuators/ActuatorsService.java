@@ -5,13 +5,11 @@
  */
 package asw1030.controllers.actuators;
 
-import asw1030.beans.Actuator;
 import asw1030.libraries.xml.ManageXML;
-import asw1030.beans.ActuatorList;
 import asw1030.controllers.sensors.SensorsService;
+import asw1030.model.ActuatorModel;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -20,10 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -38,14 +33,14 @@ import org.xml.sax.SAXException;
 @WebServlet(name = "ActuatorsService", urlPatterns = {"/actuators"})
 public class ActuatorsService extends HttpServlet {
 
-    //private ActuatorListFile afl;
+    private ActuatorModel am;
     
     @Override
     public void init() throws ServletException {
         super.init();
         
         try {
-            //afl = ActuatorListFile.getInstance(getServletContext());
+            am = ActuatorModel.getInstance(getServletContext());
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -83,32 +78,75 @@ public class ActuatorsService extends HttpServlet {
         
         switch (operation) {
             case"getActuators":
-                
-                    JAXBContext jc = JAXBContext.newInstance(ActuatorList.class);
-                    Marshaller marsh = jc.createMarshaller();
-
-                    try (OutputStream os = response.getOutputStream()) {
-                            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                            //ActuatorList al = afl.readFile();
-                            //marsh.marshal(al, doc);
-                            mngXML.transform(os, doc);
-                            mngXML.transform(System.out, doc);
-                    }
-
-                break;
-                
+                sendActuators(mngXML,response);
+                break;  
             case "setValue":
-                mngXML.transform(System.out, data);
-                Element idEl = (Element) data.getElementsByTagName("id").item(0);
-                Element valEl = (Element) data.getElementsByTagName("value").item(0);
+                setActuatorValue(mngXML,response,data);
+                break;
+            case "addActuator":
                 
-                //afl.setValue(afl.getActuatorByName(Integer.parseInt(idEl.getTextContent())),Integer.parseInt(valEl.getTextContent()));
-                
-                answer = mngXML.newDocument("done");
-                mngXML.transform(response.getOutputStream(), answer);
-                response.getOutputStream().close();
-                
+                break;
+            case "removeActuator":
                 break;
         }
+    }
+
+    private void sendActuators(ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
+        System.out.println("Get Actuators Recived");
+
+        Document doc= mngXML.newDocument("actuatorsList");
+        
+        am.getActuators().stream().forEach(a->{
+            Element actuator= doc.createElement("actuator");
+            
+            Element id = doc.createElement("id");
+            id.appendChild(doc.createTextNode(""+a.getId()));
+            actuator.appendChild(id);
+            
+//            Element kind = doc.createElement("kind");
+//            kind.appendChild(doc.createTextNode(s.getKind().toString()));
+//            sensor.appendChild(kind);
+            
+            Element value = doc.createElement("value");
+            value.appendChild(doc.createTextNode(""+a.getValue()));
+            actuator.appendChild(value);
+            
+            doc.getDocumentElement().appendChild(actuator);
+        });
+
+        mngXML.transform(response.getOutputStream(), doc);
+        response.getOutputStream().close();
+    }
+
+    private void setActuatorValue(ManageXML mngXML, HttpServletResponse response, Document data) throws IOException, TransformerException {
+        Element idEl = (Element) data.getElementsByTagName("id").item(0);
+        Element valEl = (Element) data.getElementsByTagName("value").item(0);
+
+        am.setActuatorValue(Integer.parseInt(idEl.getFirstChild().toString()), Integer.parseInt(valEl.getFirstChild().toString()));
+
+        sendMessage("done", mngXML, response);
+        response.getOutputStream().close();
+    }
+    
+    private void sendErrorMsg(String caption, String message, HttpServletResponse response, ManageXML mngXML) throws IOException, TransformerException {
+        Document answer = mngXML.newDocument("error");
+        Element cpt = answer.createElement("caption");
+        cpt.appendChild(answer.createTextNode(caption));
+        
+        Element msg = answer.createElement("message");
+        msg.appendChild(answer.createTextNode(message));
+        
+        answer.getDocumentElement().appendChild(cpt);
+        answer.getDocumentElement().appendChild(msg);
+        
+        mngXML.transform(response.getOutputStream(), answer);
+        response.getOutputStream().close();
+    }
+
+    private void sendMessage(String msg, ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
+        Document answer = mngXML.newDocument("message");
+        answer.getDocumentElement().appendChild(answer.createTextNode(msg));
+        mngXML.transform(response.getOutputStream(), answer);
+        response.getOutputStream().close(); 
     }
 }
