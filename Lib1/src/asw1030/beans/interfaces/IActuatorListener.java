@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.libraries.interfaces;
+package asw1030.beans.interfaces;
 
-import asw1030.enums.SensorEventType;
+import asw1030.beans.Actuator;
 
 
 /**
  *
  * @author Thomas
  */
-public interface ISensorEventsListener {
-    void newEvent(SensorEventType se);
+public interface IActuatorListener {
+    void actuatorUpdated(Actuator act);
 }

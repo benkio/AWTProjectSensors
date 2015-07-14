@@ -15,7 +15,6 @@
  */
 package asw1030.controllers.servlets;
 
-import asw1030.beans.SensorList;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.beans.User;
 import asw1030.beans.UserList;

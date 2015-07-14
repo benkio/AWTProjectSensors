@@ -1,10 +1,9 @@
 package asw1030.controllers.sensors;
 
 import asw1030.beans.Sensor;
-import asw1030.beans.Sensor.SensorKind;
+import asw1030.beans.enums.SensorKind;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
-import asw1030.dal.IXMLTable;
 import asw1030.model.ModelEventType;
 import asw1030.model.SensorModel;
 import java.io.IOException;
@@ -21,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +32,7 @@ import org.w3c.dom.Text;
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)
-public class SensorsService extends HttpServlet{
+public class SensorsService extends HttpServlet implements IModelEventsListener{
 
     private LinkedList<AsyncContext> contexts;
     private SensorModel sm;
@@ -87,7 +87,7 @@ public class SensorsService extends HttpServlet{
         }else{
             switch (operation) {
                 case "getSensors":
-                    sendSensors(mngXML,response,user);
+                    sendSensors(mngXML,response);
                     break;
                 case "waitEvents":
                     waitEvents(mngXML,response,request);
@@ -99,10 +99,10 @@ public class SensorsService extends HttpServlet{
                     removeSensor(mngXML,response,request,data);
                     break;
                 case "enableSensor":
-                    enableSensor(mngXML,response,request);
+                    enableSensor(mngXML,response,request,data);
                     break;
                 case "disableSensor":
-                    disableSensor(mngXML,response,request);
+                    disableSensor(mngXML,response,request,data);
                     break;
                 default:
                     sendErrorMsg("Errore", "Operazione non supportata", response, mngXML);
@@ -133,22 +133,32 @@ public class SensorsService extends HttpServlet{
         response.getOutputStream().close(); 
     }
 
-    private void sendSensors(ManageXML mngXML, HttpServletResponse response, String username) throws Exception {
+    private void sendSensors(ManageXML mngXML, HttpServletResponse response) throws Exception {
         System.out.println("Get Sensors Recived");
 
         Document doc= mngXML.newDocument("SensorsList");
-//        User tempUser = new User();
-//        tempUser.username = username;
-//        Map<String,Boolean> sensorList = uslf.getSensorIdsByUser(tempUser);
-//        for (Map.Entry<String, Boolean> s : sensorList.entrySet()){
-//            Sensor sensor = slf.getSensorByName(s.getKey());
-//            Element sensorXml = doc.createElement("Sensor");
-//            sensorXml.setAttribute("id", sensor.Name);
-//            sensorXml.setAttribute("value", Integer.toString(sensor.Value));
-//            sensorXml.setAttribute("visible", s.getValue().toString());
-//            sensorXml.appendChild(doc.createTextNode(sensor.Status.name()));
-//            doc.getDocumentElement().appendChild(sensorXml);
-//        }
+        
+        sm.getSensorList().stream().forEach(s->{
+            Element sensor= doc.createElement("Sensor");
+            
+            Element id = doc.createElement("id");
+            id.appendChild(doc.createTextNode(""+s.getId()));
+            sensor.appendChild(id);
+            
+            Element kind = doc.createElement("kind");
+            kind.appendChild(doc.createTextNode(s.getKind().toString()));
+            sensor.appendChild(kind);
+            
+            Element state = doc.createElement("state");
+            state.appendChild(doc.createTextNode(s.getStatus().toString()));
+            sensor.appendChild(state);
+            
+            Element value = doc.createElement("value");
+            value.appendChild(doc.createTextNode(""+s.getValue()));
+            sensor.appendChild(value);
+            
+            doc.appendChild(sensor);
+        });
 
         mngXML.transform(response.getOutputStream(), doc);
         response.getOutputStream().close();
@@ -197,8 +207,7 @@ public class SensorsService extends HttpServlet{
     
     private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
         if ((boolean) request.getSession().getAttribute("isAdmin")) {
-            
-            mngXML.transform(System.out, data);
+
             Element root = data.getDocumentElement();
             NodeList childs = root.getElementsByTagName("sensor");
             
@@ -220,7 +229,6 @@ public class SensorsService extends HttpServlet{
         if ((boolean) request.getSession().getAttribute("isAdmin")) {
             Element root = data.getDocumentElement();
             NodeList childs = root.getElementsByTagName("sensorId");
-            mngXML.transform(System.out, data);
             
             if (childs.getLength() !=0) {
                 Element sensor = (Element) childs.item(0);
@@ -233,30 +241,62 @@ public class SensorsService extends HttpServlet{
         }
     }
 
-    private void enableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void enableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request,Document data) throws IOException, TransformerException {
+         if ((boolean) request.getSession().getAttribute("isAdmin")) {
+            Element root = data.getDocumentElement();
+            NodeList childs = root.getElementsByTagName("sensorId");
+            
+            if (childs.getLength() !=0) {
+                Element sensor = (Element) childs.item(0);
+                Text textNode = (Text) sensor.getFirstChild();
+                
+                sm.enableSensor(Integer.parseInt(textNode.getData()));
+                
+                sendMessage("done", mngXML, response);
+            }
+        }
     }
 
-    private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void disableSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+        if ((boolean) request.getSession().getAttribute("isAdmin")) {
+            Element root = data.getDocumentElement();
+            NodeList childs = root.getElementsByTagName("sensorId");
+            
+            if (childs.getLength() !=0) {
+                Element sensor = (Element) childs.item(0);
+                Text textNode = (Text) sensor.getFirstChild();
+                
+                sm.disableSensor(Integer.parseInt(textNode.getData()));
+                
+                sendMessage("done", mngXML, response);
+            }
+        }
     }
-        
-//    @Override
-//    public void newEvent(SensorEventType se) {
-//        System.out.println("New Event");
-//        
-//        synchronized (this) {
-//            contexts.stream().forEach((asyncContext) -> {
-//                try {
-//                    ManageXML mngXML = new ManageXML();
-//                    sendMessage("NewEvent", mngXML, (HttpServletResponse)asyncContext.getResponse());
-//                    asyncContext.complete();
-//                } catch (ParserConfigurationException | IOException | TransformerException ex) {
-//                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            });
-//            contexts.clear();
-//        }
-//    }
+
+    @Override
+    public void modelEventHandler(ModelEventType type, Object arg) {
+        synchronized (this) {
+            contexts.stream().forEach((AsyncContext asyncContext) -> {
+                try {
+                    ManageXML mngXML = new ManageXML();
+                    
+                    Document d = mngXML.newDocument("newEvent");
+                    Element eventType= d.createElement("eventType");
+                    eventType.appendChild(d.createTextNode(type.toString()));
+                    Element eventArg = d.createElement("arg");
+                    eventArg.appendChild(d.createTextNode(arg.toString()));
+                    d.appendChild(eventType);
+                    d.appendChild(eventArg);
+                    
+                    mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
+                    
+                    asyncContext.complete();
+                } catch (ParserConfigurationException | TransformerException | IOException ex) {
+                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            contexts.clear();
+        }
+    }
 }
 

@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.enums;
+package asw1030.beans.enums;
 
 /**
  *
  * @author Thomas
  */
-public enum SensorEventType {
-    ValueChanged,
-    StateChanged
-}
+    public enum SensorKind
+    {
+        TEMPERATURE,
+        HUMIDITY,
+        GAS_PRESSURE
+    }

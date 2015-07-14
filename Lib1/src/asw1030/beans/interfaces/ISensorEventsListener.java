@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.enums;
+package asw1030.beans.interfaces;
+
+import asw1030.beans.enums.SensorEventType;
+
 
 /**
  *
  * @author Thomas
  */
-public enum SensorState {
-    Active,
-    Disabled,
+public interface ISensorEventsListener {
+    void newEvent(SensorEventType se,Object arg);
 }

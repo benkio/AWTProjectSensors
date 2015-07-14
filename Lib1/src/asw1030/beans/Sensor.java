@@ -1,7 +1,11 @@
 package asw1030.beans;
 
+import asw1030.beans.enums.SensorKind;
 import asw1030.beans.interfaces.IXmlRecord;
-import asw1030.enums.SensorState;
+import asw1030.beans.enums.SensorState;
+import asw1030.beans.interfaces.ISensorEventsListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,10 +17,14 @@ public class Sensor implements IXmlRecord{
     private int value;
     private int id;
     
+    private List<ISensorEventsListener> listeners;
+    
     public Sensor(SensorKind kind) {
         this.kind = kind;
         this.status = SensorState.Active;
         this.value = new Random().nextInt(100) + 1;
+        
+        listeners= new ArrayList<>();
     }
     
     @Override
@@ -54,11 +62,14 @@ public class Sensor implements IXmlRecord{
         this.value = value;
     }
     
-    public enum SensorKind
+    public void addListener(ISensorEventsListener list)
     {
-        TEMPERATURE,
-        HUMIDITY,
-        GAS_PRESSURE
+        listeners.add(list);
+    }
+    
+    public void removeListener(ISensorEventsListener list)
+    {
+        listeners.remove(list);
     }
 }
 

@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 
-import asw1030.beans.Sensor;
-import asw1030.beans.Sensor.SensorKind;
+import asw1030.beans.enums.SensorKind;
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.xml.ManageXML;
 import java.io.IOException;
@@ -19,10 +18,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -87,10 +84,4 @@ public class SensorModelTest {
         
         mngXML.transform(System.out, hc.execute("Sensors", d));
     }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
 }

@@ -10,5 +10,7 @@ package asw1030.model;
  * @author Farneti Thomas
  */
 public enum ModelEventType {
-    NEWRECORD
+    SENSORADDED,
+    SENSORREMOVED,
+    NEWSENSORVALUE,
 }
