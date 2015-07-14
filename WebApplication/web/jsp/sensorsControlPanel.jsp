@@ -25,7 +25,8 @@
         <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
             <thead>
                 <tr>
-                    <th scope="col">Nome Sensore</th>
+                    <th scope="col">ID Sensore</th>
+                    <th scope="col">Tipo Sensore</th>
                     <th scope="col">Stato Sensore</th>
                     <th scope="col">
                         <div>
@@ -43,7 +44,6 @@
         <script>  
             //Made the request of the actuators and render the result.
             XMLRequestPattern("../Sensors", loadInitialSensor/*function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}*/,GetSensorsXML);
-            
         </script>
     </body>
 </html>

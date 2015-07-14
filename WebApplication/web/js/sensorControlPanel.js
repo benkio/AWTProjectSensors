@@ -12,14 +12,15 @@
  * @returns {undefined}
  */
 function loadInitialSensor(xmlhttp) {
-    var sensor_name, sensor_state, sensor, i;
+    var sensor_name, sensor_state,sensor_type, sensor, i;
     sensor = xmlhttp.responseXML.documentElement.getElementsByTagName("Sensor");
     for (i = 0; i < sensor.length; i++) {
         sensor_name = sensor.item(i).getAttribute("id");
-        sensor_state = sensor.item(i).textContent;
+        sensor_state = sensor.item(i).getAttribute("state");
+        sensor_type = sensor.item(i).getAttribute("kind");
         $("#SensorControlPanelTableBody").prepend(sensorToHTML(sensor_name , sensor_state, function (){
             return sensor_state !== "Active";
-        } ));
+        } ),sensor_type);
         try {
             $("p[name*='Name" + sensor_name + "']").text(sensor_name );
         } catch (er) {
@@ -37,11 +38,11 @@ function loadInitialSensor(xmlhttp) {
  * @param {type} playable: used to decide what icon choose
  * @returns {String}
  */
-function sensorToHTML(sensorID, sensorStatus, playable) {
+function sensorToHTML(sensorID, sensorStatus, playable, sensorKind) {
     var icon = contextPath + "/img/stopIcon.png";
     if (playable())
         icon = contextPath + "/img/playIcon.png";
-    return "<tr><td><p name=\"SensorName"+ sensorID + "\" >"+sensorID+"</p></td><td><p name=\"SensorStatus"+sensorID+"\" >"+sensorStatus+"</p></td><td><input name=\"SensorControlButton"+sensorID+"\" type=\"image\" src="+icon+" height=\"32\" width=\"32\"><input name=\"removeSensorControlButton"+sensorID+"\" type=\"image\" src="+ contextPath + "/img/removeIcon.png"+" height=\"32\" width=\"32\"></td></tr>";   
+    return "<tr><td><p name=\"SensorName"+ sensorID + "\" >"+sensorID+"</p></td><td><p name=\"SensorKind"+sensorID+"\" >"+sensorKind+"</p></td><td><p name=\"SensorStatus"+sensorID+"\" >"+sensorStatus+"</p></td><td><input name=\"SensorControlButton"+sensorID+"\" type=\"image\" src="+icon+" height=\"32\" width=\"32\"><input name=\"removeSensorControlButton"+sensorID+"\" type=\"image\" src="+ contextPath + "/img/removeIcon.png"+" height=\"32\" width=\"32\"></td></tr>";   
 }
 
 function setEventListener(sensorID) {
