@@ -43,7 +43,7 @@ public class SensorModelTest {
         hc.setBase(new URL(BASE));
 
         Document answer = hc.execute("Sensors",  mngXML.newDocument("testLogin"));
-        mngXML.transform(System.out, answer);
+        mngXML.transformIndented(System.out, answer);
     }
     
     @AfterClass
@@ -66,12 +66,17 @@ public class SensorModelTest {
         Element kind = d.createElement("kind");
         kind.appendChild(d.createTextNode(SensorKind.GAS_PRESSURE.toString()));
         sensor.appendChild(kind);
-        Element status = d.createElement("status");
-        status.appendChild(d.createTextNode("Running"));
-        sensor.appendChild(status);
         d.getDocumentElement().appendChild(sensor);
         
-        mngXML.transform(System.out, hc.execute("Sensors", d));
+        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
+    }
+    
+    @Test
+    public void getSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
+        
+        Document d = mngXML.newDocument("getSensors");
+        
+        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
     
     @Test
@@ -82,6 +87,6 @@ public class SensorModelTest {
         sensorId.appendChild(d.createTextNode("1"));
         d.getDocumentElement().appendChild(sensorId);
         
-        mngXML.transform(System.out, hc.execute("Sensors", d));
+        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
 }

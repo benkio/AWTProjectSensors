@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.beans.interfaces;
+
+import asw1030.beans.enums.ActuatorEventType;
+
 
 /**
  *
- * @author Farneti Thomas
+ * @author Thomas
  */
-public enum ModelEventType {
-    SENSORADDED,
-    SENSORREMOVED,
-    NEWSENSORVALUE,
-    ACTUATORADDED,
-    ACTUATORREMOVED,
-    NEWACTUATORVALUE
+public interface IActuatorEventsListener {
+    void newEvent(ActuatorEventType ae,Object arg);
 }

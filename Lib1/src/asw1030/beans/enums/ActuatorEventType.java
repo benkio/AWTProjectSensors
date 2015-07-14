@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.beans.enums;
 
 /**
  *
- * @author Farneti Thomas
+ * @author Thomas
  */
-public enum ModelEventType {
-    SENSORADDED,
-    SENSORREMOVED,
-    NEWSENSORVALUE,
-    ACTUATORADDED,
-    ACTUATORREMOVED,
-    NEWACTUATORVALUE
+public enum ActuatorEventType {
+    NEWVALUE
 }
