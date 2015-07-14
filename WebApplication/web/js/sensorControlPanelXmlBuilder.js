@@ -25,7 +25,7 @@ function GetOfflineXMLFunction(sensorID) {
         var doc = document.implementation.createDocument("", "", null);
         var disableSensorsElem = doc.createElement("disableSensor");
 
-        var sensorIDElement = doc.createElement("id");
+        var sensorIDElement = doc.createElement("sensorId");
         var sensorIDTextElement = doc.createTextNode(sensorID);
         sensorIDElement.appendChild(sensorIDTextElement);
 
@@ -42,7 +42,7 @@ function GetRemoveXMLFunction(sensorID) {
         var doc = document.implementation.createDocument("", "", null);
         var disableSensorsElem = doc.createElement("removeSensor");
 
-        var sensorIDElement = doc.createElement("id");
+        var sensorIDElement = doc.createElement("sensorId");
         var sensorIDTextElement = doc.createTextNode(sensorID);
         sensorIDElement.appendChild(sensorIDTextElement);
 
@@ -59,7 +59,7 @@ function GetActiveXMLFunction(sensorID){
         var doc = document.implementation.createDocument("", "", null);
         var enableSensorsElem = doc.createElement("enableSensor");
 
-        var sensorIDElement = doc.createElement("id");
+        var sensorIDElement = doc.createElement("sensorId");
         var sensorIDTextElement = doc.createTextNode(sensorID);
         sensorIDElement.appendChild(sensorIDTextElement);
 
