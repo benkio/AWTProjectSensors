@@ -28,12 +28,7 @@
                     <th scope="col">ID Sensore</th>
                     <th scope="col">Tipo Sensore</th>
                     <th scope="col">Stato Sensore</th>
-                    <th scope="col">
-                        <div>
-                            <p id="operationCaption">Operazioni</p>
-                            <input id="addSensorButtonID" type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png" onclick="XMLRequestPattern(&quot;..&#47;Sensors&quot;,function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));},GetAddSensorXML);">
-                        </div>
-                    </th>
+                    <th scope="col">Operazioni</th>
                 </tr>
             </thead>
             <tbody id="SensorControlPanelTableBody">

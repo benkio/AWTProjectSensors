@@ -71,9 +71,18 @@ function GetActiveXMLFunction(sensorID){
     };
 }
 
-function GetAddSensorXML(){
+function GetAddSensorXML(kind){
     var doc = document.implementation.createDocument("", "", null);
     var addSensorsElem = doc.createElement("addSensor");
+    
+    var sensorElement = doc.createElement("sensor");
+    var sensorKindElement = doc.createElement("kind");
+    var sensorKindElementContent = doc.createTextNode(kind);
+    
+    sensorKindElement.appendChild(sensorKindElementContent);
+    SensorsElem.appendChild(sensorKindElement);
+    addSensorsElem.appendChild(sensorElement);
+    
     doc.appendChild(addSensorsElem);
     console.log(new XMLSerializer().serializeToString(doc));
     return doc;
