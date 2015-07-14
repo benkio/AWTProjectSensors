@@ -21,7 +21,15 @@
         
         <%@include file="/WEB-INF/jspf/adminRedirect.jspf" %>
 
-        <!-- RIA Sensors Control Panel -->
+        <!-- RIA Sensors Control Panel -->       
+        <p>Tipo di Sensore:</p>
+        <select>
+            <option value="TEMPERATURE">Temperatura</option>
+            <option value="HUMIDITY">Umidita'</option>
+            <option value="GAS_PRESSURE">Pressione Gas</option>
+        </select>     
+        <input id="addSensorButtonID" type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png" onclick="XMLRequestPattern(&quot;..&#47;Sensors&quot;,function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}, function() { GetAddSensorXML(addSensorKind); });">    
+            
         <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
             <thead>
                 <tr>

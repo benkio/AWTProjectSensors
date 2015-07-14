@@ -7,12 +7,12 @@
 				 {
 			%>
 				<li><a href='<%= request.getContextPath()%>/jsp/sensors.jsp'><span>Sensors</span></a></li>
-                                <li><a href='<%= request.getContextPath()%>/UserAuthServlet'><span>User Auth</span></a></li>
+                <li><a href='<%= request.getContextPath()%>/jsp/actuators.jsp'><span>Actuators</span></a></li>
 				<%
 					if (session.getAttribute("isAdmin") != null && (Boolean) session.getAttribute("isAdmin"))
 					{
 				%>
-				<li><a href='<%= request.getContextPath()%>/jsp/actuators.jsp'><span>Actuators</span></a></li>
+				
                                 <li><a href='<%= request.getContextPath()%>/jsp/sensorsControlPanel.jsp'><span>Sensors Control Panel</span></a></li>
 			<%
 					}
