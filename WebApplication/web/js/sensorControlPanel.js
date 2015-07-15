@@ -58,7 +58,7 @@ function sensorToHTML(sensorID, sensorStatus, playable, sensorKind) {
 function removeSensorCallback(xmlhttp, sensorId){
     logResponse(xmlhttp);
     
-    $("tr[name=\"sensorId"+sensorId+"]").remove();
+    $('tr[name=\"sensorId'+sensorId+'\"]').remove();
 }
 
 function changeStatusCallback(xmlhttp, sensorAttributes){
@@ -108,6 +108,7 @@ function addSensorCallback(xmlhttp, kind){
     $("#SensorControlPanelTableBody").prepend(sensorToHTML(sensor_name , "Active", function (){
             return false;
         } ,kind));
+    setSensorsEventListener(sensor_name);    
 }
 /**
  * set the add sensor handler
@@ -116,6 +117,6 @@ function addSensorCallback(xmlhttp, kind){
 function setAddSensorHandler(){
     $("input[name='addSensorButton']").click(function () {
         console.log("Add sensor operation button pressed:  ");
-        XMLRequestPattern( "../Sensors", addSensorCallback, GetAddSensorXML,$( '#addSensorKind' ).val());
+        XMLRequestPattern( "../Sensors", addSensorCallback, GetAddSensorXML,$( '#addSensorKind' ).val());        
     });
 }
