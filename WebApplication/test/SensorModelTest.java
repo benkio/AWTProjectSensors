@@ -79,7 +79,7 @@ public class SensorModelTest {
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
-    
+   /* 
     @Test
     public void removeSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
         
@@ -90,4 +90,5 @@ public class SensorModelTest {
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
+    */
 }

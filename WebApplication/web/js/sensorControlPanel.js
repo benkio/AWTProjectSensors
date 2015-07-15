@@ -15,12 +15,12 @@ function loadInitialSensor(xmlhttp) {
     var sensor_name, sensor_state,sensor_type, sensor, i;
     sensor = xmlhttp.responseXML.documentElement.getElementsByTagName("Sensor");
     for (i = 0; i < sensor.length; i++) {
-        sensor_name = sensor.item(i).getAttribute("id");
-        sensor_state = sensor.item(i).getAttribute("state");
-        sensor_type = sensor.item(i).getAttribute("kind");
+        sensor_name = sensor.item(i).getElementsByTagName("id").item(0).textContent;
+        sensor_state = sensor.item(i).getElementsByTagName("state").item(0).textContent;;
+        sensor_type = sensor.item(i).getElementsByTagName("kind").item(0).textContent;;
         $("#SensorControlPanelTableBody").prepend(sensorToHTML(sensor_name , sensor_state, function (){
             return sensor_state !== "Active";
-        } ),sensor_type);
+        } ,sensor_type));
         try {
             $("p[name*='Name" + sensor_name + "']").text(sensor_name );
         } catch (er) {

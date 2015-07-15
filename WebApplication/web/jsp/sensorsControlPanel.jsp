@@ -47,7 +47,7 @@
 
         <script>
                     //Made the request of the actuators and render the result.
-                    XMLRequestPattern("../Sensors", /*loadInitialSensor*/function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}, GetSensorsXML);
+                    XMLRequestPattern("../Sensors", loadInitialSensor/*function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}*/, GetSensorsXML);
         </script>
     </body>
 </html>
