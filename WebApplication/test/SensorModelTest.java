@@ -68,6 +68,7 @@ public class SensorModelTest {
         sensor.appendChild(kind);
         d.getDocumentElement().appendChild(sensor);
         
+        mngXML.transform(System.out, d);
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
     

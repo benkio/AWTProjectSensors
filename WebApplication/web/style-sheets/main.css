@@ -100,9 +100,23 @@ header  h1{
     display: inline;
     margin-left: .2em;
 }
-#addSensorButtonID{
+#sensorsControlPanelAdd *{
+    width: 25%;
+    margin: 0 1em 0 1em;
+    text-align: center;
+    height: auto;
     display: inline-block;
-    float: right;
+    vertical-align: middle;
+    line-height: normal;
+}
+#sensorsControlPanelAdd p{
+    text-align: right;
+}
+#sensorsControlPanelAdd option{
+    display: block;
+}
+#sensorsControlPanelAdd input{
+    width: auto;
 }
 
 /* Login and Registation jsps */

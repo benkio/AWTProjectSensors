@@ -80,7 +80,7 @@ function GetAddSensorXML(kind){
     var sensorKindElementContent = doc.createTextNode(kind);
     
     sensorKindElement.appendChild(sensorKindElementContent);
-    SensorsElem.appendChild(sensorKindElement);
+    sensorElement.appendChild(sensorKindElement);
     addSensorsElem.appendChild(sensorElement);
     
     doc.appendChild(addSensorsElem);
