@@ -118,6 +118,7 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
         String sensorName = null;
         String sensorStatus = null;
         String sensorValue = null;
+        String sensorType = null;
         int sensorValueInt = 0;
 
         if (value instanceof Object[]) {
@@ -125,6 +126,7 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
             sensorName = (String) values[0];
             sensorStatus = (String) values[1];
             sensorValue = (String) values[2];
+            sensorType = (String) values[3];
         }
         if (sensorName == null) {
             sensorName = "";
@@ -132,6 +134,8 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
         if (sensorStatus == null) {
             sensorStatus = "";
         }
+        if (sensorType == null)
+            sensorType = "";
         if (sensorValue == null) {
             sensorValue = "";
         }
@@ -141,6 +145,7 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
         sensorStatusLabel.setText(sensorStatus);
         sensorValueLabel.setText(sensorValue+"%");
         sensorValueProgressBar.setValue(sensorValueInt);
+        sensorTypeLabel.setText(sensorType);
 
         if (isSelected) {
             adjustColors(list.getSelectionBackground(),

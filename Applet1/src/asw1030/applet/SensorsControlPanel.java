@@ -84,9 +84,10 @@ public class SensorsControlPanel extends JApplet {
                 Element sensorElem = (Element) sensorsList.getChildNodes().item(i);
                 if (Boolean.valueOf(sensorElem.getAttribute("visible"))){
                     String[] listElem = {
-                        sensorElem.getAttribute("id"),
-                        sensorElem.getTextContent(),
-                        sensorElem.getAttribute("value")
+                        sensorElem.getElementsByTagName("id").item(0).getNodeValue(),
+                        sensorElem.getElementsByTagName("state").item(0).getNodeValue(),
+                        sensorElem.getElementsByTagName("value").item(0).getNodeValue(),
+                        sensorElem.getElementsByTagName("kind").item(0).getNodeValue()
                     };
                     appletGUI.model.addElement(listElem);
                 }
