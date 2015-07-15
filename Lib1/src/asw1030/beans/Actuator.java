@@ -8,12 +8,15 @@ package asw1030.beans;
 import asw1030.beans.enums.ActuatorEventType;
 import asw1030.beans.interfaces.IActuatorEventsListener;
 import asw1030.beans.interfaces.IXmlRecord;
+import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author enricobenini
  */
+@XmlRootElement(name="actuator")
 public class Actuator implements IXmlRecord{
     private int id;
     private int value;
@@ -21,8 +24,9 @@ public class Actuator implements IXmlRecord{
     private List<IActuatorEventsListener> listeners;
     
     public Actuator(){
-        this.id = 0;
         this.value = 0;
+        
+        listeners= new ArrayList<>();
     }
 
     public void setValue(int value) {
@@ -34,14 +38,6 @@ public class Actuator implements IXmlRecord{
     public int getValue() {
         return value;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
     
     public void addListener(IActuatorEventsListener list){
         listeners.add(list);
@@ -49,6 +45,16 @@ public class Actuator implements IXmlRecord{
     
     public void removeListener(IActuatorEventsListener list){
         listeners.remove(list);
+    }
+
+    @Override
+    public int getId() {
+        return this.id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id=id;
     }
     
 }

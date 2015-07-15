@@ -44,7 +44,7 @@ public class ActuatorModel implements IActuatorEventsListener{
     
     public ActuatorModel(ServletContext servletContext) {
         try {
-            dal = XMLTable.getInstance(servletContext.getRealPath("/")+ "WEB-INF/xml/sensors.xml");
+            dal = XMLTable.getInstance(servletContext.getRealPath("/")+ "WEB-INF/xml/actuators.xml");
         } catch (JAXBException | TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
             Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,6 +61,13 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
             operations(data,request.getSession(),mngXML,request,response);
             
         } catch(Exception ex){
+            try {
+                sendErrorMsg("Errore", ex.getMessage(), response, new ManageXML());
+            } catch (TransformerConfigurationException ex1) {
+                Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (ParserConfigurationException | TransformerException ex1) {
+                Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -207,6 +215,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
     }
     
     private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+        System.out.println("Get Sensors Recived");
+        
         if ((boolean) request.getSession().getAttribute("isAdmin")) {
 
             Element root = data.getDocumentElement();
@@ -222,6 +232,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                 
                 sendMessage(""+id, mngXML, response);
             }
+        }else{
+            sendErrorMsg("Error", "You must be admin", response, mngXML);
         }
     }
 
@@ -238,6 +250,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                 
                 sendMessage("done", mngXML, response);
             }
+        }else{
+            sendErrorMsg("Error", "You must be admin", response, mngXML);
         }
     }
 
@@ -254,6 +268,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                 
                 sendMessage("done", mngXML, response);
             }
+        }else{
+            sendErrorMsg("Error", "You must be admin", response, mngXML);
         }
     }
 
@@ -270,6 +286,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                 
                 sendMessage("done", mngXML, response);
             }
+        }else{
+            sendErrorMsg("Error", "You must be admin", response, mngXML);
         }
     }
 

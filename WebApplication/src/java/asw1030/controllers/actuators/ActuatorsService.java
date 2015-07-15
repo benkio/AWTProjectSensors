@@ -5,13 +5,20 @@
  */
 package asw1030.controllers.actuators;
 
+import asw1030.beans.Actuator;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.controllers.sensors.SensorsService;
 import asw1030.model.ActuatorModel;
+import asw1030.model.IModelEventsListener;
+import asw1030.model.ModelEventType;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.AsyncContext;
+import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,20 +37,26 @@ import org.xml.sax.SAXException;
  *
  * @author Thomas
  */
-@WebServlet(name = "ActuatorsService", urlPatterns = {"/actuators"})
-public class ActuatorsService extends HttpServlet {
+@WebServlet(name = "ActuatorsService", urlPatterns = {"/Actuators"}, asyncSupported = true)
+public class ActuatorsService extends HttpServlet implements IModelEventsListener{
 
     private ActuatorModel am;
+    private LinkedList<AsyncContext> contexts;
     
     @Override
     public void init() throws ServletException {
         super.init();
-        
+        contexts= new LinkedList<>(); 
         try {
             am = ActuatorModel.getInstance(getServletContext());
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        am.addActuator(new Actuator());
+        am.addActuator(new Actuator());
+        am.addActuator(new Actuator());
+        am.addActuator(new Actuator());
     }
     
     @Override
@@ -83,10 +96,14 @@ public class ActuatorsService extends HttpServlet {
             case "setValue":
                 setActuatorValue(mngXML,response,data);
                 break;
+            case "waitEvents":
+                waitEvents(mngXML,response,request);
+                break;
             case "addActuator":
-                
+                sendErrorMsg("Error", "Not Implemented", response, mngXML);
                 break;
             case "removeActuator":
+                sendErrorMsg("Error", "Not Implemented", response, mngXML);
                 break;
         }
     }
@@ -148,5 +165,72 @@ public class ActuatorsService extends HttpServlet {
         answer.getDocumentElement().appendChild(answer.createTextNode(msg));
         mngXML.transform(response.getOutputStream(), answer);
         response.getOutputStream().close(); 
+    }
+
+    private void waitEvents(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        AsyncContext asyncContext = request.startAsync();
+        asyncContext.setTimeout(10 * 1000);
+        asyncContext.addListener(new AsyncListener() {
+
+            @Override
+            public void onComplete(AsyncEvent event) throws IOException {
+            }
+
+            @Override
+            public void onTimeout(AsyncEvent event) throws IOException {
+                AsyncContext asyncContext = event.getAsyncContext();
+                    boolean confirm;
+                    synchronized (this) {
+                        if ((confirm = contexts.contains(asyncContext))) {
+                            contexts.remove(asyncContext);
+                        }
+                    }
+                    if (confirm) {
+                        try {
+                            sendMessage("Timeout", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                        } catch (TransformerException ex) {
+                            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        asyncContext.complete();
+                    }
+            }
+
+            @Override
+            public void onError(AsyncEvent event) throws IOException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void onStartAsync(AsyncEvent event) throws IOException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        contexts.add(asyncContext);
+    }
+
+    @Override
+    public void modelEventHandler(ModelEventType type, Object arg) {
+        synchronized (this) {
+            contexts.stream().forEach((AsyncContext asyncContext) -> {
+                try {
+                    ManageXML mngXML = new ManageXML();
+                    
+                    Document d = mngXML.newDocument("newEvent");
+                    Element eventType= d.createElement("eventType");
+                    eventType.appendChild(d.createTextNode(type.toString()));
+                    Element eventArg = d.createElement("arg");
+                    eventArg.appendChild(d.createTextNode(arg.toString()));
+                    d.appendChild(eventType);
+                    d.appendChild(eventArg);
+                    
+                    mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
+                    
+                    asyncContext.complete();
+                } catch (ParserConfigurationException | TransformerException | IOException ex) {
+                    Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            contexts.clear();
+        }
     }
 }
