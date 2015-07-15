@@ -40,29 +40,36 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
         sensorValueProgressBar = new javax.swing.JProgressBar();
         sensorValueLabel = new javax.swing.JLabel();
         panelSensorValueCaption = new javax.swing.JLabel();
+        panelSensorTypeLabel = new javax.swing.JLabel();
+        sensorTypeLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(940, 100));
 
         panelSensorNameCaption.setText("Sensor Name: ");
 
-        sensorNameLabel.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        sensorNameLabel.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         sensorNameLabel.setText("Sensor");
 
         panelSensorStatusCaption.setText("Sensor Status:");
 
-        sensorStatusLabel.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        sensorStatusLabel.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         sensorStatusLabel.setText("Status");
 
         sensorValueLabel.setText("0%");
 
         panelSensorValueCaption.setText("Sensor Value:");
 
+        panelSensorTypeLabel.setText("Sensor Type:");
+
+        sensorTypeLabel.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
+        sensorTypeLabel.setText("Type");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelSensorNameCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sensorNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -72,12 +79,15 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
                     .addComponent(panelSensorValueCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sensorStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 582, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(sensorValueProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sensorValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(sensorStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(panelSensorTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(sensorTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sensorValueProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sensorValueLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,12 +97,14 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
                     .addComponent(sensorNameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelSensorNameCaption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sensorStatusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panelSensorStatusCaption, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(sensorStatusLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                            .addComponent(panelSensorStatusCaption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                            .addComponent(sensorTypeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panelSensorTypeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sensorValueProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                            .addComponent(sensorValueProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                             .addComponent(sensorValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panelSensorValueCaption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
@@ -152,9 +164,11 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel panelSensorNameCaption;
     private javax.swing.JLabel panelSensorStatusCaption;
+    private javax.swing.JLabel panelSensorTypeLabel;
     private javax.swing.JLabel panelSensorValueCaption;
     private javax.swing.JLabel sensorNameLabel;
     private javax.swing.JLabel sensorStatusLabel;
+    private javax.swing.JLabel sensorTypeLabel;
     private javax.swing.JLabel sensorValueLabel;
     private javax.swing.JProgressBar sensorValueProgressBar;
     // End of variables declaration//GEN-END:variables
