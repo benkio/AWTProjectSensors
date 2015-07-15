@@ -29,7 +29,7 @@
                 <option value="HUMIDITY">Umidita'</option>
                 <option value="GAS_PRESSURE">Pressione Gas</option>
             </select>     
-            <input type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png" onclick="XMLRequestPattern( '../Sensors', function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement)); }, function() { GetAddSensorXML($( '#addSensorKind' ).val()); });">    
+            <input type="image" name="addSensorButton" src="<%= request.getContextPath()%>/img/addIcon.png" >    
         </div>
         <table border="0" cellpadding="1" cellspacing="1" class="ManageTable">
             <thead>
@@ -48,6 +48,7 @@
         <script>
                     //Made the request of the actuators and render the result.
                     XMLRequestPattern("../Sensors", loadInitialSensor/*function (xmlhttp) { console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));}*/, GetSensorsXML);
+                    setAddSensorHandler();
         </script>
     </body>
 </html>

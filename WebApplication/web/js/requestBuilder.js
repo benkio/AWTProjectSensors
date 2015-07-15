@@ -13,7 +13,7 @@
  * @param {type} xmlRequest function to call for build the XML Request.
  * @returns {undefined}
  */
-function XMLRequestPattern(url, loadFunction, xmlRequest) {
+function XMLRequestPattern(url, loadFunction, xmlRequest, param) {
     var xmlhttp;
     if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
         xmlhttp = new XMLHttpRequest();
@@ -22,10 +22,16 @@ function XMLRequestPattern(url, loadFunction, xmlRequest) {
     }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            loadFunction(xmlhttp);
+            if (param === undefined)
+                loadFunction(xmlhttp);
+            else
+                loadFunction(xmlhttp,param);
         }
     };
     xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader("Content-Type", "text/xml");
-    xmlhttp.send(xmlRequest());
+    if (param === undefined)
+        xmlhttp.send(xmlRequest());
+    else 
+        xmlhttp.send(xmlRequest(param));
 }
