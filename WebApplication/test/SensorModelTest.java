@@ -79,7 +79,7 @@ public class SensorModelTest {
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
-   /* 
+    
     @Test
     public void removeSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
         
@@ -90,5 +90,25 @@ public class SensorModelTest {
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
-    */
+    
+    @Test
+    public void activeSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
+        Document d = mngXML.newDocument("enableSensor");
+        Element sensorId = d.createElement("sensorId");
+        sensorId.appendChild(d.createTextNode("1"));
+        d.getDocumentElement().appendChild(sensorId);
+        
+        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
+    }
+    
+    @Test
+    public void disactiveSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
+        Document d = mngXML.newDocument("disableSensor");
+        Element sensorId = d.createElement("sensorId");
+        sensorId.appendChild(d.createTextNode("1"));
+        d.getDocumentElement().appendChild(sensorId);
+        
+        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
+    }
+    
 }
