@@ -91,7 +91,7 @@ function setSensorsEventListener(sensorID) {
     
     $("input[name='removeSensorControlButton"+sensorID+"']").click(function () {
            console.log("remove operation button pressed:  " + sensorID);
-           XMLRequestPattern("../Sensors", removeSensorCallback,GetRemoveXMLS,sensorID);
+           XMLRequestPattern("../Sensors", removeSensorCallback,GetRemoveXML,sensorID);
     });
 }
 
