@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
                 User user = new User();
                 user.pass = request.getParameter("password");
                 user.username = request.getParameter("username");
-                UserListFile ulf = UserListFile.getInstance(getServletContext());
+                SensorListFile ulf = SensorListFile.getInstance(getServletContext());
                 user = ulf.loginUser(user);
                 // setting user as logged in
                 session.setAttribute("isLoggedIn", true);

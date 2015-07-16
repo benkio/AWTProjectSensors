@@ -70,10 +70,7 @@ public class SensorServiceTest {
         d.getDocumentElement().appendChild(sensor);
         
         mngXML.transform(System.out, d);
-        Document answ = hc.execute("Sensors", d);
-        
-        //sensorIndex = Integer.parseInt(answ.getDocumentElement().getNodeValue());
-        
+        mngXML.transformIndented(System.out,hc.execute("Sensors", d));        
     }
     
     @Test

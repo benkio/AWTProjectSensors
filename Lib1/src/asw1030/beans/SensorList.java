@@ -28,14 +28,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * A list of users
  */
 @XmlRootElement
-public class ActuatorList {
+public class SensorList {
 
-    public HashMap<Integer,Actuator> actuators;
+    public HashMap<Integer,Sensor> sensors;
     
     public int index;
 
-    public ActuatorList() {
-        this.actuators = new HashMap<>();
+    public SensorList() {
+        this.sensors = new HashMap<>();
         
         index=0;
     }

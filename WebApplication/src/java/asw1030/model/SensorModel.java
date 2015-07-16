@@ -5,24 +5,17 @@
  */
 package asw1030.model;
 
-import asw1030.dal.IXMLTable;
-import asw1030.dal.XMLTable;
 import asw1030.beans.Sensor;
 import asw1030.beans.enums.SensorEventType;
 import asw1030.beans.enums.SensorState;
 import asw1030.beans.interfaces.ISensorEventsListener;
-import com.sun.faces.util.CollectionsUtils;
-import java.io.IOException;
+import asw1030.dal.SensorListFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -32,15 +25,13 @@ public class SensorModel implements ISensorEventsListener{
         
     private static SensorModel instance;
     private HashMap<Integer,Sensor> sensors;
-    //private IXMLTable<Sensor> dal;
+    
+    private SensorListFile sList;
     
     private static final Object locker= new Object();
     
     private List<IModelEventsListener> listeners;
-    
-    private int index;
-    
-    
+        
     public static SensorModel getInstance(ServletContext servletContext){
         synchronized(locker){
             if (instance == null) {
@@ -50,28 +41,26 @@ public class SensorModel implements ISensorEventsListener{
         }
     }
     private SensorModel(ServletContext servletContext) {
-//        try {
-//            dal = new XMLTable(servletContext.getRealPath("/")+ "WEB-INF/xml/sensor.xml");
-//        } catch (JAXBException | TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
-//            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         
-        //sensors= dal.fetchRecords();
-        sensors= new HashMap<>();
-        listeners = new ArrayList<>();
+        try {
+            sList = SensorListFile.getInstance(servletContext);
+                    //sensors= dal.fetchRecords();
+                    } catch (Exception ex) {
+            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        index=0;
-        
+        try {
+            sensors= sList.readFile().sensors;
+        } catch (Exception ex) {
+            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        listeners = new ArrayList<>();        
     }
     
-    public synchronized int addSensor(Sensor s){
-        //int index = dal.addRecord(s);
-        
-        s.setId(index);
+    public synchronized int addSensor(Sensor s) throws Exception{
+        int index = sList.addSensor(s);
         sensors.put(index, s);
-        
-        index++;
-        
+                
         listeners.stream().forEach((listener) -> {
             listener.modelEventHandler(ModelEventType.SENSORADDED, index);
         });
@@ -81,8 +70,8 @@ public class SensorModel implements ISensorEventsListener{
         return index;
     }
     
-    public synchronized void removeSensor(int id){
-        //dal.removeRecord(id);
+    public synchronized void removeSensor(int id) throws Exception{
+        sList.deleteSensor(id);
         sensors.remove(id);
         
         listeners.stream().forEach((listener) -> {

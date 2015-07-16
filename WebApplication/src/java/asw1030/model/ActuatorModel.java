@@ -8,19 +8,12 @@ package asw1030.model;
 import asw1030.beans.Actuator;
 import asw1030.beans.enums.ActuatorEventType;
 import asw1030.beans.interfaces.IActuatorEventsListener;
-import asw1030.dal.IXMLTable;
-import asw1030.dal.XMLTable;
-import java.io.IOException;
+import asw1030.dal.ActuatorListFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -28,16 +21,16 @@ import org.xml.sax.SAXException;
  */
 public class ActuatorModel implements IActuatorEventsListener{
     private static ActuatorModel instance;
-    //private IXMLTable<Actuator> dal;
+    
     private final static Object locker= new Object();
+    
+    private ActuatorListFile alf;
     
     private HashMap<Integer,Actuator> actuators;
     
     private final ArrayList<IModelEventsListener> listeners;
-
-    private int index;
     
-    public static ActuatorModel getInstance(ServletContext servletContext) throws JAXBException{
+    public static ActuatorModel getInstance(ServletContext servletContext) throws JAXBException, Exception{
         synchronized(locker){
             if (instance == null) {
                     instance = new ActuatorModel(servletContext);
@@ -46,29 +39,23 @@ public class ActuatorModel implements IActuatorEventsListener{
         }
     }
     
-    public ActuatorModel(ServletContext servletContext) throws JAXBException {
-//        try {
-//            dal =new XMLTable<Actuator>(servletContext.getRealPath("/")+ "WEB-INF/xml/actuators.xml");
-//        } catch (TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
-//            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+    public ActuatorModel(ServletContext servletContext) throws JAXBException, Exception {
         
-        //actuators= dal.fetchRecords();
+        alf= ActuatorListFile.getInstance(servletContext);
+        
         actuators= new HashMap<>();
         listeners = new ArrayList<>();
-        index=0;
     }
 
     public List<Actuator> getActuators() {
         return new ArrayList<>(actuators.values());
     }
     
-    public int addActuator(Actuator act)
+    public int addActuator(Actuator act) throws Exception
     {
-        //int index = dal.addRecord(act);
-        
-        act.setId(index);
-        actuators.put(index++, act);
+        int index = alf.addActuator(act);
+
+        actuators.put(index, act);
         
         listeners.stream().forEach((listener) -> {
             listener.modelEventHandler(ModelEventType.ACTUATORADDED, index);
@@ -79,8 +66,8 @@ public class ActuatorModel implements IActuatorEventsListener{
         return index;
     }
     
-    public void removeActuator(int id){
-        //dal.removeRecord(id);
+    public void removeActuator(int id) throws Exception{
+        alf.deleteActuator(id);
         actuators.remove(id);
         
         listeners.stream().forEach((listener) -> {
