@@ -20,13 +20,12 @@ function GetSensorsXML() {
     return doc;
 }
 
-function GetOfflineXMLFunction(sensorID) {
-    return function () {
+function GetOfflineXML(sensorId) {
         var doc = document.implementation.createDocument("", "", null);
         var disableSensorsElem = doc.createElement("disableSensor");
 
         var sensorIDElement = doc.createElement("sensorId");
-        var sensorIDTextElement = doc.createTextNode(sensorID);
+        var sensorIDTextElement = doc.createTextNode(sensorId);
         sensorIDElement.appendChild(sensorIDTextElement);
 
         disableSensorsElem.appendChild(sensorIDElement);
@@ -34,33 +33,29 @@ function GetOfflineXMLFunction(sensorID) {
         doc.appendChild(disableSensorsElem);
         console.log(new XMLSerializer().serializeToString(doc));
         return doc;
-    };
 }
 
-function GetRemoveXMLFunction(sensorID) {
-    return function () {
-        var doc = document.implementation.createDocument("", "", null);
-        var disableSensorsElem = doc.createElement("removeSensor");
+function GetRemoveXML(sensorID) {
+    var doc = document.implementation.createDocument("", "", null);
+    var disableSensorsElem = doc.createElement("removeSensor");
 
-        var sensorIDElement = doc.createElement("sensorId");
-        var sensorIDTextElement = doc.createTextNode(sensorID);
-        sensorIDElement.appendChild(sensorIDTextElement);
+    var sensorIDElement = doc.createElement("sensorId");
+    var sensorIDTextElement = doc.createTextNode(sensorID);
+    sensorIDElement.appendChild(sensorIDTextElement);
 
-        disableSensorsElem.appendChild(sensorIDElement);
+    disableSensorsElem.appendChild(sensorIDElement);
 
-        doc.appendChild(disableSensorsElem);
-        console.log(new XMLSerializer().serializeToString(doc));
-        return doc;
-    };
+    doc.appendChild(disableSensorsElem);
+    console.log(new XMLSerializer().serializeToString(doc));
+    return doc;
 }
 
-function GetActiveXMLFunction(sensorID){
-    return function () {
+function GetActiveXML(sensorId){
         var doc = document.implementation.createDocument("", "", null);
         var enableSensorsElem = doc.createElement("enableSensor");
 
         var sensorIDElement = doc.createElement("sensorId");
-        var sensorIDTextElement = doc.createTextNode(sensorID);
+        var sensorIDTextElement = doc.createTextNode(sensorId);
         sensorIDElement.appendChild(sensorIDTextElement);
 
         enableSensorsElem.appendChild(sensorIDElement);
@@ -68,7 +63,6 @@ function GetActiveXMLFunction(sensorID){
         doc.appendChild(enableSensorsElem);
         console.log(new XMLSerializer().serializeToString(doc));
         return doc;
-    };
 }
 
 function GetAddSensorXML(kind){
