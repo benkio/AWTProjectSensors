@@ -45,18 +45,22 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
     
     @Override
     public void init() throws ServletException {
-        super.init();
-        contexts= new LinkedList<>(); 
         try {
-            am = ActuatorModel.getInstance(getServletContext());
+            super.init();
+            contexts= new LinkedList<>();
+            try {
+                am = ActuatorModel.getInstance(getServletContext());
+            } catch (Exception ex) {
+                Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            am.addActuator(new Actuator());
+            am.addActuator(new Actuator());
+            am.addActuator(new Actuator());
+            am.addActuator(new Actuator());
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        am.addActuator(new Actuator());
-        am.addActuator(new Actuator());
-        am.addActuator(new Actuator());
-        am.addActuator(new Actuator());
     }
     
     @Override

@@ -206,7 +206,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
         contexts.add(asyncContext);
     }
     
-    private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+    private void addSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException, Exception {
         System.out.println("Add Sensors Recived");
         
         if ((boolean) request.getSession().getAttribute("isAdmin")) {
@@ -229,7 +229,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
         }
     }
 
-    private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException {
+    private void removeSensor(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request, Document data) throws IOException, TransformerException, Exception {
         if ((boolean) request.getSession().getAttribute("isAdmin")) {
             Element root = data.getDocumentElement();
             NodeList childs = root.getElementsByTagName("sensorId");

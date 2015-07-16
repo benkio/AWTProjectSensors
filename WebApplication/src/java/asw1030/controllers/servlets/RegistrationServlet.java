@@ -16,6 +16,7 @@
 package asw1030.controllers.servlets;
 
 import asw1030.beans.User;
+import asw1030.dal.UserListFile;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class RegistrationServlet extends HttpServlet {
             user.pass = request.getParameter("passwordsignup");
             user.username = request.getParameter("usernamesignup");
 
-            SensorListFile ulf = SensorListFile.getInstance(getServletContext());
+            UserListFile ulf = UserListFile.getInstance(getServletContext());
             ulf.registerUser(user);
             
              // setting user as logged in

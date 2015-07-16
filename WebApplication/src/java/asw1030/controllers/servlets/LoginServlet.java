@@ -16,6 +16,7 @@
 package asw1030.controllers.servlets;
 
 import asw1030.beans.User;
+import asw1030.dal.UserListFile;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -51,7 +52,7 @@ public class LoginServlet extends HttpServlet {
                 User user = new User();
                 user.pass = request.getParameter("password");
                 user.username = request.getParameter("username");
-                SensorListFile ulf = SensorListFile.getInstance(getServletContext());
+                UserListFile ulf = UserListFile.getInstance(getServletContext());
                 user = ulf.loginUser(user);
                 // setting user as logged in
                 session.setAttribute("isLoggedIn", true);
