@@ -26,13 +26,14 @@ import org.xml.sax.SAXException;
  *
  * @author Thomas
  */
-public class SensorModelTest {
+public class SensorServiceTest {
     
     static HTTPClient hc;
     static final String BASE = "http://localhost:8080/SensorsServer/";
     static ManageXML mngXML;
-            
-    public SensorModelTest() {
+    static int sensorIndex;
+    
+    public SensorServiceTest() {
     }
     
     @BeforeClass
@@ -69,7 +70,10 @@ public class SensorModelTest {
         d.getDocumentElement().appendChild(sensor);
         
         mngXML.transform(System.out, d);
-        mngXML.transformIndented(System.out, hc.execute("Sensors", d));
+        Document answ = hc.execute("Sensors", d);
+        
+        //sensorIndex = Integer.parseInt(answ.getDocumentElement().getNodeValue());
+        
     }
     
     @Test
@@ -79,16 +83,16 @@ public class SensorModelTest {
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
-   /* 
+    
     @Test
     public void removeSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
         
         Document d = mngXML.newDocument("removeSensor");
         Element sensorId = d.createElement("sensorId");
-        sensorId.appendChild(d.createTextNode("1"));
+        sensorId.appendChild(d.createTextNode(""+sensorIndex));
         d.getDocumentElement().appendChild(sensorId);
         
         mngXML.transformIndented(System.out, hc.execute("Sensors", d));
     }
-    */
+    
 }

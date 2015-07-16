@@ -32,9 +32,14 @@ public class SensorModel implements ISensorEventsListener{
         
     private static SensorModel instance;
     private HashMap<Integer,Sensor> sensors;
-    private IXMLTable<Sensor> dal;
+    //private IXMLTable<Sensor> dal;
+    
     private static final Object locker= new Object();
+    
     private List<IModelEventsListener> listeners;
+    
+    private int index;
+    
     
     public static SensorModel getInstance(ServletContext servletContext){
         synchronized(locker){
@@ -45,20 +50,27 @@ public class SensorModel implements ISensorEventsListener{
         }
     }
     private SensorModel(ServletContext servletContext) {
-        try {
-            dal = XMLTable.getInstance(servletContext.getRealPath("/")+ "WEB-INF/xml/sensors.xml");
-        } catch (JAXBException | TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
-            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            dal = new XMLTable(servletContext.getRealPath("/")+ "WEB-INF/xml/sensor.xml");
+//        } catch (JAXBException | TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
+//            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
-        sensors= dal.fetchRecords();
+        //sensors= dal.fetchRecords();
+        sensors= new HashMap<>();
         listeners = new ArrayList<>();
+        
+        index=0;
         
     }
     
     public synchronized int addSensor(Sensor s){
-        int index = dal.addRecord(s);
+        //int index = dal.addRecord(s);
+        
+        s.setId(index);
         sensors.put(index, s);
+        
+        index++;
         
         listeners.stream().forEach((listener) -> {
             listener.modelEventHandler(ModelEventType.SENSORADDED, index);
@@ -70,7 +82,7 @@ public class SensorModel implements ISensorEventsListener{
     }
     
     public synchronized void removeSensor(int id){
-        dal.removeRecord(id);
+        //dal.removeRecord(id);
         sensors.remove(id);
         
         listeners.stream().forEach((listener) -> {

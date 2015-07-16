@@ -19,12 +19,16 @@ public class Sensor implements IXmlRecord{
     
     private List<ISensorEventsListener> listeners;
     
-    public Sensor(SensorKind kind) {
-        this.kind = kind;
+    public Sensor(){
         this.status = SensorState.Active;
         this.value = new Random().nextInt(100) + 1;
-        
+        this.kind= SensorKind.TEMPERATURE;
         listeners= new ArrayList<>();
+    }
+    
+    public Sensor(SensorKind kind) {
+        this();
+        this.kind = kind;
     }
     
     @Override

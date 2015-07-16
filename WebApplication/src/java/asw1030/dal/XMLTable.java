@@ -59,31 +59,14 @@ public class XMLTable<T> implements IXMLTable<T> {
     
     @XmlElement(name = "prog")
     private int idProg;
-    
-    /**
-     *
-     * @param dbPath
-     * @return
-     * @throws javax.xml.bind.JAXBException
-     * @throws javax.xml.transform.TransformerConfigurationException
-     * @throws javax.xml.parsers.ParserConfigurationException
-     */
-    public static XMLTable getInstance(String dbPath) throws JAXBException, TransformerConfigurationException, ParserConfigurationException, IOException, FileNotFoundException, SAXException{
-        synchronized(locker){
-            if (instance == null) {
-                    instance = new XMLTable<>(dbPath);
-            }
-            return instance;
-        }
-    }
-    
-    private XMLTable() throws TransformerConfigurationException, ParserConfigurationException{
+
+    public XMLTable() throws TransformerConfigurationException, ParserConfigurationException{
         records = new ArrayList<T>();
         mngXML= new ManageXML();
         idProg=0;
     }
     
-    private XMLTable(String dbPath) throws JAXBException, TransformerConfigurationException, ParserConfigurationException, FileNotFoundException, IOException, SAXException {
+    public  XMLTable(String dbPath) throws JAXBException, TransformerConfigurationException, ParserConfigurationException, FileNotFoundException, IOException, SAXException {
         this();
         
         db = new File(dbPath);

@@ -28,12 +28,16 @@ import org.xml.sax.SAXException;
  */
 public class ActuatorModel implements IActuatorEventsListener{
     private static ActuatorModel instance;
-    private IXMLTable<Actuator> dal;
+    //private IXMLTable<Actuator> dal;
     private final static Object locker= new Object();
+    
     private HashMap<Integer,Actuator> actuators;
+    
     private final ArrayList<IModelEventsListener> listeners;
 
-    public static ActuatorModel getInstance(ServletContext servletContext){
+    private int index;
+    
+    public static ActuatorModel getInstance(ServletContext servletContext) throws JAXBException{
         synchronized(locker){
             if (instance == null) {
                     instance = new ActuatorModel(servletContext);
@@ -42,15 +46,17 @@ public class ActuatorModel implements IActuatorEventsListener{
         }
     }
     
-    public ActuatorModel(ServletContext servletContext) {
-        try {
-            dal = XMLTable.getInstance(servletContext.getRealPath("/")+ "WEB-INF/xml/actuators.xml");
-        } catch (JAXBException | TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
-            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public ActuatorModel(ServletContext servletContext) throws JAXBException {
+//        try {
+//            dal =new XMLTable<Actuator>(servletContext.getRealPath("/")+ "WEB-INF/xml/actuators.xml");
+//        } catch (TransformerConfigurationException | ParserConfigurationException | IOException | SAXException ex) {
+//            Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
-        actuators= dal.fetchRecords();
+        //actuators= dal.fetchRecords();
+        actuators= new HashMap<>();
         listeners = new ArrayList<>();
+        index=0;
     }
 
     public List<Actuator> getActuators() {
@@ -59,8 +65,10 @@ public class ActuatorModel implements IActuatorEventsListener{
     
     public int addActuator(Actuator act)
     {
-        int index = dal.addRecord(act);
-        actuators.put(index, act);
+        //int index = dal.addRecord(act);
+        
+        act.setId(index);
+        actuators.put(index++, act);
         
         listeners.stream().forEach((listener) -> {
             listener.modelEventHandler(ModelEventType.ACTUATORADDED, index);
@@ -72,7 +80,7 @@ public class ActuatorModel implements IActuatorEventsListener{
     }
     
     public void removeActuator(int id){
-        dal.removeRecord(id);
+        //dal.removeRecord(id);
         actuators.remove(id);
         
         listeners.stream().forEach((listener) -> {
@@ -90,8 +98,10 @@ public class ActuatorModel implements IActuatorEventsListener{
         listeners.remove(list);
     }
 
-    public void setActuatorValue(int id, int val){
+    public synchronized void setActuatorValue(int id, int val){
         actuators.get(id).setValue(val);
+        
+        listeners.stream().forEach(list-> {list.modelEventHandler(ModelEventType.NEWACTUATORVALUE, val);});
     }
     
     @Override
