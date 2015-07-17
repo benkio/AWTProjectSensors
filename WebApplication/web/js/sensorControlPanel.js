@@ -66,11 +66,11 @@ function changeStatusCallback(xmlhttp, sensorId, status){
     
     if (status === "Active"){
         $("p[name=\"SensorStatus"+sensorId+"\"]").text("Disabled");
-        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/stopIcon.png");
+        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/playIcon.png");
     }
     else{
         $("p[name=\"SensorStatus"+sensorId+"\"]").text("Active");
-        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/playIcon.png");
+        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/stopIcon.png");
     }
 }
 
