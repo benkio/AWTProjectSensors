@@ -51,7 +51,6 @@ function sendActuatorsValueCallback(xmlhttp){
  * @returns undefined
  */
 function sendActuatorsValue() {
-    $("#errorMessage").text("");
     $("progress").each(function () {
         var numeric_part = $(this).attr('name').substr(21);
         XMLRequestPattern("../Actuators",sendActuatorsValueCallback,setActuatorsValueXML,numeric_part);
@@ -109,3 +108,15 @@ function setEventListeners() {
         });
     });
 };
+
+/**
+ * Manage the wait event, when something new happen
+ * 
+ * @returns {undefined}
+ */
+function WaitEventCallback(xmlhttp){
+    logResponse(xmlhttp);
+    var eventType = xmlhttp.responseXML.documentElement.getElementsByTagName("eventType").item(0).textContent;
+    if (eventType !== "TIMEOUT") 
+        location.reload();
+}

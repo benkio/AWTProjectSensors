@@ -47,3 +47,16 @@ function setActuatorsValueXML(numeric_part) {
     console.log(new XMLSerializer().serializeToString(data));
     return data;
 }
+
+/**
+ * Return a new xml document used to subscribe to the comet
+ * 
+ * @returns {undefined}
+ */
+function GetWaitEventXML(){
+    var data = document.implementation.createDocument("", "", null);
+    var waitEventTag = data.createElement("waitEvents");
+    data.appendChild(waitEventTag);
+    console.log(new XMLSerializer().serializeToString(data));
+    return data;
+}
