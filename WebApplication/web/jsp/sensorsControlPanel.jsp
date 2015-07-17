@@ -43,7 +43,7 @@
             <tbody id="SensorControlPanelTableBody">
             </tbody>
         </table>
-
+        <p id="errorMessage" class="error"></p>
 
         <script>
                     //Made the request of the actuators and render the result.

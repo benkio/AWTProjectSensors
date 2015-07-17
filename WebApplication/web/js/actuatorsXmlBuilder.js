@@ -35,7 +35,7 @@ function setActuatorsValueXML(numeric_part) {
     actuatorIdTag.appendChild(actuatorIdTextContent);
 
     var actuatorValueTag = data.createElement("value");
-    var value = parseInt($("progress[name*="+numeric_part+"]").val());
+    var value = parseInt($("progress[name*='"+numeric_part+"']").val());
     var actuatorValueContent = data.createTextNode(value);
     actuatorValueTag.appendChild(actuatorValueContent);
 

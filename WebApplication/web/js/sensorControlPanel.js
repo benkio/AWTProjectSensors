@@ -4,15 +4,6 @@
  * and open the template in the editor.
  */
 
-/**
- * Log the response
- * @param {type} xmlhttp
- * @returns {undefined}
- */
-function logResponse(xmlhttp){
-    console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));
-}
-
 /*
  * Function used to manage the first call of sensor list
  * Fetch the response and render the result to html
@@ -82,6 +73,7 @@ function changeStatusCallback(xmlhttp, sensorId, status){
 function setSensorsEventListener(sensorID) {
     $("input[name='SensorControlButton"+sensorID+"']").click(function () {
            console.log("operation button pressed:  " + sensorID);
+           $("#errorMessage").text(""); 
             if ($("p[name='SensorStatus"+sensorID+"']").text() === "Active"){
                 XMLRequestPattern("../Sensors", function (xmlhttp,param) { changeStatusCallback(xmlhttp,param,"Active");},GetOfflineXML,sensorID);
             } else {
@@ -91,6 +83,7 @@ function setSensorsEventListener(sensorID) {
     
     $("input[name='removeSensorControlButton"+sensorID+"']").click(function () {
            console.log("remove operation button pressed:  " + sensorID);
+           $("#errorMessage").text(""); 
            XMLRequestPattern("../Sensors", removeSensorCallback,GetRemoveXML,sensorID);
     });
 }
@@ -117,6 +110,7 @@ function addSensorCallback(xmlhttp, kind){
 function setAddSensorHandler(){
     $("input[name='addSensorButton']").click(function () {
         console.log("Add sensor operation button pressed:  ");
+        $("#errorMessage").text(""); 
         XMLRequestPattern( "../Sensors", addSensorCallback, GetAddSensorXML,$( '#addSensorKind' ).val());        
     });
 }

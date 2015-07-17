@@ -4,6 +4,15 @@
  * and open the template in the editor.
  */
 
+/**
+ * Log the response
+ * @param {type} xmlhttp
+ * @returns {undefined}
+ */
+function logResponse(xmlhttp){
+    console.log(new XMLSerializer().serializeToString(xmlhttp.responseXML.documentElement));
+}
+
 /*
  * 
  * Pattern used to make the request and set a return function at response
@@ -35,7 +44,7 @@ function XMLRequestPattern(url, loadFunction, xmlRequest, param) {
         }
         else
             if (xmlhttp.status !== 200 && xmlhttp.status !== 0)
-                alert("This Request Failed: "+ xmlRequestDoc.childNodes[0].nodeName);
+                $("#errorMessage").append("This Request Failed: "+ xmlRequestDoc.childNodes[0].nodeName); 
     };
     xmlhttp.open("POST", url, true);
     xmlhttp.setRequestHeader("Content-Type", "text/xml");
