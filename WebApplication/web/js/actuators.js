@@ -20,7 +20,8 @@
  */
 function loadInitialActuator(xmlhttp) {
     var actuator_name, actuator_value, actuator, i;
-    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("actuators");
+    logResponse(xmlhttp);
+    actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("actuator");
     for (i = 0; i < actuator.length; i++) {
         actuator_name = actuator.item(i).getElementsByTagName("id").item(0).textContent;
         actuator_value = actuator.item(i).getElementsByTagName("value").item(0).textContent;
@@ -31,10 +32,16 @@ function loadInitialActuator(xmlhttp) {
                 return actuator_value;
             });
         } catch (er) {
-            $("p[name*='Name" + actuator_name + "']").text("XML Fetch Error");
+            $("#errorMessage").text("This Request Failed: "+ xmlhttp.responseXML.childNodes[0].nodeName);
         }
     }
     setEventListeners();
+}
+
+function sendActuatorsValueCallback(xmlhttp){
+    logResponse(xmlhttp);
+    var doneResponse = xmlhttp.responseXML.documentElement.nodeName;
+    if (doneResponse !== "done") $("#errorMessage").text("This Request Failed: "+ xmlhttp.responseXML.childNodes[0].nodeName);
 }
 
 /*
@@ -47,12 +54,7 @@ function sendActuatorsValue() {
     $("#errorMessage").text("");
     $("progress").each(function () {
         var numeric_part = $(this).attr('name').substr(21);
-        XMLRequestPattern("../actuators", function(xmlhttp){
-            var doneResponse = xmlhttp.responseXML.documentElement.nodeName;
-            if (doneResponse != "done") $("#errorMessage").text("Some error occurred in the send of Actuators Value"); 
-        }, function () {
-            return setActuatorsValueXML(numeric_part);
-        });
+        XMLRequestPattern("../Actuators",sendActuatorsValueCallback,setActuatorsValueXML,numeric_part);
     });
 }
 

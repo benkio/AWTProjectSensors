@@ -39,7 +39,7 @@
         <p id="errorMessage" class="error"></p>
         <script>  
             //Made the request of the actuators and render the result.
-            XMLRequestPattern("../actuators",loadInitialActuator,GetActuatorsXML);
+            XMLRequestPattern("../Actuators",loadInitialActuator,GetActuatorsXML);
         </script>
     </body>
 </html> 
