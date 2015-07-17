@@ -61,16 +61,16 @@ function removeSensorCallback(xmlhttp, sensorId){
     $('tr[name=\"sensorId'+sensorId+'\"]').remove();
 }
 
-function changeStatusCallback(xmlhttp, sensorAttributes){
+function changeStatusCallback(xmlhttp, sensorId, status){
     logResponse(xmlhttp);
     
-    if (sensorAttributes[1] === "Active"){
-        $("p[name=\"SensorStatus"+sensorAttributes[0]+"\"]").text("Disabled");
-        $("input[name=\"SensorControlButton"+sensorAttributes[0]+"\"]").attr("src", contextPath + "/img/stopIcon.png");
+    if (status === "Active"){
+        $("p[name=\"SensorStatus"+sensorId+"\"]").text("Disabled");
+        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/stopIcon.png");
     }
     else{
-        $("p[name=\"SensorStatus"+sensorAttributes[0]+"\"]").text("Active");
-        $("input[name=\"SensorControlButton"+sensorAttributes[0]+"\"]").attr("src", contextPath + "/img/playIcon.png");
+        $("p[name=\"SensorStatus"+sensorId+"\"]").text("Active");
+        $("input[name=\"SensorControlButton"+sensorId+"\"]").attr("src", contextPath + "/img/playIcon.png");
     }
 }
 
@@ -82,7 +82,7 @@ function changeStatusCallback(xmlhttp, sensorAttributes){
 function setSensorsEventListener(sensorID) {
     $("input[name='SensorControlButton"+sensorID+"']").click(function () {
            console.log("operation button pressed:  " + sensorID);
-            if ($("p[name='SensorStatus"+sensorID+"']").text("Active")){
+            if ($("p[name='SensorStatus"+sensorID+"']").text() === "Active"){
                 XMLRequestPattern("../Sensors", function (xmlhttp,param) { changeStatusCallback(xmlhttp,param,"Active");},GetOfflineXML,sensorID);
             } else {
                 XMLRequestPattern("../Sensors", function (xmlhttp,param) { changeStatusCallback(xmlhttp,param,"Disabled");},GetActiveXML,sensorID);
