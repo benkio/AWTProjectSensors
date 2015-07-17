@@ -65,7 +65,8 @@ public class ActuatorListFile {
         context = JAXBContext.newInstance(ActuatorList.class);
         mngXML = new ManageXML();
         String webPagesPath = servletContext.getRealPath("/");
-        actuatorFile = new File(webPagesPath + "WEB-INF/xml/actuators.xml"); // this only works with default config of tomcat        
+        actuatorFile = new File(webPagesPath + "WEB-INF/xml/actuators.xml"); // this only works with default config of tomcat   
+        System.out.print(webPagesPath + "WEB-INF/xml/actuators.xml");
     }
 
     /**

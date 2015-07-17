@@ -40,6 +40,7 @@
         <script>  
             //Made the request of the actuators and render the result.
             XMLRequestPattern("../Actuators",loadInitialActuator,GetActuatorsXML);
+            XMLRequestPattern("../Actuators",WaitEventCallback,GetWaitEventXML);
         </script>
     </body>
 </html> 

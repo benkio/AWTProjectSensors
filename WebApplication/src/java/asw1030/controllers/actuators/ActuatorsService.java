@@ -53,11 +53,6 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
             } catch (Exception ex) {
                 Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            am.addActuator(new Actuator());
-            am.addActuator(new Actuator());
-            am.addActuator(new Actuator());
-            am.addActuator(new Actuator());
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
