@@ -6,6 +6,7 @@ import asw1030.beans.enums.SensorState;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
 import asw1030.beans.enums.ModelEventType;
+import asw1030.model.ActuatorModel;
 import asw1030.model.SensorModel;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +43,11 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
     public void init() throws ServletException {
         super.init();
         contexts= new LinkedList<>();      
-        sm = SensorModel.getInstance( this.getServletContext());
+        try {
+            sm = SensorModel.getInstance( this.getServletContext());
+        } catch (Exception ex) {
+            Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
+        }
         sm.addListener(this);
     }
     

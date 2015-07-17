@@ -7,13 +7,16 @@ package asw1030.model;
 
 import asw1030.beans.enums.ModelEventType;
 import asw1030.beans.Sensor;
+import asw1030.beans.enums.ActuatorEventType;
 import asw1030.beans.enums.SensorEventType;
 import asw1030.beans.enums.SensorState;
+import asw1030.beans.interfaces.IActuatorEventsListener;
 import asw1030.beans.interfaces.ISensorEventsListener;
 import asw1030.dal.SensorListFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -22,7 +25,7 @@ import javax.servlet.ServletContext;
  *
  * @author Thomas
  */
-public class SensorModel implements ISensorEventsListener{
+public class SensorModel implements ISensorEventsListener, IModelEventsListener{
         
     private static SensorModel instance;
     private HashMap<Integer,Sensor> sensors;
@@ -33,7 +36,7 @@ public class SensorModel implements ISensorEventsListener{
     
     private List<IModelEventsListener> listeners;
         
-    public static SensorModel getInstance(ServletContext servletContext){
+    public static SensorModel getInstance(ServletContext servletContext) throws Exception{
         synchronized(locker){
             if (instance == null) {
                     instance = new SensorModel(servletContext);
@@ -41,7 +44,7 @@ public class SensorModel implements ISensorEventsListener{
             return instance;
         }
     }
-    private SensorModel(ServletContext servletContext) {
+    private SensorModel(ServletContext servletContext) throws Exception {
         
         try {
             sList = SensorListFile.getInstance(servletContext);
@@ -55,6 +58,9 @@ public class SensorModel implements ISensorEventsListener{
         } catch (Exception ex) {
             Logger.getLogger(SensorModel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        ActuatorModel.getInstance(servletContext).addListener(this);
+        
         listeners = new ArrayList<>();        
     }
     
@@ -122,7 +128,19 @@ public class SensorModel implements ISensorEventsListener{
     public void newEvent(SensorEventType se, Object arg) {
         switch(se){
             case ValueChanged:
-                listeners.stream().forEach(list-> {list.modelEventHandler(ModelEventType.NEWSENSORVALUE, arg);});break;
+                listeners.stream().forEach(list-> {list.modelEventHandler(ModelEventType.NEWSENSORVALUE, arg);
+                });break;
+        }
+    }
+    @Override
+    public void modelEventHandler(ModelEventType type, Object arg) {
+        
+        if(type==ModelEventType.NEWACTUATORVALUE){
+            sensors.values().stream().filter(s-> s.getStatus()==SensorState.Active).forEach(s-> {
+                s.setValue(new Random().nextInt(100) + 1);
+                listeners.stream().forEach((listener) -> {listener.modelEventHandler(ModelEventType.NEWSENSORVALUE, s.getId());
+        });
+            });
         }
     }
 }
