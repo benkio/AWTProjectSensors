@@ -119,4 +119,6 @@ function WaitEventCallback(xmlhttp){
     var eventType = xmlhttp.responseXML.documentElement.getElementsByTagName("eventType").item(0).textContent;
     if (eventType !== "TIMEOUT") 
         location.reload();
+    else
+        XMLRequestPattern("../Actuators",WaitEventCallback,GetWaitEventXML);
 }
