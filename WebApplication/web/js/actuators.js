@@ -40,7 +40,7 @@ function loadInitialActuator(xmlhttp) {
 
 function sendActuatorsValueCallback(xmlhttp){
     logResponse(xmlhttp);
-    var doneResponse = xmlhttp.responseXML.documentElement.nodeName;
+    var doneResponse = xmlhttp.responseXML.documentElement.textContent;
     if (doneResponse !== "done") $("#errorMessage").text("This Request Failed: "+ xmlhttp.responseXML.childNodes[0].nodeName);
 }
 
