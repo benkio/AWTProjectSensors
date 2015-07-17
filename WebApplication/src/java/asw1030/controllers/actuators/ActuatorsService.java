@@ -191,7 +191,15 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
                     }
                     if (confirm) {
                         try {
-                            sendMessage("Timeout", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                            Document d = mngXML.newDocument("newEvent");
+                            Element eventType= d.createElement("eventType");
+                            eventType.appendChild(d.createTextNode(ModelEventType.TIMEOUT.toString()));
+                            Element eventArg = d.createElement("arg");
+                            eventArg.appendChild(d.createTextNode(""));
+                            d.getDocumentElement().appendChild(eventType);
+                            d.getDocumentElement().appendChild(eventArg);
+                    
+                            mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
                         } catch (TransformerException ex) {
                             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
                         }
