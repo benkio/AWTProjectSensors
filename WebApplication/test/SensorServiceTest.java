@@ -73,6 +73,11 @@ public class SensorServiceTest {
         mngXML.transformIndented(System.out,hc.execute("Sensors", d));        
     }
     
+    public void disableSensorTest(){
+        
+    }
+    
+    
     @Test
     public void getSensorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException{
         

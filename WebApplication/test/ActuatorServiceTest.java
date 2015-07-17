@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
@@ -58,6 +59,24 @@ public class ActuatorServiceTest {
      @Test
      public void getActuatorTest() throws TransformerException, IOException, ParserConfigurationException, SAXException {
         Document d = mngXML.newDocument("getActuators");
+        
+        mngXML.transformIndented(System.out, hc.execute("Actuators", d));
+     }
+     
+    @Test
+     public void setActuatorValueTest() throws TransformerException, IOException, ParserConfigurationException, SAXException {
+        Document d = mngXML.newDocument("setValue");
+        
+        Element id = d.createElement("id");
+        id.appendChild(d.createTextNode("0"));
+        d.getDocumentElement().appendChild(id);
+        
+        Element value = d.createElement("value");
+        value.appendChild(d.createTextNode("10"));
+        d.getDocumentElement().appendChild(value);
+        
+        d.getDocumentElement().appendChild(id);
+        d.getDocumentElement().appendChild(value);
         
         mngXML.transformIndented(System.out, hc.execute("Actuators", d));
      }

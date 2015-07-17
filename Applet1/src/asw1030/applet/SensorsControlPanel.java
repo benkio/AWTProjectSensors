@@ -5,6 +5,7 @@
  */
 package asw1030.applet;
 
+import asw1030.beans.enums.ModelEventType;
 import asw1030.libraries.commonServiceRequests.SensorRequests;
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.http.HTTPClientFactory;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 import asw1030.libraries.ui.EntryListCellRenderer;
+import java.net.URL;
 
 /**
  *
@@ -33,9 +35,15 @@ public class SensorsControlPanel extends JApplet {
     @Override
     public void init() {
         username = getParameter("username");
-        try {
+        try {           
+//            hc = new HTTPClient();
+//            mngXML = new ManageXML();
+//            hc.setBase(new URL("http://localhost:8080/SensorsServer/"));
+//            hc.execute("Sensors",  mngXML.newDocument("testLogin"));
             hc = HTTPClientFactory.GetHttpClient(getParameter("sessionID"), getDocumentBase());
             mngXML = new ManageXML();
+        
+
             javax.swing.SwingUtilities.invokeAndWait(new Runnable() {
 
                 @Override
@@ -139,11 +147,14 @@ public class SensorsControlPanel extends JApplet {
                 System.out.println(runComet);
                 try {
                     // prepare the request xml
-                    String message = sensorsRequests.getNewEvent(mngXML, hc);
-                    if (message.equals("NewEvent")){
-                        runComet = false;
-                        sensorDownloadWorker = new SensorDownloadWorker();
-                        sensorDownloadWorker.execute();
+                    Document message = sensorsRequests.getNewEvent(mngXML, hc);
+                    switch(ModelEventType.valueOf(message.getElementsByTagName("eventType").item(0).getTextContent()))
+                    {
+                        default:
+                            runComet = false;
+                            sensorDownloadWorker = new SensorDownloadWorker();
+                            sensorDownloadWorker.execute();
+                            break;
                     }
                 } catch (Exception e) {
                     runComet = false;

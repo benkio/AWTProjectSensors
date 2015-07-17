@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package asw1030.model;
+package asw1030.beans.enums;
 
 /**
  *
@@ -12,8 +12,11 @@ package asw1030.model;
 public enum ModelEventType {
     SENSORADDED,
     SENSORREMOVED,
+    SENSORENABLED,
+    SENSORDISABLED,
     NEWSENSORVALUE,
     ACTUATORADDED,
     ACTUATORREMOVED,
-    NEWACTUATORVALUE
+    NEWACTUATORVALUE,
+    TIMEOUT
 }

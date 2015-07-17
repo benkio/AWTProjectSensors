@@ -5,6 +5,7 @@
  */
 package asw1030.model;
 
+import asw1030.beans.enums.ModelEventType;
 import asw1030.beans.Actuator;
 import asw1030.beans.enums.ActuatorEventType;
 import asw1030.beans.interfaces.IActuatorEventsListener;
@@ -43,7 +44,7 @@ public class ActuatorModel implements IActuatorEventsListener{
         
         alf= ActuatorListFile.getInstance(servletContext);
         
-        actuators= new HashMap<>();
+        actuators= alf.readFile().actuators;
         listeners = new ArrayList<>();
     }
 
@@ -86,9 +87,11 @@ public class ActuatorModel implements IActuatorEventsListener{
     }
 
     public synchronized void setActuatorValue(int id, int val){
-        actuators.get(id).setValue(val);
+        if(actuators.containsKey(id)){
+            actuators.get(id).setValue(val);
+            listeners.stream().forEach(list-> {list.modelEventHandler(ModelEventType.NEWACTUATORVALUE, val);});
+        }
         
-        listeners.stream().forEach(list-> {list.modelEventHandler(ModelEventType.NEWACTUATORVALUE, val);});
     }
     
     @Override

@@ -5,7 +5,7 @@ import asw1030.beans.enums.SensorKind;
 import asw1030.beans.enums.SensorState;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
-import asw1030.model.ModelEventType;
+import asw1030.beans.enums.ModelEventType;
 import asw1030.model.SensorModel;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +43,7 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
         super.init();
         contexts= new LinkedList<>();      
         sm = SensorModel.getInstance( this.getServletContext());
+        sm.addListener(this);
     }
     
     @Override
@@ -185,7 +186,17 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                     }
                     if (confirm) {
                         try {
-                            sendMessage("Timeout", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                            //sendMessage("Timeout", mngXML, (HttpServletResponse)asyncContext.getResponse());
+                            Document d = mngXML.newDocument("newEvent");
+                            Element eventType= d.createElement("eventType");
+                            eventType.appendChild(d.createTextNode(ModelEventType.TIMEOUT.toString()));
+                            Element eventArg = d.createElement("arg");
+                            eventArg.appendChild(d.createTextNode(""));
+                            d.getDocumentElement().appendChild(eventType);
+                            d.getDocumentElement().appendChild(eventArg);
+                    
+                            mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
+                            
                         } catch (TransformerException ex) {
                             Logger.getLogger(SensorsService.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -295,8 +306,8 @@ public class SensorsService extends HttpServlet implements IModelEventsListener{
                     eventType.appendChild(d.createTextNode(type.toString()));
                     Element eventArg = d.createElement("arg");
                     eventArg.appendChild(d.createTextNode(arg.toString()));
-                    d.appendChild(eventType);
-                    d.appendChild(eventArg);
+                    d.getDocumentElement().appendChild(eventType);
+                    d.getDocumentElement().appendChild(eventArg);
                     
                     mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
                     

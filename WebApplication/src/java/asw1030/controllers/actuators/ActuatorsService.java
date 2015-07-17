@@ -10,7 +10,7 @@ import asw1030.libraries.xml.ManageXML;
 import asw1030.controllers.sensors.SensorsService;
 import asw1030.model.ActuatorModel;
 import asw1030.model.IModelEventsListener;
-import asw1030.model.ModelEventType;
+import asw1030.beans.enums.ModelEventType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -143,7 +143,7 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         Element idEl = (Element) data.getElementsByTagName("id").item(0);
         Element valEl = (Element) data.getElementsByTagName("value").item(0);
 
-        am.setActuatorValue(Integer.parseInt(idEl.getFirstChild().toString()), Integer.parseInt(valEl.getFirstChild().toString()));
+        am.setActuatorValue(Integer.parseInt(idEl.getTextContent()), Integer.parseInt(valEl.getTextContent()));
 
         sendMessage("done", mngXML, response);
         response.getOutputStream().close();
@@ -224,8 +224,8 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
                     eventType.appendChild(d.createTextNode(type.toString()));
                     Element eventArg = d.createElement("arg");
                     eventArg.appendChild(d.createTextNode(arg.toString()));
-                    d.appendChild(eventType);
-                    d.appendChild(eventArg);
+                    d.getDocumentElement().appendChild(eventType);
+                    d.getDocumentElement().appendChild(eventArg);
                     
                     mngXML.transform(asyncContext.getResponse().getOutputStream(), d);
                     

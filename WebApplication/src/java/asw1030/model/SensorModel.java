@@ -5,6 +5,7 @@
  */
 package asw1030.model;
 
+import asw1030.beans.enums.ModelEventType;
 import asw1030.beans.Sensor;
 import asw1030.beans.enums.SensorEventType;
 import asw1030.beans.enums.SensorState;
@@ -87,11 +88,19 @@ public class SensorModel implements ISensorEventsListener{
     public synchronized void enableSensor(int id)
     {
         sensors.get(id).setStatus(SensorState.Active);
+        
+        listeners.stream().forEach((listener) -> {
+            listener.modelEventHandler(ModelEventType.SENSORENABLED, id);
+        });
     }
     
     public synchronized void disableSensor(int id)
     {
         sensors.get(id).setStatus(SensorState.Disabled);
+        
+                listeners.stream().forEach((listener) -> {
+            listener.modelEventHandler(ModelEventType.SENSORDISABLED, id);
+        });
     }
     
     public synchronized void addListener(IModelEventsListener list)

@@ -25,10 +25,10 @@ public class SensorRequests {
             return answer.getElementsByTagName("SensorsList");
     }
 
-    public String getNewEvent(ManageXML mngXML, HTTPClient hc) throws Exception{
+    public Document getNewEvent(ManageXML mngXML, HTTPClient hc) throws Exception{
         Document data = mngXML.newDocument("waitEvents");
         Document answer = hc.execute("Sensors", data);
         mngXML.transform(System.out, answer);
-        return answer.getElementsByTagName("message").item(0).getTextContent();
+        return answer;
     } 
 }

@@ -5,6 +5,8 @@
  */
 package asw1030.model;
 
+import asw1030.beans.enums.ModelEventType;
+
 /**
  *
  * @author Farneti Thomas
