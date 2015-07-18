@@ -17,7 +17,8 @@ import org.w3c.dom.*;
 import asw1030.libraries.ui.EntryListCellRenderer;
 
 /**
- *
+ * Applet per la visualizzazione dei sensori.
+ * 
  * @author enricobenini
  */
 public class SensorsControlPanel extends JApplet {
@@ -30,14 +31,13 @@ public class SensorsControlPanel extends JApplet {
     private CometValueUpdaterThread cometValueUpdaterThread;
     private SensorDownloadWorker sensorDownloadWorker;
 
+    /**
+     * Inizializa la GUI e le risorse per effettuare le richieste al server
+     */
     @Override
     public void init() {
         username = getParameter("username");
         try {           
-//            hc = new HTTPClient();
-//            mngXML = new ManageXML();
-//            hc.setBase(new URL("http://localhost:8080/SensorsServer/"));
-//            hc.execute("Sensors",  mngXML.newDocument("testLogin"));
             hc = HTTPClientFactory.GetHttpClient(getParameter("sessionID"), getDocumentBase());
             mngXML = new ManageXML();
         
@@ -56,6 +56,9 @@ public class SensorsControlPanel extends JApplet {
         }
     }
  
+    /**
+     * Metodo start dell'applet che fa ripartire i thread per l'aggiornamento dell'interfaccia e delle notifiche comet.
+     */
     @Override
     public void start() {
         if (cometValueUpdaterThread != null && cometValueUpdaterThread.isAlive()) {
@@ -65,6 +68,9 @@ public class SensorsControlPanel extends JApplet {
         sensorDownloadWorker.execute();
     }
 
+    /**
+     * Metodo stop che ferma le notifiche comet.
+     */
     @Override
     public void stop() {
         if (cometValueUpdaterThread.isAlive()) {
@@ -72,6 +78,9 @@ public class SensorsControlPanel extends JApplet {
         }
     }
 
+    /**
+     * SwingWorker che richiede al server i sensori e poi li aggiorna nella GUI
+     */
     private class SensorDownloadWorker extends SwingWorker<Void, NodeList> {
 
         @Override

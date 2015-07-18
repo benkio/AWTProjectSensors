@@ -10,10 +10,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- *
+ *Classe statica che contiene il solo metodo per generare l'httpClient
+ * 
  * @author Enrico Benini
  */
 public class HTTPClientFactory {
+    /**
+     * Metodo che genera l'oggetto HttpClient 
+     * 
+     * @param sessionID sessione del client
+     * @param documentBase uld di base
+     * @return oggetto HttpClient
+     * @throws MalformedURLException 
+     */
     public static HTTPClient GetHttpClient(String sessionID, URL documentBase) throws MalformedURLException{
         HTTPClient hc = new HTTPClient();
         hc.setSessionId(sessionID);
@@ -28,6 +37,12 @@ public class HTTPClientFactory {
         return hc;
     }
 
+    /**
+     * Metodo che dato il path fisico lo corregge in conformita' con http
+     * 
+     * @param parentPath
+     * @return contextPath corretto
+     */
     public static String fixParentPath(String parentPath) {
         if (parentPath.contains("/jsp"))
             parentPath = parentPath.replace("/jsp", "");

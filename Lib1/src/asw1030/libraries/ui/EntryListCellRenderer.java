@@ -12,20 +12,22 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- *
+ * Classe che rappresenta il singolo Elemento dei sensori visualizzabili nella applet
+ * 
+ * 
  * @author enricobenini
  */
 public class EntryListCellRenderer extends javax.swing.JPanel implements ListCellRenderer {
 
     /**
-     * Creates new form EntryListCellRenderer
+     * Costruttore 
      */
     public EntryListCellRenderer() {
         initComponents();
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
+     * Chiamato all'interno del costruttore per inizializzare la GUI
      */
     private void initComponents() {
 
@@ -110,9 +112,17 @@ public class EntryListCellRenderer extends javax.swing.JPanel implements ListCel
     }
 
 
+    /**
+     * Metodo richiamato quando avviene il rendering per il popolamento della grafica
+     * @param list
+     * @param value
+     * @param index
+     * @param isSelected
+     * @param cellHasFocus
+     * @return EntryListCellRenderer instance
+     */
     @Override
        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        //TODO get actual object
         String sensorName = null;
         String sensorStatus = null;
         String sensorValue = null;
