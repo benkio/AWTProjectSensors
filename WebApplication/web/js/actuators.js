@@ -22,6 +22,7 @@ function loadInitialActuator(xmlhttp) {
     var actuator_name, actuator_value, actuator, i;
     logResponse(xmlhttp);
     actuator = xmlhttp.responseXML.documentElement.getElementsByTagName("actuator");
+    $("#ActuatorsTableBody").html("<tr><td/><td><input type=\"button\" name=\"sendActuatorsValue\" value=\"Send Value of Actuators\" onclick=\"sendActuatorsValue()\" /></td><td/></tr>");
     for (i = 0; i < actuator.length; i++) {
         actuator_name = actuator.item(i).getElementsByTagName("id").item(0).textContent;
         actuator_value = actuator.item(i).getElementsByTagName("value").item(0).textContent;
