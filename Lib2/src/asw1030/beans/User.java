@@ -16,7 +16,8 @@
 package asw1030.beans;
 
 /**
- *
+ * Javabean degli utenti a DB
+ * 
  * @author Enrico Benini
  */
 public class User {

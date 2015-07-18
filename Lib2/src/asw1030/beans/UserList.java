@@ -17,6 +17,8 @@ package asw1030.beans;
 
 /**
  *
+ * Classe serialazzata per lista degli utenti.
+ * 
  * @author Enrico Benini
  */
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * A list of users
+ * List of users
  */
 @XmlRootElement
 public class UserList {
