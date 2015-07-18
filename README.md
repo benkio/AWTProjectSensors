@@ -84,7 +84,7 @@ REALIZZAZIONE DEL SITO - Tecnologie
 Computazione lato client
 ------------------------
 
-## Applet ##
+### Applet ###
 L'applet si divide in varie parti per la gestione della concorrenza e per il corretto aggiornamento della GUI. Tutto comunque si trova condensato all'interno di un'unico file che contiene la classe che eredita da JApplet e che al suo interno contiene varie altre classi private. Inoltre alcune cose sono state spostate all'intero di una libreria esterna perche' si riteneva che potessero essere utili nella costruzione di altre parti del sistema come i servizi e/o altre applet future.
 Le varie parti che compongono l'applet sono:
 
@@ -95,7 +95,8 @@ Le varie parti che compongono l'applet sono:
 
 Gli oggetti attivi vengono poi gestiti dall'applet negli appositi metodi di start e stop in modo da non lasciare computazioni inutili in esecuzione.
 
-
+### RIA Javascript ###
+Per la realizzazione delle RIA Javascript si e' utilizzata la libreria esterna *JQuery* vista a lezione che facilita e pulisce il codice per effettuare varie operazioni. Inoltre si sono predisposti vari file javascript che contengono le funzioni, generiche o peculiari, per la realizzazione di ogni RIA, in particolare:
 Computazione lato server
 ------------------------
 1. novbar.jspf,fragments inglobato in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login.
