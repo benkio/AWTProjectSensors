@@ -5,7 +5,6 @@
  */
 package asw1030.applet;
 
-import asw1030.beans.enums.ModelEventType;
 import asw1030.libraries.commonServiceRequests.SensorRequests;
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.http.HTTPClientFactory;
@@ -16,7 +15,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import org.w3c.dom.*;
 import asw1030.libraries.ui.EntryListCellRenderer;
-import java.net.URL;
 
 /**
  *
@@ -148,14 +146,12 @@ public class SensorsControlPanel extends JApplet {
                 try {
                     // prepare the request xml
                     Document message = sensorsRequests.getNewEvent(mngXML, hc);
-                    switch(ModelEventType.valueOf(message.getElementsByTagName("eventType").item(0).getTextContent()))
-                    {
-                        default:
-                            runComet = false;
-                            sensorDownloadWorker = new SensorDownloadWorker();
-                            sensorDownloadWorker.execute();
-                            break;
-                    }
+                    //message.getElementsByTagName("eventType").item(0).getTextContent();
+                    
+                    runComet = false;
+                    sensorDownloadWorker = new SensorDownloadWorker();
+                    sensorDownloadWorker.execute();
+
                 } catch (Exception e) {
                     runComet = false;
                     System.out.println(e);
