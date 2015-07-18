@@ -50,18 +50,19 @@ Computazione lato server
 ------------------------
 È compresa nelle seguenti JSP:
 
-1. index.jsp, Semplice pagina di benvenuto, incorpora le parti comuni di navbar e header.
-2. login.jsp, che verifica le credenziali dell'utente e lo redirige alla pagina principale, in caso di successo.
-3. sensors.jsp, contiene la applet apposita per la visualizzazione e monitoring dei sensori. Tramite questa si e' in grado di visualizzare i sensori che si e' abilitati a visualizzare e cotrollare il loro valore/stato/tipo.
-4. actuators.jsp, cosente di visualizzare gli attuatori e di modificarne il valore.
-5. sensorsControlPanel.jsp, consente di gestire i vari sensori, in particolare l'abilitazione e l'aggiunta.
+1. *index.jsp*: Semplice pagina di benvenuto, incorpora le parti comuni di navbar e header.
+2. *login.jsp*: che verifica le credenziali dell'utente e lo redirige alla pagina principale, in caso di successo.
+3. *sensors.jsp*: contiene la applet apposita per la visualizzazione e monitoring dei sensori. Tramite questa si e' in grado di visualizzare i sensori che si e' abilitati a visualizzare e cotrollare il loro valore/stato/tipo.
+4. *actuators.jsp*: cosente di visualizzare gli attuatori e di modificarne il valore.
+5. *sensorsControlPanel.jsp*: consente di gestire i vari sensori, in particolare l'abilitazione e l'aggiunta.
+6. *registration.jsp*: consente ad un utente di registrarsi al sito, in questo modo potra' effettuare poi l'autenticazione.
 
 Le servlet utilizzate sono:
 
-1. RegistrationServlet, che provvede alla registrazione di un nuovo utente
-2. LoginServlet, si occupa del login e logout dell'utente.
-3. ActuatorService, servizio che mette a disposizione una serie di operazioni per la gestione dei attuatori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.
-4. SensorService, servizio che mette a disposizione una serie di operazioni per la gestione dei sensori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.
+1. *RegistrationServlet*, che provvede alla registrazione di un nuovo utente
+2. *LoginServlet*, si occupa del login e logout dell'utente.
+3. *ActuatorService*, servizio che mette a disposizione una serie di operazioni per la gestione dei attuatori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.
+4. *SensorService*, servizio che mette a disposizione una serie di operazioni per la gestione dei sensori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.
 
 Informazioni memorizzate sul server e scambiate sulla rete
 ----------------------------------------------------------
@@ -89,8 +90,6 @@ Le informazioni scambiate sono principalmente suddivisibili in:
     *  Indica che e' avvenuto un nuovo evento di un certo tipo, utilizzato per le notifiche: [newEvent.xsd](../xml-types/newEvent.xsd)
     *  lista completa degli attuatori attualmente presenti: [SensorsList.xsd](../xml-types/SensorsList.xsd)
 
-
-
 REALIZZAZIONE DEL SITO - Tecnologie
 ===================================
 
@@ -101,10 +100,10 @@ Computazione lato client
 L'applet si divide in varie parti per la gestione della concorrenza e per il corretto aggiornamento della GUI. Tutto comunque si trova condensato all'interno di un'unico file che contiene la classe che eredita da JApplet e che al suo interno contiene varie altre classi private. Inoltre alcune cose sono state spostate all'intero di una libreria esterna perche' si riteneva che potessero essere utili nella costruzione di altre parti del sistema come i servizi e/o altre applet future.
 Le varie parti che compongono l'applet sono:
 
-*  SensorsControlPanel: nome della classe che eredita da JApplet e che contiene l'override dei principali metodi, per controllare il ciclo di vita dell'applet stessa.
-*  SensorDownloadWorker: SwingWorker che consente di scaricare i dati relativi ai sensori dal server.Si e' deciso di utilizzare uno swing worker per aggiornare correttamente la GUI una volta che avviene la risposta del server alla chiamata.
-*  AppletGUI: Classe interna che contiene tutto cio' che riguarda la parte grafica dell'applet. Per comporre la parte grafica si utilizza anche la classe *EntryListCellRenderer* che riguarda lo scheletro del singolo elemento di renderizzazione che conterra' i dati dei sensori, un istanza per sensore.
-* CometValueUpdaterThread: Classe thread che consente di gestire le notifiche che lato server arrivano all'applet.
+*  *SensorsControlPanel*: nome della classe che eredita da JApplet e che contiene l'override dei principali metodi, per controllare il ciclo di vita dell'applet stessa.
+*  *SensorDownloadWorker*: SwingWorker che consente di scaricare i dati relativi ai sensori dal server.Si e' deciso di utilizzare uno swing worker per aggiornare correttamente la GUI una volta che avviene la risposta del server alla chiamata.
+*  *AppletGUI*: Classe interna che contiene tutto cio' che riguarda la parte grafica dell'applet. Per comporre la parte grafica si utilizza anche la classe *EntryListCellRenderer* che riguarda lo scheletro del singolo elemento di renderizzazione che conterra' i dati dei sensori, un istanza per sensore.
+* *CometValueUpdaterThread*: Classe thread che consente di gestire le notifiche che lato server arrivano all'applet.
 
 Gli oggetti attivi vengono poi gestiti dall'applet negli appositi metodi di start e stop in modo da non lasciare computazioni inutili in esecuzione.
 
@@ -129,4 +128,5 @@ Lista dei fragments utilizzati:
 
 Gli ultimi due fragments sono inseriti per evitare che, chi conosce l'URL delle pagine di amministratore o del sito, non possa visualizzarle comunque senza aver ottenuto una valida sessione e quindi l'autenticazione.
 
-(Aggiungere descrizioni del servizio)
+Infine una delle parti piu importanti della computazione lato server consiste in due servizi principali realizzati attraverso delle apposite sevlet che, in base ai dati inviati riconoscono le operazioni che si vogliono effettuare e restituiscono al client un'apposita risposta consultando la parte di database.
+in particolare per le richieste che possono essere fatte ai servizi si faccia riferimento alla sezione dei dati scambiati in rete.
