@@ -8,7 +8,7 @@ package asw1030.model;
 import asw1030.beans.enums.ModelEventType;
 
 /**
- *
+ * Interfaccia per i listener del model
  * @author Farneti Thomas
  */
 public interface IModelEventsListener {

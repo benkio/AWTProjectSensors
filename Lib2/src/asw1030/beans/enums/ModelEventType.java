@@ -6,7 +6,7 @@
 package asw1030.beans.enums;
 
 /**
- *
+ * Tipologia eventi sollevati dal modello
  * @author Farneti Thomas
  */
 public enum ModelEventType {

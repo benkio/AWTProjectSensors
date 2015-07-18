@@ -9,7 +9,7 @@ import asw1030.beans.enums.SensorEventType;
 
 
 /**
- *
+ * Modella listener eventi del sensore
  * @author Thomas
  */
 public interface ISensorEventsListener {

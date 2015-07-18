@@ -6,7 +6,6 @@ import asw1030.beans.enums.SensorState;
 import asw1030.libraries.xml.ManageXML;
 import asw1030.model.IModelEventsListener;
 import asw1030.beans.enums.ModelEventType;
-import asw1030.model.ActuatorModel;
 import asw1030.model.SensorModel;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
- *
+ * Servlet che implementa il servizio dei Sensori
  * @author Thomas Farneti
  */
 @WebServlet(name = "SensorsService", urlPatterns = {"/Sensors"},asyncSupported = true)

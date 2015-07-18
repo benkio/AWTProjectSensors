@@ -19,9 +19,7 @@ package asw1030.beans;
  *
  * @author Enrico Benini
  */
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**

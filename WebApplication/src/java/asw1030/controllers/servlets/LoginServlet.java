@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
+ * Servlet che funge da controller per l'autenticazione degli utenti
  * @author Enrico Benini
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet", "/LogoutServlet"})

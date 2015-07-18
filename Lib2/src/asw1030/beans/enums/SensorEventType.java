@@ -6,7 +6,7 @@
 package asw1030.beans.enums;
 
 /**
- *
+ * Tipologia eventi sensore
  * @author Thomas
  */
 public enum SensorEventType {

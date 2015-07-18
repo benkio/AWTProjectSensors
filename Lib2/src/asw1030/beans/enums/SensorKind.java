@@ -6,7 +6,7 @@
 package asw1030.beans.enums;
 
 /**
- *
+ * Tipologia sensori
  * @author Thomas
  */
     public enum SensorKind

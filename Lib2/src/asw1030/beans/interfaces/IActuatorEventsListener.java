@@ -9,7 +9,7 @@ import asw1030.beans.enums.ActuatorEventType;
 
 
 /**
- *
+ * Modella listener degli eventi di un attuatore
  * @author Thomas
  */
 public interface IActuatorEventsListener {

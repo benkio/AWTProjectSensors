@@ -6,7 +6,7 @@
 package asw1030.beans.enums;
 
 /**
- *
+ * Tipologia eventi Attuatori
  * @author Thomas
  */
 public enum ActuatorEventType {
