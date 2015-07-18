@@ -1,7 +1,6 @@
 package asw1030.beans;
 
 import asw1030.beans.enums.SensorKind;
-import asw1030.beans.interfaces.IXmlRecord;
 import asw1030.beans.enums.SensorState;
 import asw1030.beans.interfaces.ISensorEventsListener;
 import java.util.ArrayList;

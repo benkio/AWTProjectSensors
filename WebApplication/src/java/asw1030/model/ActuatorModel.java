@@ -17,7 +17,9 @@ import javax.servlet.ServletContext;
 import javax.xml.bind.JAXBException;
 
 /**
- *
+ * Classe che implementa il model degli. Tutte le operations effettuabili 
+ * sugli attuatori vengono esposte da tale classe. Invia notifiche se cambia lo 
+ * stato interno
  * @author Thomas
  */
 public class ActuatorModel implements IActuatorEventsListener{
@@ -48,10 +50,20 @@ public class ActuatorModel implements IActuatorEventsListener{
         listeners = new ArrayList<>();
     }
 
+    /**
+     * Ritorna lista attuatori
+     * @return 
+     */
     public List<Actuator> getActuators() {
         return new ArrayList<>(actuators.values());
     }
     
+    /**
+     * Aggiunge un attuatore
+     * @param act
+     * @return
+     * @throws Exception 
+     */
     public int addActuator(Actuator act) throws Exception
     {
         int index = alf.addActuator(act);
@@ -67,6 +79,11 @@ public class ActuatorModel implements IActuatorEventsListener{
         return index;
     }
     
+    /**
+     * Rimuove un attuatore
+     * @param id
+     * @throws Exception 
+     */
     public void removeActuator(int id) throws Exception{
         alf.deleteActuator(id);
         actuators.remove(id);
@@ -76,16 +93,29 @@ public class ActuatorModel implements IActuatorEventsListener{
         });
     }
     
+    /**
+     * Aggiunge listener eventi attuatori
+     * @param list 
+     */
     public synchronized void addListener(IModelEventsListener list)
     {
         listeners.add(list);
     }
     
+    /**
+     * Rimuove listener eventi attuatori
+     * @param list 
+     */
     public synchronized void removeListener(IModelEventsListener list)
     {
         listeners.remove(list);
     }
 
+    /**
+     * Setta valore di un attuatore
+     * @param id
+     * @param val 
+     */
     public synchronized void setActuatorValue(int id, int val){
         if(actuators.containsKey(id)){
             actuators.get(id).setValue(val);
@@ -94,6 +124,11 @@ public class ActuatorModel implements IActuatorEventsListener{
         
     }
     
+    /**
+     * Notidifica un nuovo evento dagli attuatori
+     * @param ae
+     * @param arg 
+     */
     @Override
     public void newEvent(ActuatorEventType ae, Object arg) {
         switch(ae){

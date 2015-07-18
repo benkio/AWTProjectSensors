@@ -31,7 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
 /**
- *
+ * Rappresenta un DAL per gli attuatori
  * @author Enrico Benini
  */
 public class ActuatorListFile {
@@ -72,7 +72,7 @@ public class ActuatorListFile {
     /**
      * Read the xml db
      *
-     * @return the list of users
+     * @return the list of actuators
      * @throws Exception
      */
     public synchronized ActuatorList readFile() throws Exception {
@@ -87,9 +87,9 @@ public class ActuatorListFile {
     }
 
     /**
-     * Delete a user, removing its entry from the xml db
+     * Delete a actuator, removing its entry from the xml db
      *
-     * @param username
+     * @param index
      * @throws Exception
      */
     public synchronized void deleteActuator(int index) throws Exception {
@@ -100,7 +100,7 @@ public class ActuatorListFile {
         writeFile(al);
     }
     /**
-     * Register a new user, adding a new entry in the xml db
+     * Register a new actuator, adding a new entry in the xml db
      *
      * @param s
      * @throws Exception
@@ -119,9 +119,10 @@ public class ActuatorListFile {
     }
 
     /**
-     * @param username
-     * @return user information
-     * @throws Exception
+     * Ritorna un attuatore cercandolo tramite id
+     * @param id
+     * @return
+     * @throws Exception 
      */
     public synchronized Actuator getActuatorById(int id) throws Exception {
         ActuatorList sl = readFile();

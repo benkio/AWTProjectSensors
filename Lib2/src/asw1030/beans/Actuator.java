@@ -7,7 +7,6 @@ package asw1030.beans;
 
 import asw1030.beans.enums.ActuatorEventType;
 import asw1030.beans.interfaces.IActuatorEventsListener;
-import asw1030.beans.interfaces.IXmlRecord;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author enricobenini
  */
 @XmlRootElement(name="actuator")
-public class Actuator implements IXmlRecord{
+public class Actuator{
     private int id;
     private int value;
     
@@ -47,12 +46,10 @@ public class Actuator implements IXmlRecord{
         listeners.remove(list);
     }
 
-    @Override
     public int getId() {
         return this.id;
     }
 
-    @Override
     public void setId(int id) {
         this.id=id;
     }

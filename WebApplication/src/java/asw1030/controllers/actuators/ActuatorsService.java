@@ -94,19 +94,6 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         }
     }
 
-    /**
-     * Seleziona le operations da effettuare sulla base del nodo root dell'xml ricevuto
-     * @param data XML file ricevuto
-     * @param session Oggetto Session
-     * @param mngXML Classe per la gestione dell'xml
-     * @param request Req HTTP
-     * @param response Resp HTTP
-     * @throws JAXBException
-     * @throws IOException
-     * @throws TransformerException
-     * @throws ParserConfigurationException
-     * @throws Exception 
-     */
     private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws JAXBException, IOException, TransformerException, ParserConfigurationException, Exception {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
@@ -131,13 +118,6 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         }
     }
 
-    /**
-     * Metodo che implementa la operations per l'invio dello store dei sensori
-     * @param mngXML
-     * @param response
-     * @throws IOException
-     * @throws TransformerException 
-     */
     private void sendActuators(ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
         System.out.println("Get Actuators Recived");
 
@@ -161,14 +141,6 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         response.getOutputStream().close();
     }
 
-    /**
-     * Aggiunta di un nuovo attuatore allo store degli attuatori
-     * @param mngXML
-     * @param response
-     * @param data
-     * @throws IOException
-     * @throws TransformerException 
-     */
     private void setActuatorValue(ManageXML mngXML, HttpServletResponse response, Document data) throws IOException, TransformerException {
         System.out.println("Set Actuators Recived");
         
@@ -253,6 +225,11 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         contexts.add(asyncContext);
     }
 
+    /**
+     * 
+     * @param type
+     * @param arg 
+     */
     @Override
     public void modelEventHandler(ModelEventType type, Object arg) {
         System.out.println("NewEvent "+type.toString()+" "+arg.toString());

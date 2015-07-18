@@ -32,7 +32,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
 /**
- *
+ * Modella un DAL per i sensori
  * @author Enrico Benini
  */
 public class SensorListFile {
@@ -43,10 +43,11 @@ public class SensorListFile {
     private ManageXML mngXML;
     private String webPagesPath;
     private final ServletContext servletContext;
+    
     /**
      * Return a singleton object of UserListFile
-     *     
-* @param servletContext
+     *    
+     * @param servletContext
      * @return
      * @throws Exception
      */
@@ -72,7 +73,7 @@ public class SensorListFile {
     /**
      * Read the xml db
      *
-     * @return the list of users
+     * @return the list of sensors
      * @throws Exception
      */
     public synchronized SensorList readFile() throws Exception {
@@ -87,9 +88,9 @@ public class SensorListFile {
     }
 
     /**
-     * Delete a user, removing its entry from the xml db
+     * Delete a sensor, removing its entry from the xml db
      *
-     * @param username
+     * @param index 
      * @throws Exception
      */
     public synchronized void deleteSensor(int index) throws Exception {
@@ -99,11 +100,12 @@ public class SensorListFile {
         
         writeFile(sl);
     }
+   
     /**
-     * Register a new user, adding a new entry in the xml db
-     *
+     * Aggiunge un nuovo sensore
      * @param s
-     * @throws Exception
+     * @return id fresh del sensore
+     * @throws Exception 
      */
     public synchronized int addSensor(Sensor s) throws Exception {
         SensorList sl = readFile();
@@ -119,9 +121,10 @@ public class SensorListFile {
     }
 
     /**
-     * @param username
-     * @return user information
-     * @throws Exception
+     * Ritorna un sensore cercandolo per id
+     * @param id
+     * @return the sensor
+     * @throws Exception 
      */
     public synchronized Sensor getSensorById(int id) throws Exception {
         SensorList sl = readFile();
