@@ -100,9 +100,9 @@ Per la realizzazione delle RIA Javascript si e' utilizzata la libreria esterna *
 
 *  *requestBuilder*: Contiene le funzioni generiche condivise da tutte le RIA, in particolare quella per effettuare le chiamate AJAX verso il server e la funzione di logging per controllare le risposte e richieste.
 *  *sensorControlPanel*: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.
-*  * sensorControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio del sensori che servono alla RIA per effettuare la computazione.
+*  *sensorControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio del sensori che servono alla RIA per effettuare la computazione.
 *  *actuatorsControlPanel*: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.
-*  * actuatorsControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio degli attuatori che servono alla RIA per effettuare la computazione.
+*  *actuatorsControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio degli attuatori che servono alla RIA per effettuare la computazione.
 
 
 Computazione lato server
