@@ -21,15 +21,15 @@
             <p>
                 The main idea of this project is to simulate a control panel for a set of sensors.
                 All the functionality can be accessed only after the authentication process. 
-                After that, if you are a simple user you can only see the values of the sensors else if you are an administrator you can also act on a set of actuators than change the enviroments in some way,
-                this changes causes some effects back on the sensors.
-                Finally there's a page for the control panel of the sensors in order to turn off the single sensor and stop its notifications.
+                The simple user you can only see the values of the sensors, their types, value and act on a set of actuators.
+                This changes causes some effects back on the sensors.
+                The admin can also modify the sensors in term of: disable/enable, add/remove sensors.
                 In particular with this site you can:</p>
                 <ul>
                     <li>Register and Login in the sensor system</li>
                     <li>Access and view the values of the sersors(if autheticated)</li>
-                    <li>Access, view and act on the actuators(if admin)</li>
-                    <li>Access, view and start or stop the sensors(if admin)</li>
+                    <li>Access, view and act on the actuators</li>
+                    <li>Access, view, add or remove, start or stop the sensors(if admin)</li>
                 </ul>
         </article>        
     </body>
