@@ -97,6 +97,13 @@ Gli oggetti attivi vengono poi gestiti dall'applet negli appositi metodi di star
 
 ### RIA Javascript ###
 Per la realizzazione delle RIA Javascript si e' utilizzata la libreria esterna *JQuery* vista a lezione che facilita e pulisce il codice per effettuare varie operazioni. Inoltre si sono predisposti vari file javascript che contengono le funzioni, generiche o peculiari, per la realizzazione di ogni RIA, in particolare:
+*  *requestBuilder*: Contiene le funzioni generiche condivise da tutte le RIA, in particolare quella per effettuare le chiamate AJAX verso il server e la funzione di logging per controllare le risposte e richieste.
+*  *sensorControlPanel*: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.
+*  * sensorControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio del sensori che servono alla RIA per effettuare la computazione.
+*  *actuatorsControlPanel*: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.
+*  * actuatorsControlPanelXmlBuilder*: Contiene le funzioni specifiche per la creazione delle richieste al servizio degli attuatori che servono alla RIA per effettuare la computazione.
+
+
 Computazione lato server
 ------------------------
 1. novbar.jspf,fragments inglobato in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login.
