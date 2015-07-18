@@ -21,18 +21,18 @@ UTILIZZO DEL SITO
 Tipologie di utenti:
 
 1. Utenti non registrati
-  * E' possibile registrarsi.
-  * Non e' possibile visualizzare nulla di sensori e attuatori.
+    *  E' possibile registrarsi.
+    *  Non e' possibile visualizzare nulla di sensori e attuatori.
   
 2. Utenti registrati
-  * Login/Logout.
-  * Visualizzazione dei sensori: il loro stato,tipo e il loro valore.
-  * Agire sul valore degli attuatori.
+    * Login/Logout.
+    * Visualizzazione dei sensori: il loro stato,tipo e il loro valore.
+    * Agire sul valore degli attuatori.
   
 3. Utente amministratore (Singolo)
-  * Tutto quello previsto per gli utenti registrati.
-  * Agire sull'abilitazione dei sensori. (Abilitare e Disabilitare)
-  * Aggiungere e Rimuovere sensori.
+    * Tutto quello previsto per gli utenti registrati.
+    * Agire sull'abilitazione dei sensori. (Abilitare e Disabilitare)
+    * Aggiungere e Rimuovere sensori.
 
 REALIZZAZIONE DEL SITO - Sommario
 =================================
