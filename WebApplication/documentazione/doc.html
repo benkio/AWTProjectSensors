@@ -1,0 +1,129 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Untitled Document</title><style></style></head><body>
+<h1 id="applicazione-e-servizi-web-unibo-2014-2015">Applicazione e servizi web - Unibo - 2014-2015</h1>
+<h1 id="titolo">Titolo</h1>
+<p>Sensors Manager</p>
+<h1 id="autori">Autori</h1>
+<p>Enrico Benini - 701013 - enrico.benini5@studio.unibo.it</p>
+<p>Thomas Farneti - 710232 - thomas.farneti@studio.unibo.it</p>
+<h1 id="descrizione-del-servizio-offerto-dal-sito">DESCRIZIONE DEL SERVIZIO OFFERTO DAL SITO</h1>
+<p>Pannello di controllo di una serie di sensori ed attuatori che agiscono sui primi. In particolare il valore dei sensori variera&#39; al variare del valore degli attuatori e notificheranno il loro valore e stato.
+La gestione e visualizzazione dei sensori e attuatori e&#39; influenzata dalla tipologia di utenti, si veda la sezione seguente.</p>
+<h1 id="utilizzo-del-sito">UTILIZZO DEL SITO</h1>
+<p>Tipologie di utenti:</p>
+<ol>
+<li><p>Utenti non registrati</p>
+<ul>
+<li>E&#39; possibile registrarsi.</li>
+<li>Non e&#39; possibile visualizzare nulla di sensori e attuatori.</li>
+</ul>
+</li>
+<li><p>Utenti registrati</p>
+<ul>
+<li>Login/Logout.</li>
+<li>Visualizzazione dei sensori: il loro stato,tipo e il loro valore.</li>
+<li>Agire sul valore degli attuatori.</li>
+</ul>
+</li>
+<li><p>Utente amministratore (Singolo)</p>
+<ul>
+<li>Tutto quello previsto per gli utenti registrati.</li>
+<li>Agire sull&#39;abilitazione dei sensori. (Abilitare e Disabilitare)</li>
+<li>Aggiungere e Rimuovere sensori.</li>
+</ul>
+</li>
+</ol>
+<h1 id="realizzazione-del-sito-sommario">REALIZZAZIONE DEL SITO - Sommario</h1>
+<h2 id="computazione-lato-client">Computazione lato client</h2>
+<p>Consiste in diverse RIA eseguite come applet e Javascript, incorporate in pagine web. In particolare:</p>
+<ol>
+<li><em>sensorsControlPanel</em> si occupa di tutta la parte relativa al monitoraggio dei sensori e alla loro visualizzazione, quindi una RIA javascript che consente l&#39;abilitazione e l&#39;aggiunta/rimozione. E&#39; disponibile solamente all&#39;utente amministratore.</li>
+<li><em>actuators</em> contiene la RIA javascript che realizza la visualizzazione degli attuatori e la modifica dei loro valori. Accedibile da tutti gli utenti.</li>
+<li><em>sensors</em> contiene l&#39;applet che visualizza tutto quello che riguarda i sensori attualmente presenti nel sistema.</li>
+</ol>
+<p>le funzioni javascript utilizzate si trovano nella cartella apposita per i file javascript all&#39;interno della Web application. Si possono trovare quindi tutte le funzioni utilizzate per creare i vari file XML e per effettuare le richieste e gestire il comportamento lato client delle varie RIA. Si scendera&#39; nel dettagli di come e&#39; la struttura delle varie RIA nella sezione apposita.</p>
+<h2 id="computazione-lato-server">Computazione lato server</h2>
+<p>È compresa nelle seguenti JSP:</p>
+<ol>
+<li><em>index.jsp</em>: Semplice pagina di benvenuto, incorpora le parti comuni di navbar e header.</li>
+<li><em>login.jsp</em>: che verifica le credenziali dell&#39;utente e lo redirige alla pagina principale, in caso di successo.</li>
+<li><em>sensors.jsp</em>: contiene la applet apposita per la visualizzazione e monitoring dei sensori. Tramite questa si e&#39; in grado di visualizzare i sensori che si e&#39; abilitati a visualizzare e cotrollare il loro valore/stato/tipo.</li>
+<li><em>actuators.jsp</em>: cosente di visualizzare gli attuatori e di modificarne il valore.</li>
+<li><em>sensorsControlPanel.jsp</em>: consente di gestire i vari sensori, in particolare l&#39;abilitazione e l&#39;aggiunta.</li>
+<li><em>registration.jsp</em>: consente ad un utente di registrarsi al sito, in questo modo potra&#39; effettuare poi l&#39;autenticazione.</li>
+</ol>
+<p>Le servlet utilizzate sono:</p>
+<ol>
+<li><em>RegistrationServlet</em>, che provvede alla registrazione di un nuovo utente</li>
+<li><em>LoginServlet</em>, si occupa del login e logout dell&#39;utente.</li>
+<li><em>ActuatorService</em>, servizio che mette a disposizione una serie di operazioni per la gestione dei attuatori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.</li>
+<li><em>SensorService</em>, servizio che mette a disposizione una serie di operazioni per la gestione dei sensori consentendo alla computazione lato client di effettuare le varie richieste per effettuare le modifiche.</li>
+</ol>
+<h2 id="informazioni-memorizzate-sul-server-e-scambiate-sulla-rete">Informazioni memorizzate sul server e scambiate sulla rete</h2>
+<p>Le informazioni memorizzate sul server sono quelle realtive a:</p>
+<ol>
+<li>Gli utenti registrati. <a href="../xml-types/userList.xsd">users.xsd</a></li>
+<li>Gli attuatori presenti nel sistema. <a href="../xml-types/actuatorList.xsd">actuatorList.xsd</a></li>
+<li>I sensori presenti nel sistema. <a href="../xml-types/sensorList.xsd">sensorList.xsd</a></li>
+</ol>
+<p>Le informazioni scambiate sono principalmente suddivisibili in:</p>
+<ol>
+<li>xml presente nelle request, generalmente formato da un nodo radice che contiene il nome dell&#39;operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: li nuovo valore di un attuatore). nel dettaglio la lista delle richieste effettuate dal client:<ul>
+<li>Aggiunta di un nuovo sensore: <a href="../xml-types/addSensor.xsd">addSensor.xsd</a></li>
+<li>Disabilita un sensore: <a href="../xml-types/disableSensor.xsd">disableSensor.xsd</a></li>
+<li>Abilita un sensore: <a href="../xml-types/enableSensor.xsd">enableSensor.xsd</a></li>
+<li>Ottieni attuatori: <a href="../xml-types/getActuators.xsd">getActuators.xsd</a></li>
+<li>Ottieni sensori: <a href="../xml-types/getSensors.xsd">getSensors.xsd</a></li>
+<li>Rimuovi sensore: <a href="../xml-types/removeSensor.xsd">removeSensor.xsd</a></li>
+<li>Imposta il valore di un attuatore: <a href="../xml-types/setValue.xsd">setValue.xsd</a></li>
+<li>Richiesta del client di sottoscrizione alle notifiche: <a href="../xml-types/waitEvents.xsd">waitEvents.xsd</a></li>
+</ul>
+</li>
+<li>xml presente nelle response, generalmente formato da una lista di elementi (es: lista di sensori). nel dettaglio la lista delle risposte effettuate dal server:<ul>
+<li>lista completa degli attuatori attualmente presenti: <a href="../xml-types/actuatorsList.xsd">actuatorsList.xsd</a></li>
+<li>Risposta del server per comunicare che tutto funziona correttamente o se ci sono stati degli errori: <a href="../xml-types/message.xsd">message.xsd</a></li>
+<li>Indica che e&#39; avvenuto un nuovo evento di un certo tipo, utilizzato per le notifiche: <a href="../xml-types/newEvent.xsd">newEvent.xsd</a></li>
+<li>lista completa degli attuatori attualmente presenti: <a href="../xml-types/SensorsList.xsd">SensorsList.xsd</a></li>
+</ul>
+</li>
+</ol>
+<h1 id="realizzazione-del-sito-tecnologie">REALIZZAZIONE DEL SITO - Tecnologie</h1>
+<h2 id="computazione-lato-client">Computazione lato client</h2>
+<h3 id="applet">Applet</h3>
+<p>L&#39;applet si divide in varie parti per la gestione della concorrenza e per il corretto aggiornamento della GUI. Tutto comunque si trova condensato all&#39;interno di un&#39;unico file che contiene la classe che eredita da JApplet e che al suo interno contiene varie altre classi private. Inoltre alcune cose sono state spostate all&#39;intero di una libreria esterna perche&#39; si riteneva che potessero essere utili nella costruzione di altre parti del sistema come i servizi e/o altre applet future.
+Le varie parti che compongono l&#39;applet sono:</p>
+<ul>
+<li><em>SensorsControlPanel</em>: nome della classe che eredita da JApplet e che contiene l&#39;override dei principali metodi, per controllare il ciclo di vita dell&#39;applet stessa.</li>
+<li><em>SensorDownloadWorker</em>: SwingWorker che consente di scaricare i dati relativi ai sensori dal server.Si e&#39; deciso di utilizzare uno swing worker per aggiornare correttamente la GUI una volta che avviene la risposta del server alla chiamata.</li>
+<li><em>AppletGUI</em>: Classe interna che contiene tutto cio&#39; che riguarda la parte grafica dell&#39;applet. Per comporre la parte grafica si utilizza anche la classe <em>EntryListCellRenderer</em> che riguarda lo scheletro del singolo elemento di renderizzazione che conterra&#39; i dati dei sensori, un istanza per sensore.</li>
+<li><em>CometValueUpdaterThread</em>: Classe thread che consente di gestire le notifiche che lato server arrivano all&#39;applet.</li>
+</ul>
+<p>Gli oggetti attivi vengono poi gestiti dall&#39;applet negli appositi metodi di start e stop in modo da non lasciare computazioni inutili in esecuzione.</p>
+<h3 id="ria-javascript">RIA Javascript</h3>
+<p>Per la realizzazione delle RIA Javascript si e&#39; utilizzata la libreria esterna <em>JQuery</em> vista a lezione che facilita e pulisce il codice per effettuare varie operazioni. Inoltre si sono predisposti vari file javascript che contengono le funzioni, generiche o peculiari, per la realizzazione di ogni RIA, in particolare:</p>
+<ul>
+<li><em>requestBuilder</em>: Contiene le funzioni generiche condivise da tutte le RIA, in particolare quella per effettuare le chiamate AJAX verso il server e la funzione di logging per controllare le risposte e richieste.</li>
+<li><em>sensorControlPanel</em>: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.</li>
+<li><em>sensorControlPanelXmlBuilder</em>: Contiene le funzioni specifiche per la creazione delle richieste al servizio del sensori che servono alla RIA per effettuare la computazione.</li>
+<li><em>actuatorsControlPanel</em>: Contiene le funzioni specifiche per la gestione del comportamento della RIA. Nello specifico gli event handlers e le callback relative.</li>
+<li><em>actuatorsControlPanelXmlBuilder</em>: Contiene le funzioni specifiche per la creazione delle richieste al servizio degli attuatori che servono alla RIA per effettuare la computazione.</li>
+</ul>
+<h2 id="computazione-lato-server">Computazione lato server</h2>
+<p>Lista dei fragments utilizzati:</p>
+<ol>
+<li><em>navbar.jspf</em>: fragments incluso in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l&#39;utente è loggato, mostra all&#39;utente i link le pagine per visualizzare sensori e attuatori. Se l&#39;utente non è loggato, mostro i link per le pagine di registrazione e login. Fa distinzione anche da utente amministratore a utente non amministratore utilizzando la sessione.Mostra inoltre anche un piccolo messaggio per l&#39;utente loggato.</li>
+<li><em>header.jspf</em>: fragments incluso in tutte le pagine che si occupa di mostrare l&#39;intestazione del sito.</li>
+<li><em>sessionRedirect.jspf</em>: fragments incluso in tutte le pagine che si occupa di controllare la presenza della sessione, se questa non e&#39; presente avviene un redirect immediato alla pagina di login.</li>
+<li><em>adminRedirect.jspf</em>: esattamente come il precedente ma controlla che l&#39;utente sia anche l&#39;amministratore.</li>
+</ol>
+<p>Gli ultimi due fragments sono inseriti per evitare che, chi conosce l&#39;URL delle pagine di amministratore o del sito, non possa visualizzarle comunque senza aver ottenuto una valida sessione e quindi l&#39;autenticazione.</p>
+<p>Infine una delle parti piu importanti della computazione lato server consiste in due servizi principali realizzati attraverso delle apposite sevlet che, in base ai dati inviati riconoscono le operazioni che si vogliono effettuare e restituiscono al client un&#39;apposita risposta consultando la parte di database.
+in particolare per le richieste che possono essere fatte ai servizi si faccia riferimento alla sezione dei dati scambiati in rete.
+Fare riferimento al javadoc per maggiori informazioni:</p>
+<ul>
+<li><a href="Applet1/javadoc/index.html">Applet Javadoc</a></li>
+<li><a href="Lib1/javadoc/index.html">Lib1 Javadoc</a></li>
+<li><a href="Lib2/javadoc/index.html">Lib2 Javadoc</a></li>
+<li><a href="WebApplication/javadoc/index.html">WebApplication Javadoc</a></li>
+</ul>
+
+</body></html>
