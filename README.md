@@ -130,3 +130,8 @@ Gli ultimi due fragments sono inseriti per evitare che, chi conosce l'URL delle 
 
 Infine una delle parti piu importanti della computazione lato server consiste in due servizi principali realizzati attraverso delle apposite sevlet che, in base ai dati inviati riconoscono le operazioni che si vogliono effettuare e restituiscono al client un'apposita risposta consultando la parte di database.
 in particolare per le richieste che possono essere fatte ai servizi si faccia riferimento alla sezione dei dati scambiati in rete.
+Fare riferimento al javadoc per maggiori informazioni:
+*  [Applet Javadoc](Applet1/javadoc/index.html)
+*  [Lib1 Javadoc](Lib1/javadoc/index.html)
+*  [Lib2 Javadoc](Lib2/javadoc/index.html)
+*  [WebApplication Javadoc](WebApplication/javadoc/index.html)
