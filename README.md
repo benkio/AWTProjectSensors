@@ -107,13 +107,9 @@ Per la realizzazione delle RIA Javascript si e' utilizzata la libreria esterna *
 
 Computazione lato server
 ------------------------
-1. novbar.jspf,fragments inglobato in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login.
-2. login.jsp, che verifica le credenziali dell'utente e lo redirige alla pagina principale.
+Lista dei fragments utilizzati:
 
-Le servlet utilizzate sono:
-
-1. RegistrationServlet, che riceve i dati dal form di registrazione e provvede a salvarli (db xml e directory contenente le immagini del profilo degli utenti).
-
-3. LoginServlet, che a seconda dell'url pattern matchato, provvede a loggare o sloggare l'utente dal sito.
+1. *navbar.jspf*: fragments incluso in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login. Fa distinzione anche da utente amministratore a utente non amministratore utilizzando la sessione.
+2. **
  
 (Aggiungere descrizioni del servizio)
