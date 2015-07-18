@@ -23,12 +23,12 @@ Tipologie di utenti:
 1. Utenti non registrati
     *  E' possibile registrarsi.
     *  Non e' possibile visualizzare nulla di sensori e attuatori.
-  
+
 2. Utenti registrati
     * Login/Logout.
     * Visualizzazione dei sensori: il loro stato,tipo e il loro valore.
     * Agire sul valore degli attuatori.
-  
+
 3. Utente amministratore (Singolo)
     * Tutto quello previsto per gli utenti registrati.
     * Agire sull'abilitazione dei sensori. (Abilitare e Disabilitare)
@@ -68,14 +68,27 @@ Informazioni memorizzate sul server e scambiate sulla rete
 
 Le informazioni memorizzate sul server sono quelle realtive a:
 
-1. Gli utenti registrati. (users.xml)
-2. Gli attuatori presenti nel sistema. (actuators.xml)
-3. I sensori presenti nel sistema. (sensors.xml)
+1. Gli utenti registrati. [users.xsd](../xml-types/userList.xsd)
+2. Gli attuatori presenti nel sistema. [actuatorList.xsd](../xml-types/actuatorList.xsd)
+3. I sensori presenti nel sistema. [sensorList.xsd](../xml-types/sensorList.xsd)
 
 Le informazioni scambiate sono principalmente suddivisibili in:
 
-1. xml presente nelle request, generalmente formato da un nodo radice che contiene il nome dell'operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: li nuovo valore di un attuatore).
-2. xml presente nelle response, generalmente formato da una lista di elementi (es: lista di sensori)
+1. xml presente nelle request, generalmente formato da un nodo radice che contiene il nome dell'operazione richiesta e opzionalmente altri nodi, contenenti parametri da elaborare (es: li nuovo valore di un attuatore). nel dettaglio la lista delle richieste effettuate dal client:
+    *  Aggiunta di un nuovo sensore: [addSensor.xsd](../xml-types/addSensor.xsd)
+    *  Disabilita un sensore: [disableSensor.xsd](../xml-types/disableSensor.xsd)
+    *  Abilita un sensore: [enableSensor.xsd](../xml-types/enableSensor.xsd)
+    *  Ottieni attuatori: [getActuators.xsd](../xml-types/getActuators.xsd)
+    *  Ottieni sensori: [getSensors.xsd](../xml-types/getSensors.xsd)
+    *  Rimuovi sensore: [removeSensor.xsd](../xml-types/removeSensor.xsd)
+    *  Imposta il valore di un attuatore: [setValue.xsd](../xml-types/setValue.xsd)
+    *  Richiesta del client di sottoscrizione alle notifiche: [waitEvents.xsd](../xml-types/waitEvents.xsd)
+2. xml presente nelle response, generalmente formato da una lista di elementi (es: lista di sensori). nel dettaglio la lista delle risposte effettuate dal server:
+    *  lista completa degli attuatori attualmente presenti: [actuatorsList.xsd](../xml-types/actuatorsList.xsd)
+    *  Risposta del server per comunicare che tutto funziona correttamente o se ci sono stati degli errori: [message.xsd](../xml-types/message.xsd)
+    *  Indica che e' avvenuto un nuovo evento di un certo tipo, utilizzato per le notifiche: [newEvent.xsd](../xml-types/newEvent.xsd)
+    *  lista completa degli attuatori attualmente presenti: [SensorsList.xsd](../xml-types/SensorsList.xsd)
+
 
 
 REALIZZAZIONE DEL SITO - Tecnologie
@@ -115,5 +128,5 @@ Lista dei fragments utilizzati:
 4. *adminRedirect.jspf*: esattamente come il precedente ma controlla che l'utente sia anche l'amministratore.
 
 Gli ultimi due fragments sono inseriti per evitare che, chi conosce l'URL delle pagine di amministratore o del sito, non possa visualizzarle comunque senza aver ottenuto una valida sessione e quindi l'autenticazione.
- 
+
 (Aggiungere descrizioni del servizio)
