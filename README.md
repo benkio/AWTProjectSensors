@@ -84,7 +84,16 @@ REALIZZAZIONE DEL SITO - Tecnologie
 Computazione lato client
 ------------------------
 
-(spiegazione di applet e RIA javascript)
+## Applet ##
+L'applet si divide in varie parti per la gestione della concorrenza e per il corretto aggiornamento della GUI. Tutto comunque si trova condensato all'interno di un'unico file che contiene la classe che eredita da JApplet e che al suo interno contiene varie altre classi private. Inoltre alcune cose sono state spostate all'intero di una libreria esterna perche' si riteneva che potessero essere utili nella costruzione di altre parti del sistema come i servizi e/o altre applet future.
+Le varie parti che compongono l'applet sono:
+*  SensorsControlPanel: nome della classe che eredita da JApplet e che contiene l'override dei principali metodi, per controllare il ciclo di vita dell'applet stessa.
+*  SensorDownloadWorker: SwingWorker che consente di scaricare i dati relativi ai sensori dal server.Si e' deciso di utilizzare uno swing worker per aggiornare correttamente la GUI una volta che avviene la risposta del server alla chiamata.
+*  AppletGUI: Classe interna che contiene tutto cio' che riguarda la parte grafica dell'applet. Per comporre la parte grafica si utilizza anche la classe *EntryListCellRenderer* che riguarda lo scheletro del singolo elemento di renderizzazione che conterra' i dati dei sensori, un istanza per sensore.
+* CometValueUpdaterThread: Classe thread che consente di gestire le notifiche che lato server arrivano all'applet.
+
+Gli oggetti attivi vengono poi gestiti dall'applet negli appositi metodi di start e stop in modo da non lasciare computazioni inutili in esecuzione.
+
 
 Computazione lato server
 ------------------------
