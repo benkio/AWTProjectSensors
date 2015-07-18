@@ -109,7 +109,11 @@ Computazione lato server
 ------------------------
 Lista dei fragments utilizzati:
 
-1. *navbar.jspf*: fragments incluso in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login. Fa distinzione anche da utente amministratore a utente non amministratore utilizzando la sessione.
-2. **
+1. *navbar.jspf*: fragments incluso in tutte le pagine che si occupa di renderizzare la barra di navigazione. Se l'utente è loggato, mostra all'utente i link le pagine per visualizzare sensori e attuatori. Se l'utente non è loggato, mostro i link per le pagine di registrazione e login. Fa distinzione anche da utente amministratore a utente non amministratore utilizzando la sessione.Mostra inoltre anche un piccolo messaggio per l'utente loggato.
+2. *header.jspf*: fragments incluso in tutte le pagine che si occupa di mostrare l'intestazione del sito.
+3. *sessionRedirect.jspf*: fragments incluso in tutte le pagine che si occupa di controllare la presenza della sessione, se questa non e' presente avviene un redirect immediato alla pagina di login.
+4. *adminRedirect.jspf*: esattamente come il precedente ma controlla che l'utente sia anche l'amministratore.
+
+Gli ultimi due fragments sono inseriti per evitare che, chi conosce l'URL delle pagine di amministratore o del sito, non possa visualizzarle comunque senza aver ottenuto una valida sessione e quindi l'autenticazione.
  
 (Aggiungere descrizioni del servizio)
