@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Classe che implementa il servizio che espone le operations effettuabili sugli attuatori
  * @author Thomas
  */
 @WebServlet(name = "ActuatorsService", urlPatterns = {"/Actuators"}, asyncSupported = true)
@@ -54,13 +54,19 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
                 Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-//            am.addActuator(new Actuator());
-//            am.addActuator(new Actuator());
-//            am.addActuator(new Actuator());
-//            am.addActuator(new Actuator());
+            if(am.getActuators().isEmpty())
+            {
+                am.addActuator(new Actuator());
+                am.addActuator(new Actuator());
+                am.addActuator(new Actuator());
+                am.addActuator(new Actuator());
+            }
+            
         } catch (Exception ex) {
             Logger.getLogger(ActuatorsService.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        am.addListener(this);
     }
     
     @Override
@@ -88,6 +94,19 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         }
     }
 
+    /**
+     * Seleziona le operations da effettuare sulla base del nodo root dell'xml ricevuto
+     * @param data XML file ricevuto
+     * @param session Oggetto Session
+     * @param mngXML Classe per la gestione dell'xml
+     * @param request Req HTTP
+     * @param response Resp HTTP
+     * @throws JAXBException
+     * @throws IOException
+     * @throws TransformerException
+     * @throws ParserConfigurationException
+     * @throws Exception 
+     */
     private void operations(Document data, HttpSession session, ManageXML mngXML, HttpServletRequest request, HttpServletResponse response) throws JAXBException, IOException, TransformerException, ParserConfigurationException, Exception {
         Element root = data.getDocumentElement();
         String operation = root.getTagName();
@@ -112,6 +131,13 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         }
     }
 
+    /**
+     * Metodo che implementa la operations per l'invio dello store dei sensori
+     * @param mngXML
+     * @param response
+     * @throws IOException
+     * @throws TransformerException 
+     */
     private void sendActuators(ManageXML mngXML, HttpServletResponse response) throws IOException, TransformerException {
         System.out.println("Get Actuators Recived");
 
@@ -123,11 +149,7 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
             Element id = doc.createElement("id");
             id.appendChild(doc.createTextNode(""+a.getId()));
             actuator.appendChild(id);
-            
-//            Element kind = doc.createElement("kind");
-//            kind.appendChild(doc.createTextNode(s.getKind().toString()));
-//            sensor.appendChild(kind);
-            
+                        
             Element value = doc.createElement("value");
             value.appendChild(doc.createTextNode(""+a.getValue()));
             actuator.appendChild(value);
@@ -139,7 +161,17 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
         response.getOutputStream().close();
     }
 
+    /**
+     * Aggiunta di un nuovo attuatore allo store degli attuatori
+     * @param mngXML
+     * @param response
+     * @param data
+     * @throws IOException
+     * @throws TransformerException 
+     */
     private void setActuatorValue(ManageXML mngXML, HttpServletResponse response, Document data) throws IOException, TransformerException {
+        System.out.println("Set Actuators Recived");
+        
         Element idEl = (Element) data.getElementsByTagName("id").item(0);
         Element valEl = (Element) data.getElementsByTagName("value").item(0);
 
@@ -172,6 +204,7 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
     }
 
     private void waitEvents(ManageXML mngXML, HttpServletResponse response, HttpServletRequest request) {
+        System.out.println("WaitEvents Recived");
         AsyncContext asyncContext = request.startAsync();
         asyncContext.setTimeout(10 * 1000);
         asyncContext.addListener(new AsyncListener() {
@@ -222,6 +255,8 @@ public class ActuatorsService extends HttpServlet implements IModelEventsListene
 
     @Override
     public void modelEventHandler(ModelEventType type, Object arg) {
+        System.out.println("NewEvent "+type.toString()+" "+arg.toString());
+        
         synchronized (this) {
             contexts.stream().forEach((AsyncContext asyncContext) -> {
                 try {

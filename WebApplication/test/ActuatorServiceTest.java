@@ -6,6 +6,7 @@
 
 import asw1030.libraries.http.HTTPClient;
 import asw1030.libraries.xml.ManageXML;
+import asw1030.model.ActuatorModel;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
